@@ -1,1 +1,1 @@
-# kross-autorrespondeer
+# kross-autoresponder
