@@ -111,10 +111,9 @@ def load_apartment_file(apartment_name):
 
 
 # ── Claude ────────────────────────────────────────────────────────────────────
-# System prompt: tells Claude its role, tone, language rule, and when to escalate.
-SYSTEM_PROMPT = """You are an AI assistant managing guest communications for Milano Holiday Homes, a short-term rental company in Milan, Italy.
+SYSTEM_PROMPT_BASE = """You are an AI assistant managing guest communications for Milano Holiday Homes, a short-term rental company in Milan, Italy.
 
-You will receive a guest message along with context about the apartment and reservation. Reply in a friendly, professional tone — as if you were the host. Always reply in the same language the guest used.
+You will receive the full conversation history between the host and the guest, plus context about the apartment and reservation. Reply in a friendly, professional tone — as if you were the host. Always reply in the same language the guest used.
 
 If you cannot answer confidently — the question requires information you don't have, involves a complaint needing human judgment, or concerns something outside what the apartment info covers — respond ONLY with this JSON and nothing else:
 {"action": "escalate", "reason": "<brief explanation of why you can't handle it>"}
@@ -122,37 +121,66 @@ If you cannot answer confidently — the question requires information you don't
 Otherwise write a direct, helpful reply. Do not include any preamble or sign-off."""
 
 
-def build_prompt(guest_message, translated_message, apartment_name, apartment_info, reservation):
-    # Build the user-turn message Claude will read. Packs in all available context.
+def build_system_prompt(apartment_name, apartment_info, reservation):
+    # Reservation and apartment context go in the system prompt so Claude has them
+    # as standing background, separate from the conversation turns.
     res   = reservation["data"][0]
     rooms = res.get("rooms", [{}])[0]
 
     lines = [
+        SYSTEM_PROMPT_BASE,
+        "\n--- Reservation Context ---",
         f"Apartment: {apartment_name}",
         f"Check-in: {res['arrival']} | Check-out: {res['departure']}",
         f"Guest: {res['label']} | Guests: {rooms.get('qt_guests', '?')} | Language: {res.get('lang', '?')}",
     ]
     if res.get("note"):
-        lines.append(f"Reservation notes: {res['note']}")
-
+        lines.append(f"Notes: {res['note']}")
     if apartment_info:
         lines.append(f"\n--- Apartment Information ---\n{apartment_info}")
-
-    lines.append(f"\n--- Guest Message ---\n{guest_message}")
-    # Include translation when the guest wrote in a different language — helps Claude understand
-    if translated_message and translated_message != guest_message:
-        lines.append(f"(Translation: {translated_message})")
 
     return "\n".join(lines)
 
 
-def call_anthropic(prompt):
+def build_conversation(all_messages, up_to_id_message):
+    # Converts this guest's thread history into the Claude messages array format.
+    # all_messages is the full history for one thread (one guest), chronological order.
+    # We include only messages up to and including the one we're replying to.
+    # guest → "user" turn, owner → "assistant" turn.
+    # Claude requires strictly alternating roles starting with "user", so consecutive
+    # messages from the same side are merged into one turn.
+    cutoff = next(i for i, m in enumerate(all_messages) if m["id_message"] == up_to_id_message)
+    relevant = all_messages[:cutoff + 1]
+
+    messages = []
+    for msg in relevant:
+        role = "user" if msg["user_role"] == "guest" else "assistant"
+        content = msg["message"]
+        # Append translation inline so Claude understands non-Italian/English messages
+        if msg.get("translated_message") and msg["translated_message"] != msg["message"]:
+            content += f"\n(Translation: {msg['translated_message']})"
+
+        if messages and messages[-1]["role"] == role:
+            # Merge consecutive same-role messages into one turn
+            messages[-1]["content"] += f"\n\n{content}"
+        else:
+            messages.append({"role": role, "content": content})
+
+    # Claude requires the first message to be "user". If the thread started with
+    # an owner message, prepend a placeholder to satisfy the constraint.
+    if messages and messages[0]["role"] == "assistant":
+        messages.insert(0, {"role": "user", "content": "[conversation start]"})
+
+    return messages
+
+
+def call_anthropic(system, messages):
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     msg = client.messages.create(
         model="claude-sonnet-4-6",  # good balance of quality and cost for guest replies
         max_tokens=1024,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": prompt}],
+        system=system,
+        messages=messages,
     )
     return msg.content[0].text
 
@@ -192,7 +220,7 @@ def notify_error(apartment_name, error):
     )
 
 
-# ── Process a single thread ───────────────────────────────────────────────────
+# ── Process a single thread (thread = reservation)───────────────────────────────────────────────────
 def process_thread(thread):
     id_thread      = thread["id_thread"]
     id_reservation = thread["id_reservation"]
@@ -219,15 +247,15 @@ def process_thread(thread):
     apartment_info = load_apartment_file(apartment_name)
     reservation    = get_reservation(id_reservation)
 
+    # Build once per thread — same apartment and reservation context for all messages.
+    system       = build_system_prompt(apartment_name, apartment_info, reservation)
+    # Full thread history in chronological order (data[] from Kross is newest-first).
+    all_messages = list(reversed(detail["data"]))
+
     for guest_msg in unread_guest_msgs:
-        prompt = build_prompt(
-            guest_msg["message"],
-            guest_msg.get("translated_message"),
-            apartment_name,
-            apartment_info,
-            reservation,
-        )
-        reply = call_anthropic(prompt)
+        # Pass history up to this specific message so Claude has full context.
+        messages = build_conversation(all_messages, guest_msg["id_message"])
+        reply    = call_anthropic(system, messages)
 
         if is_escalation(reply):
             reason = json.loads(reply.strip())["reason"]
