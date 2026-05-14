@@ -256,15 +256,22 @@ def process_thread(thread):
 
     print(f"  Thread {id_thread} ({apartment_name})")
 
-    # Collect all unread guest messages, then reverse so we reply oldest-first.
-    # data[] comes newest-first from Kross; reversing gives chronological order.
-    detail = get_thread(id_thread)
-    unread_guest_msgs = [
-        m for m in reversed(detail["data"])
-        if m["user_role"] == "guest" and m["to_read"]
-    ]
+    detail       = get_thread(id_thread)
+    all_messages = list(reversed(detail["data"]))  # chronological order, built once
 
-    # Thread has no unread guest messages — nothing to reply to
+    # Defensive filter: only include guest messages with to_read=True that have no
+    # owner/cohost reply after them — guards against replying to already-handled messages
+    # when Teo/Nico replied from the Airbnb/Booking app (which doesn't update to_read in Kross).
+    unread_guest_msgs = []
+    for i, m in enumerate(all_messages):
+        if m["user_role"] == "guest" and m["to_read"]:
+            has_reply_after = any(
+                all_messages[j]["user_role"] in ("owner", "cohost")
+                for j in range(i + 1, len(all_messages))
+            )
+            if not has_reply_after:
+                unread_guest_msgs.append(m)
+
     if not unread_guest_msgs:
         return
 
@@ -288,10 +295,7 @@ def process_thread(thread):
     apartment_info = load_apartment_file(apartment_name)
     reservation    = get_reservation(id_reservation)
 
-    # Build once per thread — same apartment and reservation context for all messages.
-    system       = build_system_prompt(apartment_name, apartment_info, reservation)
-    # Full thread history in chronological order (data[] from Kross is newest-first).
-    all_messages = list(reversed(detail["data"]))
+    system = build_system_prompt(apartment_name, apartment_info, reservation)
 
     # Pass full history up to the last unread message — Claude sees the full context
     # and produces one aggregated reply instead of one reply per message.
