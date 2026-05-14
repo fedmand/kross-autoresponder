@@ -28,7 +28,7 @@ POLL_INTERVAL = 300  # seconds between polling cycles (5 min, well within rate l
 # TESTING ONLY — remove this constant and the early-return check in process_thread() for full production.
 # Lists the apartments the bot is allowed to handle. All others are silently skipped.
 # Use the exact name_room_type string returned by Kross (e.g. as printed in the console logs).
-ACTIVE_APARTMENTS = {"Palestrina 4/B"}
+ACTIVE_APARTMENTS = {"Pellegrini 26"}
 
 # Global bearer token — fetched once on startup, auto-refreshed on 401.
 _token = None
@@ -103,7 +103,7 @@ def load_apartment_file(apartment_name):
     # Apartment names can contain "/" (e.g. "Palestrina 4/B") which is invalid in file paths.
     # We replace any filesystem-unsafe chars with "-" to get a consistent filename.
     safe_name = re.sub(r'[<>:"/\\|?*]', "-", apartment_name)
-    path = os.path.join("apartments", f"{safe_name}.txt")
+    path = os.path.join("apartments", f"{safe_name}.md")
     if not os.path.exists(path):
         raise FileNotFoundError(f"No apartment file found for '{apartment_name}' (expected: {path})")
     with open(path, encoding="utf-8") as f:
@@ -111,12 +111,22 @@ def load_apartment_file(apartment_name):
 
 
 # ── Claude ────────────────────────────────────────────────────────────────────
-SYSTEM_PROMPT_BASE = """You are an AI assistant managing guest communications for Milano Holiday Homes, a short-term rental company in Milan, Italy.
+SYSTEM_PROMPT_BASE = """You are an AI assistant managing guest communications for Nicolo&Matteo, a short-term rental company in Milan, Italy.
 
-You will receive the full conversation history between the host and the guest, plus context about the apartment and reservation. Reply in a friendly, professional tone — as if you were the host. Always reply in the same language the guest used.
+You will receive the full conversation history between the host and the guest, plus context about the apartment and reservation. Reply in a friendly, professional tone — as if you were the host. Rispondi sempre in italiano, indipendentemente dalla lingua usata dall'ospite.
 
-If you cannot answer confidently — the question requires information you don't have, involves a complaint needing human judgment, or concerns something outside what the apartment info covers — respond ONLY with this JSON and nothing else:
-{"action": "escalate", "reason": "<brief explanation of why you can't handle it>"}
+Respond ONLY with this JSON (and nothing else) in ANY of these situations:
+{"action": "escalate", "reason": "<brief explanation>"}
+
+Escalate when:
+- The guest reports a problem that PERSISTS after instructions were already given (e.g. "still not working", "tried that and it doesn't work")
+- The guest is angry, aggressive, or uses offensive language
+- There is a maintenance or technical issue requiring physical presence (broken appliance, leak, broken lock, etc.)
+- The guest asks for something requiring host approval (late check-out, extra guests, early check-in, bianchieria)
+- The question requires information not in the apartment info and not answerable with certainty
+- Any situation involving a complaint, dissatisfaction, or request for compensation
+
+Do NOT promise to check, verify, or get back to the guest — if you cannot give a definitive answer right now, escalate.
 
 Otherwise write a direct, helpful reply. Do not include any preamble or sign-off."""
 
@@ -194,29 +204,43 @@ def is_escalation(reply):
         return False
 
 
+# ── Formatting helpers ────────────────────────────────────────────────────────
+def fmt_date(iso):
+    y, mo, day = iso.split("-")
+    return f"{day}-{mo}-{y}"
+
+def fmt_ts(created_at):  # "2026-04-16 11:25:10+02" → "16-04-2026 11:25"
+    date_str, time_str = created_at.split(" ")
+    return f"{fmt_date(date_str)} {time_str[:5]}"
+
+
 # ── Telegram notification ─────────────────────────────────────────────────────
-def notify(text):
-    # Sends a plain-text message to the host's Telegram chat.
-    requests.post(
-        f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
-        json={"chat_id": TELEGRAM_CHAT_ID, "text": text},
-    )
+def notify(text, parse_mode=None):
+    # Sends a message to the host's Telegram chat. Pass parse_mode="Markdown" for bold/italic.
+    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text}
+    if parse_mode:
+        payload["parse_mode"] = parse_mode
+    requests.post(f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage", json=payload)
 
 
-def notify_escalation(apartment_name, guest_message, reason):
+def notify_escalation(apartment_name, guest_name, checkin, checkout, timestamp, guest_message, reason):
     notify(
-        f"Unhandled guest message — action needed\n\n"
-        f"Apartment: {apartment_name}\n\n"
-        f"Guest: {guest_message}\n\n"
-        f"Reason not auto-replied: {reason}"
+        f"🚨 *{apartment_name}*\n"
+        f"Ospite: *{guest_name}*\n"
+        f"Check-in: *{fmt_date(checkin)}* | Check-out: *{fmt_date(checkout)}*\n"
+        f"Orario messaggio: {fmt_ts(timestamp)}\n\n"
+        f"Messaggio: {guest_message}\n\n"
+        f"Motivo: {reason}",
+        parse_mode="Markdown",
     )
 
 
 def notify_error(apartment_name, error):
     notify(
-        f"Error processing thread — action needed\n\n"
-        f"Apartment: {apartment_name}\n\n"
-        f"Error: {error}"
+        f"⚠️ *{apartment_name}*\n"
+        f"Errore nell'elaborazione del thread — intervento necessario\n\n"
+        f"{error}",
+        parse_mode="Markdown",
     )
 
 
@@ -244,6 +268,23 @@ def process_thread(thread):
     if not unread_guest_msgs:
         return
 
+    # If any unread guest message has no text, it's a photo — Claude can't see images,
+    # so escalate the whole thread and let the host handle it.
+    if any(not m.get("message") for m in unread_guest_msgs):
+        reservation = get_reservation(id_reservation)
+        res         = reservation["data"][0]
+        photo_msg   = next(m for m in unread_guest_msgs if not m.get("message"))
+        print(f"    → Photo detected, notifying host")
+        notify(
+            f"📷 *{apartment_name}*\n"
+            f"Ospite: *{photo_msg['from_first_name']}*\n"
+            f"Check-in: *{fmt_date(res['arrival'])}* | Check-out: *{fmt_date(res['departure'])}*\n"
+            f"Orario messaggio: {fmt_ts(photo_msg['created_at'])}\n"
+            f"L'ospite ha mandato una foto. Controlla su Kross.",
+            parse_mode="Markdown",
+        )
+        return
+
     apartment_info = load_apartment_file(apartment_name)
     reservation    = get_reservation(id_reservation)
 
@@ -252,18 +293,20 @@ def process_thread(thread):
     # Full thread history in chronological order (data[] from Kross is newest-first).
     all_messages = list(reversed(detail["data"]))
 
-    for guest_msg in unread_guest_msgs:
-        # Pass history up to this specific message so Claude has full context.
-        messages = build_conversation(all_messages, guest_msg["id_message"])
-        reply    = call_anthropic(system, messages)
+    # Pass full history up to the last unread message — Claude sees the full context
+    # and produces one aggregated reply instead of one reply per message.
+    messages = build_conversation(all_messages, unread_guest_msgs[-1]["id_message"])
+    reply    = call_anthropic(system, messages)
 
-        if is_escalation(reply):
-            reason = json.loads(reply.strip())["reason"]
-            print(f"    → Escalating: {reason}")
-            notify_escalation(apartment_name, guest_msg["message"], reason)
-        else:
-            print(f"    → Replying: {reply[:80]}...")
-            send_message(id_thread, reply)
+    if is_escalation(reply):
+        reason = json.loads(reply.strip())["reason"]
+        print(f"    → Escalating: {reason}")
+        res      = reservation["data"][0]
+        last_msg = unread_guest_msgs[-1]
+        notify_escalation(apartment_name, res["label"], res["arrival"], res["departure"], last_msg["created_at"], last_msg["message"], reason)
+    else:
+        print(f"    → Replying: {reply[:80]}...")
+        send_message(id_thread, reply)
 
 
 # ── Main loop ─────────────────────────────────────────────────────────────────
