@@ -23,12 +23,16 @@ TELEGRAM_CHAT_ID   = os.getenv("TELEGRAM_CHAT_ID")
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 BASE_URL      = "https://api.krossbooking.com/v5"
-POLL_INTERVAL = 300  # seconds between polling cycles (5 min, well within rate limits)
+POLL_INTERVAL = 1000  # seconds between polling cycles (5 min, well within rate limits)
 
 # TESTING ONLY — remove this constant and the early-return check in process_thread() for full production.
 # Lists the apartments the bot is allowed to handle. All others are silently skipped.
 # Use the exact name_room_type string returned by Kross (e.g. as printed in the console logs).
-ACTIVE_APARTMENTS = {"Pellegrini 26"}
+ACTIVE_APARTMENTS = {"Costantino Nigra 29"}
+
+# Names that appear as last_message_from_name when a host/cohost sent the last message.
+# If the last sender is a known host, we skip get_thread() entirely — no reply needed.
+KNOWN_HOSTS = {"Matteo", "Nicolo", "Riccardo", "api"}
 
 # Global bearer token — fetched once on startup, auto-refreshed on 401.
 _token = None
@@ -42,6 +46,7 @@ def kross_post(endpoint, payload, token=None):
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
+    print(f"  [API] {time.strftime('%H:%M:%S')} POST {endpoint}")
     r = requests.post(f"{BASE_URL}{endpoint}", json=payload, headers=headers)
     r.raise_for_status()  # raises on 4xx/5xx so errors don't silently pass
     return r.json()
@@ -254,8 +259,14 @@ def process_thread(thread):
     if ACTIVE_APARTMENTS and apartment_name not in ACTIVE_APARTMENTS:
         return
 
+    # Pre-filter: last_message_from_name comes free from get_threads() with no extra API call.
+    # If the last message was sent by a known host, the host already replied — nothing to do.
+    if thread.get("last_message_from_name") in KNOWN_HOSTS:
+        return
+
     print(f"  Thread {id_thread} ({apartment_name})")
 
+    time.sleep(20)  # avoid hitting Kross rate limits on sequential get-thread calls
     detail       = get_thread(id_thread)
     all_messages = list(reversed(detail["data"]))  # chronological order, built once
 
@@ -273,14 +284,17 @@ def process_thread(thread):
                 unread_guest_msgs.append(m)
 
     if not unread_guest_msgs:
+        print(f"    → Skipped (already handled)")
         return
+
+    reservation = get_reservation(id_reservation)
+    res         = reservation["data"][0]
+    print(f"    Ospite: {res['label']} | Check-in: {res['arrival']} | Check-out: {res['departure']}")
 
     # If any unread guest message has no text, it's a photo — Claude can't see images,
     # so escalate the whole thread and let the host handle it.
     if any(not m.get("message") for m in unread_guest_msgs):
-        reservation = get_reservation(id_reservation)
-        res         = reservation["data"][0]
-        photo_msg   = next(m for m in unread_guest_msgs if not m.get("message"))
+        photo_msg = next(m for m in unread_guest_msgs if not m.get("message"))
         print(f"    → Photo detected, notifying host")
         notify(
             f"📷 *{apartment_name}*\n"
@@ -293,7 +307,6 @@ def process_thread(thread):
         return
 
     apartment_info = load_apartment_file(apartment_name)
-    reservation    = get_reservation(id_reservation)
 
     system = build_system_prompt(apartment_name, apartment_info, reservation)
 
@@ -305,7 +318,6 @@ def process_thread(thread):
     if is_escalation(reply):
         reason = json.loads(reply.strip())["reason"]
         print(f"    → Escalating: {reason}")
-        res      = reservation["data"][0]
         last_msg = unread_guest_msgs[-1]
         notify_escalation(apartment_name, res["label"], res["arrival"], res["departure"], last_msg["created_at"], last_msg["message"], reason)
     else:
@@ -325,7 +337,8 @@ def main():
         try:
             threads = get_threads()
             unread  = threads["data"]
-            print(f"\nPolling — {len(unread)} unread thread(s).")
+            active  = [t for t in unread if not ACTIVE_APARTMENTS or t.get("name_room_type") in ACTIVE_APARTMENTS]
+            print(f"\nPolling — {len(unread)} unread thread(s) total, {len(active)} in active apartments.")
 
             for thread in unread:
                 try:
