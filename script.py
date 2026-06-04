@@ -28,7 +28,7 @@ POLL_INTERVAL = 1000  # seconds between polling cycles (5 min, well within rate 
 # TESTING ONLY — remove this constant and the early-return check in process_thread() for full production.
 # Lists the apartments the bot is allowed to handle. All others are silently skipped.
 # Use the exact name_room_type string returned by Kross (e.g. as printed in the console logs).
-ACTIVE_APARTMENTS = {"Costantino Nigra 29"}
+ACTIVE_APARTMENTS = {"Costantino Nigra 29", "Petrella 4", "Terraggio 21", "Pellegrini 26"}
 
 # Names that appear as last_message_from_name when a host/cohost sent the last message.
 # If the last sender is a known host, we skip get_thread() entirely — no reply needed.
@@ -170,7 +170,7 @@ def build_conversation(all_messages, up_to_id_message):
     messages = []
     for msg in relevant:
         role = "user" if msg["user_role"] == "guest" else "assistant"
-        content = msg["message"]
+        content = msg["message"] or "[foto]"
         # Append translation inline so Claude understands non-Italian/English messages
         if msg.get("translated_message") and msg["translated_message"] != msg["message"]:
             content += f"\n(Translation: {msg['translated_message']})"
