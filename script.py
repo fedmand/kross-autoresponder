@@ -1,10 +1,12 @@
 # ── Imports ───────────────────────────────────────────────────────────────────
 import os           # read environment variables at runtime
 import re           # sanitize apartment names into safe filenames
+import random       # placeholder category pick until Claude classifies escalations
 import json         # parse Claude's escalation JSON
 import time         # sleep between polling cycles
 import requests     # make HTTP requests to Kross and Telegram APIs
 import anthropic    # official Anthropic SDK — wraps the Claude API
+import storage      # SQLite-backed notification store — dedup + shared GUI data
 from dotenv import load_dotenv
 
 
@@ -316,9 +318,29 @@ def process_thread(thread):
     reply    = call_anthropic(system, messages)
 
     if is_escalation(reply):
-        reason = json.loads(reply.strip())["reason"]
-        print(f"    → Escalating: {reason}")
+        reason   = json.loads(reply.strip())["reason"]
         last_msg = unread_guest_msgs[-1]
+
+        # Dedup: have we already escalated on this exact guest message? If so,
+        # Teo is already handling it — don't notify again on every poll cycle.
+        if storage.notification_exists(id_thread, last_msg["id_message"]):
+            print(f"    → Already notified for this message — skipping")
+            return
+
+        print(f"    → Escalating: {reason}")
+        storage.record_notification({
+            "id_thread":      id_thread,
+            "id_message":     last_msg["id_message"],
+            "id_reservation": id_reservation,
+            "category":       random.choice(["intervento_host", "riparazione", "checkin_checkout"]),
+            "home":           apartment_name,
+            "guest_name":     res["label"],
+            "channel":        res.get("channel"),
+            "check_in":       res["arrival"],
+            "check_out":      res["departure"],
+            "message":        last_msg["message"],
+            "summary":        reason,
+        })
         notify_escalation(apartment_name, res["label"], res["arrival"], res["departure"], last_msg["created_at"], last_msg["message"], reason)
     else:
         print(f"    → Replying: {reply[:80]}...")
@@ -332,6 +354,7 @@ def main():
     print("Starting Kross Autoresponder...")
     _token = get_auth_token()
     print("Authenticated.")
+    storage.init_db()
 
     while True:
         try:
