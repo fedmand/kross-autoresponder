@@ -1,0 +1,100 @@
+Kross Autoresponder — GUI Plan
+==============================
+
+Goal
+----
+An Airbnb-style dashboard for hosts to review ALL notifications produced by the
+AI bot (auto-answered + escalations), filter them, and mark them as handled.
+
+Branch split
+------------
+- Colleague's branch: produces & stores notifications (the data / backend).
+- My branch (GUI): reads & displays notifications, lets host act on them.
+
+CONFIRMED DECISIONS
+-------------------
+1. Scope: the dashboard shows ONLY notifications that require host intervention
+   (i.e. the bot's escalations). We do NOT log auto-answered messages. This is
+   simpler and matches what script.py already does (escalations -> Telegram); we
+   just need to persist those escalations instead of only sending them.
+   "Tutti" = all interventions.
+2. Filter model: category (single-select) + facets (combinable) + sort.
+   Categories (3): Tutti (all) / Riparazioni / Early-late check-in/out.
+   Sidebar order: Stato (date) first, then Categoria.
+3. booking_status (passata/presente/futura) is computed by the GUI for now,
+   from check_in/check_out vs today. May move to the backend later.
+4. Mock JSON includes all future-proof fields now, even if unused by the UI.
+5. Tech: Streamlit MVP now (Phase A); possibly FastAPI + React later (Phase B).
+6. Cards are clickable directly (no button); click opens the detail/zoom view.
+
+Data contract (mock shape — see gui/data/mock_notifications.json)
+----------------------------------------------------------------
+{
+  "id": "thread_1001",
+  "id_thread": 1001,
+  "id_reservation": 50001,
+  "category": "intervento_host",        # intervento_host | riparazione | checkin_checkout
+  "home": "Pellegrini 26",
+  "guest_name": "Marco Rossi",
+  "channel": "airbnb",                  # airbnb | booking | kross
+  "check_in": "2026-06-04",
+  "check_out": "2026-06-08",
+  "booking_date": "2026-05-12",
+  "message": "Il WiFi continua a non funzionare.",
+  "summary": "Problema WiFi persistente dopo le istruzioni",
+  "created_at": "2026-06-06 09:15",
+  "status": "pending",                  # pending | answered | resolved
+  "handled_by": null,                   # reserved for multi-host phase
+  "read_by": []                         # reserved for multi-host phase
+}
+
+Filters (UI)
+------------
+- Stato prenotazione (combinable): Passate / Presente / Future  [GUI-computed]
+- Categoria (single): Tutti / Riparazioni / Early-late check-in/out
+- Casa (combinable): one per apartment
+- Ordina per: Data notifica (chronological) | Data prenotazione
+- Later: Riparazioni / check-in-out detection by Claude refined, per-home views.
+
+Card content (Airbnb-style)
+---------------------------
+- Home name (+ category & stato badges)
+- Stay dates (+ guest name + channel)
+- Short summary: escalation reason (intervento_host/riparazione) or message
+  preview (auto_risposta)
+
+Interactions
+------------
+1. Phase 1 (DONE in MVP): click "Apri" -> zoom detail -> "Segna come gestita".
+   Currently local-only (session). When backend lands, this writes
+   status:"resolved" to the shared store so it disappears for all hosts.
+2. Phase 2 (later): deep-link to Kross on each card (have id_thread /
+   id_reservation; confirm Kross URL pattern). Airbnb deep-link = maybe later.
+3. Phase 3 (later): two host accounts + see each other's notifications
+   (handled_by / read_by fields already reserved).
+
+Project layout
+--------------
+gui/
+  app.py                     # Streamlit app
+  data/mock_notifications.json
+  requirements.txt
+  README.md
+
+Run: pip install -r gui/requirements.txt && streamlit run gui/app.py
+
+Open questions to settle with colleague
+---------------------------------------
+1. Storage format & location of the real data store (JSON vs SQLite vs DB)?
+2. Confirm backend can log ALL handled messages (not just escalations).
+3. Who owns booking_status long-term (GUI vs backend)?
+4. Refresh: auto-poll vs manual button?
+5. Confirm whether Kross exposes a per-thread URL (for Phase 2).
+
+Immediate next steps
+--------------------
+[x] Agree on the notification data format.
+[x] Build Streamlit GUI against mock data (filters + zoom + mark-as-handled).
+[ ] Colleague: implement persistence of ALL handled messages in that format.
+[ ] Swap load_notifications() from mock JSON to the real store.
+[ ] Later: add Kross deep-link + multi-host accounts.
