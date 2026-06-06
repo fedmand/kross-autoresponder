@@ -32,7 +32,6 @@ def init_db():
             channel         TEXT,
             check_in        TEXT,
             check_out       TEXT,
-            booking_date    TEXT,
             message         TEXT,
             summary         TEXT,
             created_at      TEXT NOT NULL,
@@ -63,14 +62,14 @@ def record_notification(notification):
     conn.execute("""
         INSERT INTO notifications (
             id_thread, id_message, id_reservation, category, home,
-            guest_name, channel, check_in, check_out, booking_date,
+            guest_name, channel, check_in, check_out,
             message, summary, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         notification["id_thread"], notification["id_message"], notification["id_reservation"],
         notification["category"], notification["home"], notification["guest_name"],
         notification["channel"], notification["check_in"], notification["check_out"],
-        notification["booking_date"], notification["message"], notification["summary"],
+        notification["message"], notification["summary"],
         time.strftime("%Y-%m-%d %H:%M:%S"),
     ))
     conn.commit()

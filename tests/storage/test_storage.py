@@ -26,7 +26,7 @@ fake_1 = {
     "id_thread": 9070, "id_message": 1001, "id_reservation": 5302,
     "category": "riparazione", "home": "Costantino Nigra 29",
     "guest_name": "Bariş Çal", "channel": "airbnb",
-    "check_in": "2026-05-22", "check_out": "2026-05-24", "booking_date": "2026-05-10",
+    "check_in": "2026-05-22", "check_out": "2026-05-24",
     "message": "La doccia perde acqua, potete mandare qualcuno?",
     "summary": "Problema di manutenzione che richiede intervento fisico",
 }
@@ -34,7 +34,7 @@ fake_2 = {
     "id_thread": 9070, "id_message": 1002, "id_reservation": 5302,
     "category": "checkin_checkout", "home": "Costantino Nigra 29",
     "guest_name": "Bariş Çal", "channel": "airbnb",
-    "check_in": "2026-05-22", "check_out": "2026-05-24", "booking_date": "2026-05-10",
+    "check_in": "2026-05-22", "check_out": "2026-05-24",
     "message": "Possiamo fare il check-out alle 13 invece delle 11?",
     "summary": "Richiesta di late check-out, serve approvazione host",
 }
