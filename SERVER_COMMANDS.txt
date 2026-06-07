@@ -1,0 +1,185 @@
+Kross Autoresponder — Server Commands
+======================================
+
+All commands run on the VPS via SSH:
+  ssh ubuntu@57.129.115.95
+
+Once connected, always move to the project folder first:
+  cd /home/ubuntu/kross-autoresponder
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+START
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Start the bot (AI autoresponder):
+  sudo systemctl start kross-bot
+
+Start the web dashboard:
+  sudo systemctl start kross-web
+
+Start both at once:
+  sudo systemctl start kross-bot kross-web
+
+Note: once started, both services survive terminal closes and reboots
+automatically — you do NOT need to keep an SSH session open.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STOP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Stop the bot:
+  sudo systemctl stop kross-bot
+
+Stop the web dashboard:
+  sudo systemctl stop kross-web
+
+Stop both at once:
+  sudo systemctl stop kross-bot kross-web
+
+Note: "stop" halts the service until you manually start it again or reboot.
+The service is still *enabled* (will restart on next reboot). To prevent
+that, also run:
+  sudo systemctl disable kross-bot kross-web
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STATUS — verify what is running
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Check both services at once:
+  sudo systemctl status kross-bot kross-web
+
+What to look for in the output:
+  Active: active (running)   → service is running correctly
+  Active: inactive (dead)    → service is stopped
+  Active: failed             → service crashed, check the logs
+
+Check what is actually listening on port 8000 (web dashboard):
+  ss -tlnp | grep 8000
+
+If that command returns nothing → nothing is serving the dashboard.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LOGS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Bot logs — live (press Ctrl+C to stop following):
+  sudo journalctl -u kross-bot -f
+
+Web dashboard logs — live:
+  sudo journalctl -u kross-web -f
+
+Both at once — live:
+  sudo journalctl -u kross-bot -u kross-web -f
+
+Last 50 lines of bot logs (no live follow):
+  sudo journalctl -u kross-bot --no-pager | tail -50
+
+Last 50 lines of web dashboard logs:
+  sudo journalctl -u kross-web --no-pager | tail -50
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RESTART (e.g. after a code update)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Pull latest code and restart both:
+  git pull
+  sudo systemctl restart kross-bot kross-web
+
+Restart bot only:
+  sudo systemctl restart kross-bot
+
+Restart web dashboard only:
+  sudo systemctl restart kross-web
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DISABLE & RE-ENABLE (survive reboots or not)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+There are two separate concepts:
+  stop/start   → controls whether the service is running RIGHT NOW
+  enable/disable → controls whether it starts AUTOMATICALLY after a reboot
+
+Fully pause everything (stop now + don't restart on reboot):
+  sudo systemctl stop kross-bot kross-web
+  sudo systemctl disable kross-bot kross-web
+
+Re-enable and start again after disabling:
+  sudo systemctl enable kross-bot kross-web
+  sudo systemctl start kross-bot kross-web
+
+Verify they are enabled (will survive reboot):
+  sudo systemctl is-enabled kross-bot kross-web
+  (output should be "enabled" for both)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REBOOTS — what happens and when
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+When does a reboot happen?
+  - OVH applies a kernel security patch (they warn by email 24-48h in advance,
+    happens rarely — a few times per year at most).
+  - OVH migrates the VPS to different hardware (also warned by email).
+  - The VPS runs out of memory and the OS watchdog reboots it (unlikely for
+    a lightweight app like this).
+  - You or your colleague manually run: sudo reboot
+  - You click "Restart" in the OVH control panel (ovh.com).
+
+What happens to services after a reboot:
+
+  Service state before reboot   | After reboot
+  ─────────────────────────────────────────────
+  enabled + running             | restarts automatically (~30s)
+  enabled + stopped             | restarts automatically (~30s)
+  disabled + stopped            | stays stopped — must be started manually
+
+Rule of thumb:
+  If you want the bot and dashboard to come back on their own after any
+  reboot (recommended for production), always keep them ENABLED.
+  Use "stop" only to pause temporarily; use "disable" only if you want
+  them off for a long period.
+
+Recommended: set up an OVH email alert in the OVH control panel
+(Alerts section) so you get notified if the VPS goes down unexpectedly.
+That way you know immediately if the bot has stopped replying to guests.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DATABASE — inspect notifications.db
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Open an interactive SQLite shell:
+  sqlite3 notifications.db
+
+Useful queries (run inside the shell):
+  -- List all pending notifications
+  SELECT id, home, guest_name, category, status, created_at
+  FROM notifications
+  WHERE status = 'pending'
+  ORDER BY created_at DESC;
+
+  -- Count notifications by status
+  SELECT status, COUNT(*) FROM notifications GROUP BY status;
+
+  -- Show everything (all records)
+  SELECT * FROM notifications ORDER BY created_at DESC LIMIT 20;
+
+  -- Exit
+  .quit
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WEBSITE URL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Dashboard (when kross-web is running):
+  http://57.129.115.95:8000
+
+Accessible from any browser — desktop, iPhone, Android — as long as
+kross-web is running on the VPS.
