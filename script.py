@@ -6,6 +6,9 @@ import time         # sleep between polling cycles
 import requests     # make HTTP requests to Kross and Telegram APIs
 import anthropic    # official Anthropic SDK — wraps the Claude API
 import storage      # SQLite-backed notification store — dedup + shared GUI data
+import logging      # structured, timestamped logging to file + console
+from logging.handlers import TimedRotatingFileHandler  # one log file per day
+from collections import deque, Counter  # rate-limit window + per-cycle tallies
 from datetime import datetime   # current Italian date/time for Claude's context
 from zoneinfo import ZoneInfo   # Europe/Rome timezone (handles CET/CEST automatically)
 from dotenv import load_dotenv
@@ -14,6 +17,28 @@ from dotenv import load_dotenv
 # ── Load credentials from .env ────────────────────────────────────────────────
 # Must run before any os.getenv() call.
 load_dotenv()
+
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+# Writes to a daily-rotating file (logs/bot.log, one file per day kept for 30 days)
+# AND to the console, so `journalctl -u kross-bot` keeps working unchanged.
+LOG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+
+_file_handler = TimedRotatingFileHandler(
+    os.path.join(LOG_DIR, "bot.log"),
+    when="midnight",     # roll over at 00:00 local time
+    backupCount=30,      # keep 30 days of history, then discard the oldest
+    encoding="utf-8",
+)
+_file_handler.suffix = "%Y-%m-%d"  # rotated files look like bot.log.2026-06-07
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+    handlers=[_file_handler, logging.StreamHandler()],
+)
+log = logging.getLogger("kross")
 
 KROSS_API_KEY  = os.getenv("KROSS_API_KEY")
 KROSS_HOTEL_ID = os.getenv("KROSS_HOTEL_ID")
@@ -40,6 +65,37 @@ KNOWN_HOSTS = {"Matteo", "Nicolo", "Riccardo", "api"}
 # Global bearer token — fetched once on startup, auto-refreshed on 401.
 _token = None
 
+# ── Kross rate-limit tracking ─────────────────────────────────────────────────
+# Documented Kross limits: 10/min, 300/hour, 5000/day. Every Kross call funnels
+# through kross_post(), so we count there. We keep the timestamps of the last
+# 24h of calls and, on each call, report usage and warn when nearing a limit.
+KROSS_LIMITS = {"1m": (60, 10), "1h": (3600, 300), "24h": (86400, 5000)}
+RATE_WARN_RATIO = 0.8  # warn once usage reaches 80% of any limit
+_call_times = deque()
+
+
+def _record_api_call():
+    now = time.time()
+    _call_times.append(now)
+    # Drop timestamps older than the largest window (24h) so the deque stays bounded.
+    while _call_times and now - _call_times[0] > 86400:
+        _call_times.popleft()
+
+    counts = {
+        name: sum(1 for t in _call_times if now - t <= window)
+        for name, (window, _limit) in KROSS_LIMITS.items()
+    }
+    log.info(
+        "[RATE] kross calls — "
+        + "  ".join(f"{name}={counts[name]}/{limit}" for name, (_w, limit) in KROSS_LIMITS.items())
+    )
+    for name, (_window, limit) in KROSS_LIMITS.items():
+        if counts[name] >= RATE_WARN_RATIO * limit:
+            log.warning(
+                f"[RATE] approaching Kross {name} limit: {counts[name]}/{limit} "
+                f"({counts[name] / limit:.0%})"
+            )
+
 
 # ── Generic Kross HTTP helper ─────────────────────────────────────────────────
 def kross_post(endpoint, payload, token=None):
@@ -49,8 +105,9 @@ def kross_post(endpoint, payload, token=None):
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
-    print(f"  [API] {time.strftime('%H:%M:%S')} POST {endpoint}")
+    log.info(f"[API] POST {endpoint}")
     r = requests.post(f"{BASE_URL}{endpoint}", json=payload, headers=headers)
+    _record_api_call()  # count the call regardless of HTTP status — it still hit Kross
     r.raise_for_status()  # raises on 4xx/5xx so errors don't silently pass
     return r.json()
 
@@ -63,7 +120,7 @@ def kross_call(endpoint, payload):
         return kross_post(endpoint, payload, token=_token)
     except requests.HTTPError as e:
         if e.response.status_code == 401:
-            print("Token expired — re-authenticating...")
+            log.info("Token expired — re-authenticating...")
             _token = get_auth_token()
             return kross_post(endpoint, payload, token=_token)
         raise
@@ -302,14 +359,14 @@ def process_thread(thread):
 
     # TESTING ONLY — remove this block for full production (together with ACTIVE_APARTMENTS above).
     if ACTIVE_APARTMENTS and apartment_name not in ACTIVE_APARTMENTS:
-        return
+        return "skip"
 
     # Pre-filter: last_message_from_name comes free from get_threads() with no extra API call.
     # If the last message was sent by a known host, the host already replied — nothing to do.
     if thread.get("last_message_from_name") in KNOWN_HOSTS:
-        return
+        return "skip"
 
-    print(f"  Thread {id_thread} ({apartment_name})")
+    log.info(f"Thread {id_thread} ({apartment_name})")
 
     time.sleep(20)  # avoid hitting Kross rate limits on sequential get-thread calls
     detail       = get_thread(id_thread)
@@ -329,18 +386,18 @@ def process_thread(thread):
                 unread_guest_msgs.append(m)
 
     if not unread_guest_msgs:
-        print(f"    → Skipped (already handled)")
-        return
+        log.info("    → Skipped (already handled)")
+        return "skip"
 
     reservation = get_reservation(id_reservation)
     res         = reservation["data"][0]
-    print(f"    Ospite: {res['label']} | Check-in: {res['arrival']} | Check-out: {res['departure']}")
+    log.info(f"    Ospite: {res['label']} | Check-in: {res['arrival']} | Check-out: {res['departure']}")
 
     # If any unread guest message has no text, it's a photo — Claude can't see images,
     # so escalate the whole thread and let the host handle it.
     if any(not m.get("message") for m in unread_guest_msgs):
         photo_msg = next(m for m in unread_guest_msgs if not m.get("message"))
-        print(f"    → Photo detected, notifying host")
+        log.info("    → Photo detected, notifying host")
         notify(
             f"📷 *{apartment_name}*\n"
             f"Ospite: *{photo_msg['from_first_name']}*\n"
@@ -349,7 +406,7 @@ def process_thread(thread):
             f"L'ospite ha mandato una foto. Controlla su Kross.",
             parse_mode="Markdown",
         )
-        return
+        return "photo"
 
     apartment_info = load_apartment_file(apartment_name)
 
@@ -373,10 +430,10 @@ def process_thread(thread):
         # Dedup: have we already escalated on this exact guest message? If so,
         # Teo is already handling it — don't notify again on every poll cycle.
         if storage.notification_exists(id_thread, last_msg["id_message"]):
-            print(f"    → Already notified for this message — skipping")
-            return
+            log.info("    → Already notified for this message — skipping")
+            return "duplicate"
 
-        print(f"    → Escalating ({category}): {reason}")
+        log.info(f"    → Escalating ({category}): {reason}")
         storage.record_notification({
             "id_thread":      id_thread,
             "id_message":     last_msg["id_message"],
@@ -391,38 +448,52 @@ def process_thread(thread):
             "summary":        reason,
         })
         notify_escalation(apartment_name, res["label"], res["arrival"], res["departure"], last_msg["created_at"], last_msg["message"], reason)
+        return "escalate"
     else:
-        print(f"    → Replying: {reply[:80]}...")
+        log.info(f"    → Replying: {reply[:80]}...")
         send_message(id_thread, reply)
+        return "reply"
 
 
 # ── Main loop ─────────────────────────────────────────────────────────────────
 def main():
     global _token
 
-    print("Starting Kross Autoresponder...")
+    log.info("Starting Kross Autoresponder...")
     _token = get_auth_token()
-    print("Authenticated.")
+    log.info("Authenticated.")
     storage.init_db()
 
     while True:
+        cycle_start = time.time()
+        stats = Counter()
         try:
             threads = get_threads()
             unread  = threads["data"]
             active  = [t for t in unread if not ACTIVE_APARTMENTS or t.get("name_room_type") in ACTIVE_APARTMENTS]
-            print(f"\nPolling — {len(unread)} unread thread(s) total, {len(active)} in active apartments.")
+            log.info(f"Polling — {len(unread)} unread thread(s) total, {len(active)} in active apartments.")
 
             for thread in unread:
                 try:
-                    process_thread(thread)
+                    outcome = process_thread(thread) or "skip"
+                    stats[outcome] += 1
                 except Exception as e:
-                    print(f"  Error on thread {thread['id_thread']}: {e}")
+                    stats["error"] += 1
+                    log.exception(f"Error on thread {thread['id_thread']}: {e}")
                     notify_error(thread.get("name_room_type", f"thread {thread['id_thread']}"), e)
 
         except Exception as e:
-            print(f"Error polling: {e}")
+            stats["error"] += 1
+            log.exception(f"Error polling: {e}")
 
-        print(f"Sleeping {POLL_INTERVAL}s...")
+        duration = time.time() - cycle_start
+        log.info(
+            f"[CYCLE] done in {duration:.1f}s — "
+            f"replies={stats['reply']} escalations={stats['escalate']} "
+            f"photos={stats['photo']} duplicates={stats['duplicate']} "
+            f"skipped={stats['skip']} errors={stats['error']}"
+        )
+        log.info(f"Sleeping {POLL_INTERVAL}s...")
         time.sleep(POLL_INTERVAL)
 
 
