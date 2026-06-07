@@ -1,12 +1,13 @@
 # ── Imports ───────────────────────────────────────────────────────────────────
 import os           # read environment variables at runtime
 import re           # sanitize apartment names into safe filenames
-import random       # placeholder category pick until Claude classifies escalations
 import json         # parse Claude's escalation JSON
 import time         # sleep between polling cycles
 import requests     # make HTTP requests to Kross and Telegram APIs
 import anthropic    # official Anthropic SDK — wraps the Claude API
 import storage      # SQLite-backed notification store — dedup + shared GUI data
+from datetime import datetime   # current Italian date/time for Claude's context
+from zoneinfo import ZoneInfo   # Europe/Rome timezone (handles CET/CEST automatically)
 from dotenv import load_dotenv
 
 
@@ -133,7 +134,23 @@ Escalate when:
 - The question requires information not in the apartment info and not answerable with certainty
 - Any situation involving a complaint, dissatisfaction, or request for compensation
 
+When escalating, also add a "category" field to the JSON — but ONLY if the situation clearly matches one of these two:
+- "riparazione": the issue requires a physical repair or maintenance intervention (broken appliance, water leak, broken lock, AC not working, boiler issue, etc.)
+- "checkin_checkout": the guest is explicitly requesting an early check-in or a late check-out.
+If neither applies, omit the "category" field entirely.
+
+Examples:
+{"action": "escalate", "reason": "Perdita d'acqua sotto il lavandino", "category": "riparazione"}
+{"action": "escalate", "reason": "Richiesta late check-out alle 14:00", "category": "checkin_checkout"}
+{"action": "escalate", "reason": "Ospite arrabbiato per il rumore"}
+
 Do NOT promise to check, verify, or get back to the guest — if you cannot give a definitive answer right now, escalate.
+
+CRITICAL — output format rules:
+- When escalating, output ONLY the raw JSON object: no markdown code fences, no backticks, no text before or after it.
+- When NOT escalating, write ONLY the plain-text reply for the guest. NEVER include any JSON, curly braces, "action", "escalate", or any machine-readable content in a guest-facing reply. The escalation JSON is read by the system, never shown to the guest.
+
+Pay close attention to today's date (provided below in Italian time) when reasoning about check-in/check-out timing. Do NOT say "domani" / "oggi" unless it is actually correct relative to today's date — always compute the real date and refer to it explicitly (e.g. "il 18 giugno").
 
 Otherwise write a direct, helpful reply. Do not include any preamble or sign-off."""
 
@@ -144,8 +161,12 @@ def build_system_prompt(apartment_name, apartment_info, reservation):
     res   = reservation["data"][0]
     rooms = res.get("rooms", [{}])[0]
 
+    now_it = datetime.now(ZoneInfo("Europe/Rome"))
+
     lines = [
         SYSTEM_PROMPT_BASE,
+        "\n--- Current Date/Time (Italy) ---",
+        f"Oggi è {now_it.strftime('%A %d %B %Y, %H:%M')} (ora italiana).",
         "\n--- Reservation Context ---",
         f"Apartment: {apartment_name}",
         f"Check-in: {res['arrival']} | Check-out: {res['departure']}",
@@ -202,13 +223,35 @@ def call_anthropic(system, messages):
     return msg.content[0].text
 
 
+def extract_escalation(reply):
+    # Returns the parsed escalation dict if Claude's reply contains the escalation
+    # JSON, otherwise None. Robust against Claude wrapping the JSON in markdown
+    # fences or stray text — we locate the first {...} block and parse that, so a
+    # malformed wrapper never causes the raw JSON to leak to the guest.
+    if not isinstance(reply, str):
+        return None
+
+    # Fast path: the whole reply is the JSON object.
+    candidates = [reply.strip()]
+
+    # Fallback: pull out the first {...} block found anywhere in the text.
+    match = re.search(r"\{.*\}", reply, re.DOTALL)
+    if match:
+        candidates.append(match.group(0))
+
+    for candidate in candidates:
+        try:
+            data = json.loads(candidate)
+        except (json.JSONDecodeError, TypeError):
+            continue
+        if isinstance(data, dict) and data.get("action") == "escalate":
+            return data
+    return None
+
+
 def is_escalation(reply):
     # Returns True if Claude responded with the escalation JSON instead of a reply.
-    try:
-        data = json.loads(reply.strip())
-        return isinstance(data, dict) and data.get("action") == "escalate"
-    except (json.JSONDecodeError, AttributeError):
-        return False
+    return extract_escalation(reply) is not None
 
 
 # ── Formatting helpers ────────────────────────────────────────────────────────
@@ -317,8 +360,14 @@ def process_thread(thread):
     messages = build_conversation(all_messages, unread_guest_msgs[-1]["id_message"])
     reply    = call_anthropic(system, messages)
 
-    if is_escalation(reply):
-        reason   = json.loads(reply.strip())["reason"]
+    escalation_data = extract_escalation(reply)
+    if escalation_data:
+        reason   = escalation_data["reason"]
+        # Use Claude's category if it provided one; fall back to the generic
+        # intervento_host so the notification still appears under "Tutti".
+        category = escalation_data.get("category", "intervento_host")
+        if category not in ("riparazione", "checkin_checkout"):
+            category = "intervento_host"
         last_msg = unread_guest_msgs[-1]
 
         # Dedup: have we already escalated on this exact guest message? If so,
@@ -327,12 +376,12 @@ def process_thread(thread):
             print(f"    → Already notified for this message — skipping")
             return
 
-        print(f"    → Escalating: {reason}")
+        print(f"    → Escalating ({category}): {reason}")
         storage.record_notification({
             "id_thread":      id_thread,
             "id_message":     last_msg["id_message"],
             "id_reservation": id_reservation,
-            "category":       random.choice(["intervento_host", "riparazione", "checkin_checkout"]),
+            "category":       category,
             "home":           apartment_name,
             "guest_name":     res["label"],
             "channel":        res.get("channel"),
