@@ -397,7 +397,26 @@ def process_thread(thread):
     # so escalate the whole thread and let the host handle it.
     if any(not m.get("message") for m in unread_guest_msgs):
         photo_msg = next(m for m in unread_guest_msgs if not m.get("message"))
+
+        # Dedup: same logic as text escalations — skip if already stored.
+        if storage.notification_exists(id_thread, photo_msg["id_message"]):
+            log.info("    → Photo already notified — skipping")
+            return "duplicate"
+
         log.info("    → Photo detected, notifying host")
+        storage.record_notification({
+            "id_thread":      id_thread,
+            "id_message":     photo_msg["id_message"],
+            "id_reservation": id_reservation,
+            "category":       "intervento_host",
+            "home":           apartment_name,
+            "guest_name":     res["label"],
+            "channel":        res.get("channel"),
+            "check_in":       res["arrival"],
+            "check_out":      res["departure"],
+            "message":        "[foto]",
+            "summary":        "L'ospite ha mandato una foto — intervento necessario.",
+        })
         notify(
             f"📷 *{apartment_name}*\n"
             f"Ospite: *{photo_msg['from_first_name']}*\n"
