@@ -3,8 +3,8 @@ Kross Autoresponder — GUI Plan
 
 Goal
 ----
-An Airbnb-style dashboard for hosts to review ALL notifications produced by the
-AI bot (auto-answered + escalations), filter them, and mark them as handled.
+An Airbnb-style dashboard for hosts to review notifications produced by the AI
+bot (escalations only), filter them, and mark them as handled.
 
 Branch split
 ------------
@@ -14,87 +14,167 @@ Branch split
 CONFIRMED DECISIONS
 -------------------
 1. Scope: the dashboard shows ONLY notifications that require host intervention
-   (i.e. the bot's escalations). We do NOT log auto-answered messages. This is
-   simpler and matches what script.py already does (escalations -> Telegram); we
-   just need to persist those escalations instead of only sending them.
-   "Tutti" = all interventions.
+   (the bot's escalations). "Tutti" = all interventions.
 2. Filter model: category (single-select) + facets (combinable) + sort.
-   Categories (3): Tutti (all) / Riparazioni / Early-late check-in/out.
+   Categories (3): Tutti / Riparazioni / Early-late check-in/out.
    Sidebar order: Stato (date) first, then Categoria.
-3. booking_status (passata/presente/futura) is computed by the GUI for now,
-   from check_in/check_out vs today. May move to the backend later.
-4. Mock JSON includes all future-proof fields now, even if unused by the UI.
-5. Tech: Streamlit MVP now (Phase A); possibly FastAPI + React later (Phase B).
-6. Cards are clickable directly (no button); click opens the detail/zoom view.
+3. booking_status (passata/presente/futura) computed by the GUI from
+   check_in/check_out vs today.
+4. Storage: SQLite (notifications.db), shared by bot and GUI on the same machine.
+   load_notifications() falls back to mock JSON if the DB doesn't exist yet.
+5. "Segna come gestita" writes status:"resolved" to the DB (real, persistent).
 
-Data contract (mock shape — see gui/data/mock_notifications.json)
-----------------------------------------------------------------
-{
-  "id": "thread_1001",
-  "id_thread": 1001,
-  "id_reservation": 50001,
-  "category": "intervento_host",        # intervento_host | riparazione | checkin_checkout
-  "home": "Pellegrini 26",
-  "guest_name": "Marco Rossi",
-  "channel": "airbnb",                  # airbnb | booking | kross
-  "check_in": "2026-06-04",
-  "check_out": "2026-06-08",
-  "booking_date": "2026-05-12",
-  "message": "Il WiFi continua a non funzionare.",
-  "summary": "Problema WiFi persistente dopo le istruzioni",
-  "created_at": "2026-06-06 09:15",
-  "status": "pending",                  # pending | answered | resolved
-  "handled_by": null,                   # reserved for multi-host phase
-  "read_by": []                         # reserved for multi-host phase
-}
+Data contract (SQLite table: notifications)
+-------------------------------------------
+Column          Type      Notes
+-----------     -------   ------------------------------------------------
+id              INTEGER   primary key, auto-increment
+id_thread       INTEGER   Kross thread id
+id_message      INTEGER   dedup key — one notification per guest message
+id_reservation  INTEGER
+category        TEXT      intervento_host | riparazione | checkin_checkout
+home            TEXT      apartment name (matches Kross name_room_type)
+guest_name      TEXT
+channel         TEXT      airbnb | booking | kross
+check_in        TEXT      YYYY-MM-DD
+check_out       TEXT      YYYY-MM-DD
+message         TEXT      full guest message
+summary         TEXT      escalation reason (produced by Claude)
+created_at      TEXT      YYYY-MM-DD HH:MM:SS (set by storage.py)
+status          TEXT      pending | resolved
+handled_by      TEXT      reserved for multi-host phase
+read_by         TEXT      reserved for multi-host phase
+
+UNIQUE constraint on (id_thread, id_message) — prevents duplicate escalations.
+Resolved records are kept in the DB (anti-re-notification safety net for the bot).
 
 Filters (UI)
 ------------
 - Stato prenotazione (combinable): Passate / Presente / Future  [GUI-computed]
 - Categoria (single): Tutti / Riparazioni / Early-late check-in/out
 - Casa (combinable): one per apartment
-- Ordina per: Data notifica (chronological) | Data prenotazione
-- Later: Riparazioni / check-in-out detection by Claude refined, per-home views.
+- Ordina per: Data notifica | Data prenotazione
 
 Card content (Airbnb-style)
 ---------------------------
-- Home name (+ category & stato badges)
-- Stay dates (+ guest name + channel)
-- Short summary: escalation reason (intervento_host/riparazione) or message
-  preview (auto_risposta)
+- Home name + stato & category badges
+- Stay dates + guest name + channel
+- Short summary (escalation reason from Claude)
+- "Apri" button -> detail view -> "Segna come gestita"
 
-Interactions
-------------
-1. Phase 1 (DONE in MVP): click "Apri" -> zoom detail -> "Segna come gestita".
-   Currently local-only (session). When backend lands, this writes
-   status:"resolved" to the shared store so it disappears for all hosts.
-2. Phase 2 (later): deep-link to Kross on each card (have id_thread /
-   id_reservation; confirm Kross URL pattern). Airbnb deep-link = maybe later.
-3. Phase 3 (later): two host accounts + see each other's notifications
-   (handled_by / read_by fields already reserved).
-
-Project layout
---------------
+Current project layout
+----------------------
 gui/
-  app.py                     # Streamlit app
-  data/mock_notifications.json
+  app.py                       # Streamlit MVP
+  data/mock_notifications.json # fallback data (DB not yet created)
   requirements.txt
   README.md
+storage.py                     # SQLite data-access layer (shared by bot + GUI)
+notifications.db               # created at first bot run (gitignored)
+script.py                      # the AI bot
 
-Run: pip install -r gui/requirements.txt && streamlit run gui/app.py
 
-Open questions to settle with colleague
----------------------------------------
-1. Storage format & location of the real data store (JSON vs SQLite vs DB)?
-2. Confirm backend can log ALL handled messages (not just escalations).
-3. Who owns booking_status long-term (GUI vs backend)?
-4. Refresh: auto-poll vs manual button?
-5. Confirm whether Kross exposes a per-thread URL (for Phase 2).
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MIGRATION PLAN: Streamlit → FastAPI + HTML/CSS on a single VPS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Immediate next steps
---------------------
-[x] Agree on the notification data format.
-[x] Build Streamlit GUI against mock data (filters + zoom + mark-as-handled).
-[ ] Colleague: implement persistence of ALL handled messages in that format.
-[ ] Swap load_notifications() from mock JSON to the real store.
-[ ] Later: add Kross deep-link + multi-host accounts.
+Why migrate
+-----------
+Streamlit Community Cloud has a read-only / ephemeral filesystem — notifications.db
+can't live there. The bot runs on a different machine, so the GUI on Streamlit
+Cloud can never see the DB file. The fix: move everything onto one server.
+
+Target architecture (one cheap VPS, e.g. €5-10/month)
+------------------------------------------------------
+  script.py      runs as a background service (systemd or screen)
+  notifications.db   single file on disk, shared by everything on this machine
+  FastAPI        serves notifications as JSON (the "waiter" between DB and UI)
+  HTML/CSS UI    the host dashboard, served by FastAPI as static pages
+
+Why FastAPI + plain HTML (not React, not Streamlit)
+---------------------------------------------------
+- The UI is not complex: cards, three filters, a detail view, one button.
+  Plain HTML + CSS is enough and gives full design control.
+- FastAPI is pure Python — nothing new to learn on the server side.
+- If React is ever needed later, the FastAPI backend stays exactly the same;
+  only the HTML files get replaced.
+- No filesystem limitations, no ephemeral storage, no third-party hosting
+  dependency.
+
+What changes vs what stays the same
+------------------------------------
+STAYS THE SAME:
+  script.py      (no changes)
+  storage.py     (no changes)
+  notifications.db format (no changes)
+  data contract / field names (no changes)
+
+REPLACED:
+  gui/app.py (Streamlit)  ->  a FastAPI app with HTML templates
+
+The filter logic, booking_status computation, and mark_resolved call just move
+from app.py into FastAPI route functions. The storage.py API is identical.
+
+New project layout after migration
+-----------------------------------
+script.py
+storage.py
+notifications.db
+web/
+  main.py              # FastAPI app (routes + serves HTML)
+  templates/
+    index.html         # notification list with filters
+    detail.html        # single notification detail + resolve button
+  static/
+    style.css          # card styles (same design as current Streamlit app)
+
+FastAPI routes (minimum viable)
+--------------------------------
+  GET  /                          -> renders index.html with filtered list
+  GET  /notification/{id}         -> renders detail.html for one notification
+  POST /notification/{id}/resolve -> calls storage.mark_resolved(), redirects
+  GET  /api/notifications         -> returns JSON (for future use / debugging)
+
+How the filters work on the server side
+----------------------------------------
+The host opens / with optional query params, e.g.:
+  /?category=riparazione&stato=presente&casa=Pellegrini+26
+FastAPI reads the params, filters the DB rows, passes them to the template.
+No JavaScript needed for the core flow.
+
+Deployment steps (when ready)
+------------------------------
+1. Rent a VPS (DigitalOcean, Hetzner, OVH — any Ubuntu box).
+2. Install Python, clone the repo, pip install fastapi uvicorn jinja2.
+3. Run FastAPI:  uvicorn web.main:app --host 0.0.0.0 --port 80
+4. Run the bot:  python script.py  (as a systemd service or in screen/tmux)
+5. Point a domain at the VPS IP (optional but recommended).
+6. Add HTTPS with Let's Encrypt (certbot) — mandatory before real guest data.
+7. Add a simple login (HTTP Basic Auth or a password page) — mandatory before
+   exposing to the public internet.
+
+Deferred features (same priority as before, just on the new stack)
+------------------------------------------------------------------
+- Deep-link to Kross per-thread URL on each card (need to confirm URL pattern).
+- Two host accounts + per-user read state (handled_by / read_by already in DB).
+- Category auto-detection by Claude (riparazione vs checkin_checkout vs generic).
+- Real-time refresh (Server-Sent Events via FastAPI — easy to add later).
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IMMEDIATE NEXT STEPS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[x] Agree on notification data format.
+[x] Build Streamlit MVP (filters + zoom + mark-as-handled).
+[x] Colleague: persist escalations to SQLite via storage.py.
+[x] Wire gui/app.py to storage.py (load_notifications + mark_resolved).
+[x] Seed DB with test notifications for local testing.
+
+[ ] Test locally with real Kross API calls hitting the bot -> DB -> GUI.
+[ ] Confirm Kross per-thread URL pattern (for deep-link feature).
+[ ] Set up VPS.
+[ ] Build web/main.py (FastAPI) + templates/index.html + style.css.
+[ ] Deploy: script.py as systemd service, FastAPI with uvicorn.
+[ ] Add HTTPS (certbot) + basic login before going live.
+[ ] Decommission Streamlit Cloud deployment.
