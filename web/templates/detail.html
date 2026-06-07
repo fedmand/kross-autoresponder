@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ n.home }} — Notifica{% endblock %}
+
+{% block content %}
+<a class="back" href="/{% if next %}?{{ next }}{% endif %}">← Indietro</a>
+
+<header class="detail-head">
+    <h1>{{ n.home }}</h1>
+    <div class="badges">
+        <span class="badge" style="background:{{ n.stato_badge.bg }};color:{{ n.stato_badge.fg }};">{{ n.stato_badge.label }}</span>
+        <span class="badge" style="background:{{ n.cat_badge.bg }};color:{{ n.cat_badge.fg }};">{{ n.cat_badge.label }}</span>
+    </div>
+</header>
+
+<dl class="meta">
+    <div><dt>Ospite</dt><dd>{{ n.guest_name }}</dd></div>
+    <div><dt>Canale</dt><dd>{{ n.channel }}</dd></div>
+    <div><dt>Check-in</dt><dd>{{ n.check_in_fmt }}</dd></div>
+    <div><dt>Check-out</dt><dd>{{ n.check_out_fmt }}</dd></div>
+    <div><dt>Prenotato il</dt><dd>{{ n.booking_date_fmt }}</dd></div>
+    <div><dt>Ricevuto</dt><dd>{{ n.created_at }}</dd></div>
+</dl>
+
+<section class="block">
+    <h2>Messaggio dell'ospite</h2>
+    <p class="msg">{{ n.message }}</p>
+</section>
+
+<section class="block">
+    <h2>Perché serve l'host</h2>
+    <p class="reason">{{ n.summary }}</p>
+</section>
+
+<form class="resolve" method="post" action="/notification/{{ n.id }}/resolve">
+    <input type="hidden" name="next" value="{{ next }}">
+    <button type="submit" class="btn btn-primary btn-resolve">Segna come gestita</button>
+</form>
+{% endblock %}
