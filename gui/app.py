@@ -10,9 +10,14 @@ Run with:  streamlit run gui/app.py
 
 import json
 import os
+import sys
 from datetime import date, datetime
 
 import streamlit as st
+
+# storage.py lives in the repo root (one level above gui/).
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import storage
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 DATA_PATH = os.path.join(os.path.dirname(__file__), "data", "mock_notifications.json")
@@ -43,6 +48,20 @@ STATO_ORDER = ["presente", "futura", "passata"]
 
 # ── Data loading ──────────────────────────────────────────────────────────────
 def load_notifications():
+    """
+    Use the real SQLite DB if it exists; fall back to mock JSON otherwise.
+    This lets you develop against mock data before the bot has run even once.
+    """
+    if os.path.exists(storage.DB_PATH):
+        rows = storage.get_pending_notifications()
+        for r in rows:
+            # booking_date isn't in the DB schema — use check_in as a fallback
+            # so the sort-by-booking-date option still works gracefully.
+            r.setdefault("booking_date", r.get("check_in", ""))
+            # DB id is an integer; stringify it so card keys stay consistent.
+            r["id"] = str(r["id"])
+        return rows
+    # DB not created yet (bot hasn't run) — use mock JSON for local dev.
     with open(DATA_PATH, encoding="utf-8") as f:
         return json.load(f)
 
@@ -197,13 +216,17 @@ def render_detail(n):
     st.warning(n["summary"])
 
     st.divider()
-    # Phase 1 interaction: resolve/cancel (local-only for now — see README).
     if st.button("Segna come gestita", type="primary"):
+        if os.path.exists(storage.DB_PATH):
+            storage.mark_resolved(int(n["id"]))
+        # also update local set so the card disappears instantly on rerun
         st.session_state.resolved.add(n["id"])
         st.session_state.selected_id = None
         st.toast("Notifica segnata come gestita.")
         st.rerun()
-    st.caption("Nota: per ora 'gestita' agisce solo localmente (nessun salvataggio sul backend).")
+
+    source = "SQLite DB" if os.path.exists(storage.DB_PATH) else "mock JSON (DB non ancora creato)"
+    st.caption(f"Fonte dati: {source}")
 
 
 # ── Sidebar filters ───────────────────────────────────────────────────────────

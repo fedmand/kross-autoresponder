@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Notifiche host{% endblock %}
+
+{% set active_count = stato_selected|length + casa_selected|length + (1 if category != 'tutti' else 0) + (1 if sort != 'created_at' else 0) %}
+
+{% block content %}
+<header class="topbar">
+    <div class="topbar-text">
+        <div class="app-title">🏠 Notifiche host</div>
+        <div class="app-sub">{{ count }} notifiche{% if not using_db %} · dati di esempio (DB non ancora creato){% endif %}</div>
+    </div>
+    <button type="button" class="btn-filter" id="openFilters">
+        Filtri{% if active_count %} <span class="filter-count">{{ active_count }}</span>{% endif %}
+    </button>
+</header>
+
+<main class="list">
+    {% if not notifications %}
+    <p class="empty">Nessuna notifica con questi filtri.</p>
+    {% endif %}
+
+    {% for n in notifications %}
+    <a class="card-link" href="/notification/{{ n.id }}{% if query_string %}?next={{ query_string | urlencode }}{% endif %}">
+        <article class="card">
+            <div class="card-home">
+                {{ n.home }}
+                <span class="badges">
+                    <span class="badge" style="background:{{ n.stato_badge.bg }};color:{{ n.stato_badge.fg }};">{{ n.stato_badge.label }}</span>
+                    <span class="badge" style="background:{{ n.cat_badge.bg }};color:{{ n.cat_badge.fg }};">{{ n.cat_badge.label }}</span>
+                </span>
+            </div>
+            <div class="card-dates">{{ n.dates }} &nbsp;·&nbsp; <span class="guest">{{ n.guest_name }} · {{ n.channel }}</span></div>
+            <div class="card-summary">{{ n.summary }}</div>
+        </article>
+    </a>
+    {% endfor %}
+</main>
+
+<!-- ── Filters drawer (slides in from the right) ────────────────── -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="filterDrawer" aria-hidden="true">
+    <div class="drawer-head">
+        <span>Filtri</span>
+        <button type="button" class="drawer-close" id="closeFilters" aria-label="Chiudi">&times;</button>
+    </div>
+
+    <form class="filters" method="get" action="/">
+        <!-- Stato (date) filter first, then category -->
+        <fieldset class="filter-group">
+            <legend>Stato prenotazione</legend>
+            <div class="chips">
+                {% for key in stato_order %}
+                <label class="chip {% if key in stato_selected %}chip-on{% endif %}">
+                    <input type="checkbox" name="stato" value="{{ key }}"
+                           {% if key in stato_selected %}checked{% endif %}>
+                    {{ stato_labels[key] }}
+                </label>
+                {% endfor %}
+            </div>
+        </fieldset>
+
+        <fieldset class="filter-group">
+            <legend>Categoria</legend>
+            <div class="chips">
+                {% for key, label in category_labels.items() %}
+                <label class="chip {% if category == key %}chip-on{% endif %}">
+                    <input type="radio" name="category" value="{{ key }}"
+                           {% if category == key %}checked{% endif %}>
+                    {{ label }}
+                </label>
+                {% endfor %}
+            </div>
+        </fieldset>
+
+        <fieldset class="filter-group">
+            <legend>Casa</legend>
+            <div class="chips">
+                {% for home in homes %}
+                <label class="chip {% if home in casa_selected %}chip-on{% endif %}">
+                    <input type="checkbox" name="casa" value="{{ home }}"
+                           {% if home in casa_selected %}checked{% endif %}>
+                    {{ home }}
+                </label>
+                {% endfor %}
+            </div>
+        </fieldset>
+
+        <fieldset class="filter-group">
+            <legend>Ordina per</legend>
+            <select name="sort">
+                <option value="created_at" {% if sort == "created_at" %}selected{% endif %}>Data notifica</option>
+                <option value="booking_date" {% if sort == "booking_date" %}selected{% endif %}>Data prenotazione</option>
+            </select>
+        </fieldset>
+
+        <div class="filter-actions">
+            <button type="submit" class="btn btn-primary">Applica filtri</button>
+            <a class="btn btn-link" href="/">Reset</a>
+        </div>
+    </form>
+</aside>
+{% endblock %}

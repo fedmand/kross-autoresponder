@@ -59,31 +59,35 @@ def record_notification(notification):
     # notification: dict with keys matching the table columns, minus
     # created_at/status/handled_by/read_by, which are set here.
     conn = sqlite3.connect(DB_PATH)
-    conn.execute("""
-        INSERT INTO notifications (
-            id_thread, id_message, id_reservation, category, home,
-            guest_name, channel, check_in, check_out,
-            message, summary, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        notification["id_thread"], notification["id_message"], notification["id_reservation"],
-        notification["category"], notification["home"], notification["guest_name"],
-        notification["channel"], notification["check_in"], notification["check_out"],
-        notification["message"], notification["summary"],
-        time.strftime("%Y-%m-%d %H:%M:%S"),
-    ))
-    conn.commit()
-    conn.close()
+    try:
+        conn.execute("""
+            INSERT INTO notifications (
+                id_thread, id_message, id_reservation, category, home,
+                guest_name, channel, check_in, check_out,
+                message, summary, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            notification["id_thread"], notification["id_message"], notification["id_reservation"],
+            notification["category"], notification["home"], notification["guest_name"],
+            notification["channel"], notification["check_in"], notification["check_out"],
+            notification["message"], notification["summary"],
+            time.strftime("%Y-%m-%d %H:%M:%S"),
+        ))
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def mark_resolved(notification_id, handled_by=None):
     conn = sqlite3.connect(DB_PATH)
-    conn.execute(
-        "UPDATE notifications SET status = 'resolved', handled_by = ? WHERE id = ?",
-        (handled_by, notification_id),
-    )
-    conn.commit()
-    conn.close()
+    try:
+        conn.execute(
+            "UPDATE notifications SET status = 'resolved', handled_by = ? WHERE id = ?",
+            (handled_by, notification_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def get_pending_notifications():
