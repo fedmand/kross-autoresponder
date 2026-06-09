@@ -41,6 +41,18 @@ def init_db():
             UNIQUE(id_thread, id_message)
         )
     """)
+    # Dedup log for messages the bot auto-replied to. Kept separate from the
+    # notifications table so auto-replies never surface in the host dashboard —
+    # this table exists purely so we don't re-call Claude for an already-answered
+    # guest message on the next poll cycle.
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS replied_messages (
+            id_thread   INTEGER NOT NULL,
+            id_message  INTEGER NOT NULL,
+            replied_at  TEXT NOT NULL,
+            UNIQUE(id_thread, id_message)
+        )
+    """)
     conn.commit()
     conn.close()
 
@@ -53,6 +65,31 @@ def notification_exists(id_thread, id_message):
     ).fetchone()
     conn.close()
     return row is not None
+
+
+def reply_exists(id_thread, id_message):
+    # True if the bot already auto-replied to this specific guest message.
+    conn = sqlite3.connect(DB_PATH)
+    row = conn.execute(
+        "SELECT 1 FROM replied_messages WHERE id_thread = ? AND id_message = ?",
+        (id_thread, id_message),
+    ).fetchone()
+    conn.close()
+    return row is not None
+
+
+def record_reply(id_thread, id_message):
+    # Mark a guest message as answered so we don't re-call Claude for it next cycle.
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        conn.execute(
+            "INSERT OR IGNORE INTO replied_messages (id_thread, id_message, replied_at) "
+            "VALUES (?, ?, ?)",
+            (id_thread, id_message, time.strftime("%Y-%m-%d %H:%M:%S")),
+        )
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def record_notification(notification):

@@ -73,6 +73,20 @@ KROSS_LIMITS = {"1m": (60, 10), "1h": (3600, 300), "24h": (86400, 5000)}
 RATE_WARN_RATIO = 0.8  # warn once usage reaches 80% of any limit
 _call_times = deque()
 
+# ── Claude circuit breaker ────────────────────────────────────────────────────
+# Prevents hammering Claude when calls keep failing (e.g. exhausted credit, API
+# outage). After CLAUDE_FAILURE_THRESHOLD consecutive failures we stop calling
+# Claude for CLAUDE_COOLDOWN seconds; a single success resets the counter.
+CLAUDE_FAILURE_THRESHOLD = 5
+CLAUDE_COOLDOWN = 1800  # 30 minutes
+_claude_consecutive_failures = 0
+_claude_paused_until = 0.0
+
+
+def claude_circuit_open():
+    # True while Claude calls are paused after repeated failures.
+    return time.time() < _claude_paused_until
+
 
 def _record_api_call():
     now = time.time()
@@ -270,13 +284,26 @@ def build_conversation(all_messages, up_to_id_message):
 
 
 def call_anthropic(system, messages):
+    global _claude_consecutive_failures, _claude_paused_until
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-    msg = client.messages.create(
-        model="claude-sonnet-4-6",  # good balance of quality and cost for guest replies
-        max_tokens=1024,
-        system=system,
-        messages=messages,
-    )
+    try:
+        msg = client.messages.create(
+            model="claude-sonnet-4-6",  # good balance of quality and cost for guest replies
+            max_tokens=1024,
+            system=system,
+            messages=messages,
+        )
+    except Exception:
+        _claude_consecutive_failures += 1
+        if _claude_consecutive_failures >= CLAUDE_FAILURE_THRESHOLD:
+            _claude_paused_until = time.time() + CLAUDE_COOLDOWN
+            log.error(
+                f"[CIRCUIT] {_claude_consecutive_failures} consecutive Claude failures — "
+                f"pausing Claude calls for {CLAUDE_COOLDOWN}s"
+            )
+        raise
+
+    _claude_consecutive_failures = 0  # reset on any success
     return msg.content[0].text
 
 
@@ -389,20 +416,19 @@ def process_thread(thread):
         log.info("    → Skipped (already handled)")
         return "skip"
 
-    reservation = get_reservation(id_reservation)
-    res         = reservation["data"][0]
-    log.info(f"    Ospite: {res['label']} | Check-in: {res['arrival']} | Check-out: {res['departure']}")
-
     # If any unread guest message has no text, it's a photo — Claude can't see images,
     # so escalate the whole thread and let the host handle it.
     if any(not m.get("message") for m in unread_guest_msgs):
         photo_msg = next(m for m in unread_guest_msgs if not m.get("message"))
 
-        # Dedup: same logic as text escalations — skip if already stored.
+        # Dedup BEFORE fetching the reservation — already-notified photos cost nothing.
         if storage.notification_exists(id_thread, photo_msg["id_message"]):
             log.info("    → Photo already notified — skipping")
             return "duplicate"
 
+        reservation = get_reservation(id_reservation)
+        res         = reservation["data"][0]
+        log.info(f"    Ospite: {res['label']} | Check-in: {res['arrival']} | Check-out: {res['departure']}")
         log.info("    → Photo detected, notifying host")
         storage.record_notification({
             "id_thread":      id_thread,
@@ -427,13 +453,31 @@ def process_thread(thread):
         )
         return "photo"
 
+    # Dedup BEFORE any Claude call AND before the extra get_reservation Kross call.
+    # Skip if we already escalated on this message OR already auto-replied to it.
+    last_msg = unread_guest_msgs[-1]
+    if (storage.notification_exists(id_thread, last_msg["id_message"])
+            or storage.reply_exists(id_thread, last_msg["id_message"])):
+        log.info("    → Already handled for this message — skipping")
+        return "duplicate"
+
+    # Circuit breaker: if Claude has been failing repeatedly, don't keep calling it.
+    # The message stays unread, so it'll be retried once the cooldown elapses.
+    if claude_circuit_open():
+        log.warning("    → Claude paused (circuit breaker open) — skipping for now")
+        return "skip"
+
+    reservation = get_reservation(id_reservation)
+    res         = reservation["data"][0]
+    log.info(f"    Ospite: {res['label']} | Check-in: {res['arrival']} | Check-out: {res['departure']}")
+
     apartment_info = load_apartment_file(apartment_name)
 
     system = build_system_prompt(apartment_name, apartment_info, reservation)
 
     # Pass full history up to the last unread message — Claude sees the full context
     # and produces one aggregated reply instead of one reply per message.
-    messages = build_conversation(all_messages, unread_guest_msgs[-1]["id_message"])
+    messages = build_conversation(all_messages, last_msg["id_message"])
     reply    = call_anthropic(system, messages)
 
     escalation_data = extract_escalation(reply)
@@ -444,13 +488,6 @@ def process_thread(thread):
         category = escalation_data.get("category", "intervento_host")
         if category not in ("riparazione", "checkin_checkout"):
             category = "intervento_host"
-        last_msg = unread_guest_msgs[-1]
-
-        # Dedup: have we already escalated on this exact guest message? If so,
-        # Teo is already handling it — don't notify again on every poll cycle.
-        if storage.notification_exists(id_thread, last_msg["id_message"]):
-            log.info("    → Already notified for this message — skipping")
-            return "duplicate"
 
         log.info(f"    → Escalating ({category}): {reason}")
         storage.record_notification({
@@ -471,6 +508,9 @@ def process_thread(thread):
     else:
         log.info(f"    → Replying: {reply[:80]}...")
         send_message(id_thread, reply)
+        # Record the reply so we don't re-call Claude for this same message next
+        # cycle if Kross hasn't yet reflected our sent reply in the thread history.
+        storage.record_reply(id_thread, last_msg["id_message"])
         return "reply"
 
 
