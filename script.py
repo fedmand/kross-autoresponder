@@ -73,6 +73,12 @@ KROSS_LIMITS = {"1m": (60, 10), "1h": (3600, 300), "24h": (86400, 5000)}
 RATE_WARN_RATIO = 0.8  # warn once usage reaches 80% of any limit
 _call_times = deque()
 
+# ── 429 retry / backoff ───────────────────────────────────────────────────────
+# Kross recommends an exponential backoff for temporary errors (429/500):
+# 10s, 20s, 40s, 80s... After ~7 retries (~10 min) it advises contacting support.
+KROSS_MAX_RETRIES   = 6
+KROSS_BACKOFF_BASE  = 10  # seconds for the first retry; doubles each attempt
+
 # ── Claude circuit breaker ────────────────────────────────────────────────────
 # Prevents hammering Claude when calls keep failing (e.g. exhausted credit, API
 # outage). After CLAUDE_FAILURE_THRESHOLD consecutive failures we stop calling
@@ -86,6 +92,31 @@ _claude_paused_until = 0.0
 def claude_circuit_open():
     # True while Claude calls are paused after repeated failures.
     return time.time() < _claude_paused_until
+
+
+def _throttle():
+    # Safety net (Fix 3): block before a call would exceed any Kross window.
+    # Uses the same _call_times deque the tracker maintains. If we're already at
+    # a limit, sleep just long enough for the oldest call in that window to age
+    # out, then re-check. This guarantees the bot never self-inflicts a 429 even
+    # if a burst occurs, regardless of the fixed sleeps elsewhere.
+    while True:
+        now = time.time()
+        while _call_times and now - _call_times[0] > 86400:
+            _call_times.popleft()
+
+        wait = 0.0
+        for name, (window, limit) in KROSS_LIMITS.items():
+            in_window = [t for t in _call_times if now - t <= window]
+            if len(in_window) >= limit:
+                # Sleep until the oldest call in this window leaves it.
+                needed = window - (now - in_window[0]) + 0.1
+                if needed > wait:
+                    wait = needed
+        if wait <= 0:
+            return
+        log.warning(f"[RATE] throttling — sleeping {wait:.1f}s to stay within Kross limits")
+        time.sleep(wait)
 
 
 def _record_api_call():
@@ -119,11 +150,27 @@ def kross_post(endpoint, payload, token=None):
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
-    log.info(f"[API] POST {endpoint}")
-    r = requests.post(f"{BASE_URL}{endpoint}", json=payload, headers=headers)
-    _record_api_call()  # count the call regardless of HTTP status — it still hit Kross
-    r.raise_for_status()  # raises on 4xx/5xx so errors don't silently pass
-    return r.json()
+    # Retry loop (Fix 1): on 429 (Too Many Requests) back off exponentially and
+    # retry instead of crashing the thread. A 429 from the per-minute window
+    # clears within ~60s, so the first retry almost always succeeds.
+    delay = KROSS_BACKOFF_BASE
+    for attempt in range(KROSS_MAX_RETRIES + 1):
+        _throttle()  # Fix 3: never exceed a window in the first place
+        log.info(f"[API] POST {endpoint}")
+        r = requests.post(f"{BASE_URL}{endpoint}", json=payload, headers=headers)
+        _record_api_call()  # count the call regardless of HTTP status — it still hit Kross
+
+        if r.status_code == 429 and attempt < KROSS_MAX_RETRIES:
+            log.warning(
+                f"[RATE] 429 Too Many Requests on {endpoint} — backing off {delay}s "
+                f"(attempt {attempt + 1}/{KROSS_MAX_RETRIES})"
+            )
+            time.sleep(delay)
+            delay *= 2
+            continue
+
+        r.raise_for_status()  # raises on other 4xx/5xx so errors don't silently pass
+        return r.json()
 
 
 def kross_call(endpoint, payload):
@@ -393,6 +440,16 @@ def process_thread(thread):
     if thread.get("last_message_from_name") in KNOWN_HOSTS:
         return "skip"
 
+    # Fix 2: skip threads with nothing new since we last handled them. get-threads
+    # returns each thread's last_update for free; if it matches the value we stored
+    # after fully handling this thread, no message changed and we avoid the
+    # expensive get-thread call. This is what stops permanently to_read threads
+    # (host replied via Airbnb/Booking, which never clears to_read) from costing a
+    # get-thread call every single cycle.
+    last_update = thread.get("last_update")
+    if last_update and storage.get_thread_last_seen(id_thread) == last_update:
+        return "skip"
+
     log.info(f"Thread {id_thread} ({apartment_name})")
 
     time.sleep(20)  # avoid hitting Kross rate limits on sequential get-thread calls
@@ -536,6 +593,12 @@ def main():
                 try:
                     outcome = process_thread(thread) or "skip"
                     stats[outcome] += 1
+                    # Fix 2: record the thread's current last_update only after a
+                    # clean (non-error) outcome, so next cycle skips it unless a new
+                    # message arrives. On error we deliberately skip recording so the
+                    # thread is retried.
+                    if thread.get("last_update"):
+                        storage.record_thread_seen(thread["id_thread"], thread["last_update"])
                 except Exception as e:
                     stats["error"] += 1
                     log.exception(f"Error on thread {thread['id_thread']}: {e}")

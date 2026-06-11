@@ -27,6 +27,7 @@ sys.path.insert(0, REPO_ROOT)
 import storage  # noqa: E402
 
 MOCK_PATH = os.path.join(REPO_ROOT, "gui", "data", "mock_notifications.json")
+APARTMENTS_DIR = os.path.join(REPO_ROOT, "apartments")
 
 app = FastAPI(title="Kross — Notifiche host")
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
@@ -75,6 +76,20 @@ def load_notifications():
 
 def using_db():
     return os.path.exists(storage.DB_PATH)
+
+
+def known_homes():
+    """All apartments we manage, taken from the apartments/ folder (one .md per
+    apartment). Used so every apartment always appears as a filter option, even
+    when it currently has no pending notification."""
+    try:
+        return [
+            os.path.splitext(f)[0]
+            for f in os.listdir(APARTMENTS_DIR)
+            if f.endswith(".md")
+        ]
+    except OSError:
+        return []
 
 
 def compute_booking_status(check_in, check_out, today=None):
@@ -153,7 +168,9 @@ def index(
     sort: str = "created_at",
 ):
     items = get_enriched()
-    homes = sorted({n["home"] for n in items})
+    # Union the canonical apartment list with any homes present in the data, so
+    # every managed apartment shows as a filter even with no pending notification.
+    homes = sorted(set(known_homes()) | {n["home"] for n in items})
 
     filtered = apply_filters(items, category, stato, casa, sort)
     views = [build_view(n) for n in filtered]

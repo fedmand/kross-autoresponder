@@ -53,6 +53,19 @@ def init_db():
             UNIQUE(id_thread, id_message)
         )
     """)
+    # Per-thread "last fully handled" marker. We store the last_update value
+    # (from get-threads) that we processed without error. On the next poll, if
+    # a thread's last_update is unchanged, nothing new happened and we can skip
+    # the expensive get-thread call entirely. This stops Kross's permanently
+    # to_read threads (host replied via Airbnb/Booking, which never clears
+    # to_read) from burning a get-thread call every single cycle.
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS thread_state (
+            id_thread    INTEGER PRIMARY KEY,
+            last_update  TEXT,
+            seen_at      TEXT NOT NULL
+        )
+    """)
     conn.commit()
     conn.close()
 
@@ -86,6 +99,35 @@ def record_reply(id_thread, id_message):
             "INSERT OR IGNORE INTO replied_messages (id_thread, id_message, replied_at) "
             "VALUES (?, ?, ?)",
             (id_thread, id_message, time.strftime("%Y-%m-%d %H:%M:%S")),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def get_thread_last_seen(id_thread):
+    # Returns the last_update value we last fully handled for this thread, or
+    # None if we've never processed it.
+    conn = sqlite3.connect(DB_PATH)
+    row = conn.execute(
+        "SELECT last_update FROM thread_state WHERE id_thread = ?",
+        (id_thread,),
+    ).fetchone()
+    conn.close()
+    return row[0] if row else None
+
+
+def record_thread_seen(id_thread, last_update):
+    # Upsert the last_update we've fully handled for this thread, so an
+    # unchanged thread is skipped (no get-thread call) on the next cycle.
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        conn.execute(
+            "INSERT INTO thread_state (id_thread, last_update, seen_at) "
+            "VALUES (?, ?, ?) "
+            "ON CONFLICT(id_thread) DO UPDATE SET last_update = excluded.last_update, "
+            "seen_at = excluded.seen_at",
+            (id_thread, last_update, time.strftime("%Y-%m-%d %H:%M:%S")),
         )
         conn.commit()
     finally:
