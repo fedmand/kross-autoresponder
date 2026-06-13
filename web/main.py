@@ -114,6 +114,18 @@ def fmt_date(iso):
     return f"{d.day} {_MONTHS[d.month - 1]}"
 
 
+def fmt_datetime(value):
+    # created_at is stored as "YYYY-MM-DD HH:MM:SS" (DB) or "YYYY-MM-DD HH:MM"
+    # (mock). Render a compact "13 giu 09:15" for the card timestamp.
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M"):
+        try:
+            d = datetime.strptime(value, fmt)
+        except (ValueError, TypeError):
+            continue
+        return f"{d.day} {_MONTHS[d.month - 1]} {d.strftime('%H:%M')}"
+    return value or ""
+
+
 def build_view(n):
     """Precompute everything the templates need so they stay presentational."""
     cat_bg, cat_fg, cat_lbl = CATEGORY_BADGE.get(
@@ -127,6 +139,7 @@ def build_view(n):
         "check_in_fmt": fmt_date(n["check_in"]),
         "check_out_fmt": fmt_date(n["check_out"]),
         "booking_date_fmt": fmt_date(n.get("booking_date", "")),
+        "created_at_fmt": fmt_datetime(n.get("created_at", "")),
         "cat_badge": {"bg": cat_bg, "fg": cat_fg, "label": cat_lbl},
         "stato_badge": {"bg": st_bg, "fg": st_fg, "label": st_lbl},
     }

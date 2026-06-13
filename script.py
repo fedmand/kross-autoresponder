@@ -169,7 +169,34 @@ def kross_post(endpoint, payload, token=None):
             delay *= 2
             continue
 
-        r.raise_for_status()  # raises on other 4xx/5xx so errors don't silently pass
+        # On any 4xx/5xx, Kross returns the real reason in the body
+        # (error_code, error_message, ruid). raise_for_status() alone would
+        # discard it and surface only the bare HTTP status, so we log the body
+        # and enrich the exception before re-raising — keeping the HTTPError
+        # type (and .response) intact so kross_call's 401 handling still works.
+        if not r.ok:
+            try:
+                detail = r.json()
+            except ValueError:
+                detail = {"raw": (r.text or "")[:500]}
+            if isinstance(detail, dict):
+                log.error(
+                    f"[API] {r.status_code} on {endpoint} — "
+                    f"error_code={detail.get('error_code')} "
+                    f"error_message={detail.get('error_message')!r} "
+                    f"ruid={detail.get('ruid')}"
+                )
+            try:
+                r.raise_for_status()
+            except requests.HTTPError as e:
+                if isinstance(detail, dict) and detail.get("error_message"):
+                    base = e.args[0] if e.args else str(e)
+                    e.args = (
+                        f"{base} — Kross error_code={detail.get('error_code')} "
+                        f"\"{detail.get('error_message')}\" (ruid={detail.get('ruid')})",
+                    )
+                raise
+
         return r.json()
 
 

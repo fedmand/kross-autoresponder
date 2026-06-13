@@ -31,6 +31,7 @@
             </div>
             <div class="card-dates">{{ n.dates }} &nbsp;·&nbsp; <span class="guest">{{ n.guest_name }} · {{ n.channel }}</span></div>
             <div class="card-summary">{{ n.summary }}</div>
+            {% if n.created_at_fmt %}<div class="card-time">{{ n.created_at_fmt }}</div>{% endif %}
         </article>
     </a>
     {% endfor %}
