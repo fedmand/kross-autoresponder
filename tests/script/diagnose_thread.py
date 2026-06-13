@@ -17,6 +17,7 @@ Uso (sul VPS, dentro la cartella del progetto):
 import os
 import sys
 import json
+import time
 import requests
 from dotenv import load_dotenv
 
@@ -24,6 +25,16 @@ sys.stdout.reconfigure(encoding="utf-8")
 load_dotenv()
 
 BASE_URL = "https://api.krossbooking.com/v5"
+
+# ── 429 backoff ───────────────────────────────────────────────────────────────
+# This script shares the same Kross account — and therefore the same rate limits
+# (10/min, 300/hour, 5000/day) — as the live kross-bot service. If the bot is
+# polling at the same time, the combined calls blow past the per-minute window
+# and Kross replies 429. Unlike the bot, this script has no throttling, so we add
+# an exponential backoff (mirroring kross_post in script.py): 10s, 20s, 40s...
+# so the diagnostic survives being run while the bot is up.
+MAX_RETRIES  = 6
+BACKOFF_BASE = 10  # seconds for the first retry; doubles each attempt
 
 ID_THREAD = int(sys.argv[1]) if len(sys.argv) > 1 else 10216
 
@@ -33,8 +44,24 @@ def pp(label, data):
     print(json.dumps(data, indent=2, ensure_ascii=False, default=str))
 
 
+def request_with_backoff(method, url, **kwargs):
+    # Retry on 429 with exponential backoff. Returns the final Response object.
+    delay = BACKOFF_BASE
+    for attempt in range(MAX_RETRIES + 1):
+        resp = requests.request(method, url, **kwargs)
+        if resp.status_code == 429 and attempt < MAX_RETRIES:
+            print(f"[rate-limit] 429 on {url} — backing off {delay}s "
+                  f"(attempt {attempt + 1}/{MAX_RETRIES}). "
+                  f"Tip: stop the bot (sudo systemctl stop kross-bot) to avoid this.")
+            time.sleep(delay)
+            delay *= 2
+            continue
+        return resp
+    return resp
+
+
 # ── Auth ──────────────────────────────────────────────────────────────────────
-r = requests.post(f"{BASE_URL}/auth/get-token", json={
+r = request_with_backoff("POST", f"{BASE_URL}/auth/get-token", json={
     "api_key":  os.getenv("KROSS_API_KEY"),
     "hotel_id": os.getenv("KROSS_HOTEL_ID"),
     "username": os.getenv("KROSS_USERNAME"),
@@ -46,7 +73,7 @@ headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json
 
 
 def post(endpoint, payload):
-    resp = requests.post(f"{BASE_URL}{endpoint}", json=payload, headers=headers)
+    resp = request_with_backoff("POST", f"{BASE_URL}{endpoint}", json=payload, headers=headers)
     try:
         body = resp.json()
     except ValueError:

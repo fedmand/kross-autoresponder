@@ -591,7 +591,49 @@ def process_thread(thread):
         return "escalate"
     else:
         log.info(f"    → Replying: {reply[:80]}...")
-        send_message(id_thread, reply)
+        try:
+            send_message(id_thread, reply)
+        except requests.HTTPError as e:
+            # A 400 on send-message is not transient: it almost always means the
+            # OTA conversation is closed / read-only (thread closed after
+            # check-out, cancelled reservation, or a channel that doesn't accept
+            # outbound messages). Retrying every cycle would fail forever and spam
+            # the host with the generic error notification. Instead, escalate this
+            # message ONCE (deduped on id_thread+id_message via the notifications
+            # table) and return a non-error outcome so main() records the thread as
+            # seen and skips it until a genuinely new guest message arrives.
+            if e.response is not None and e.response.status_code == 400:
+                detail = {}
+                try:
+                    detail = e.response.json()
+                except ValueError:
+                    pass
+                kross_msg = detail.get("error_message", "Bad Request") if isinstance(detail, dict) else "Bad Request"
+                reason = (
+                    "Risposta automatica non inviata (errore 400 — conversazione "
+                    f"probabilmente chiusa o di sola lettura). Kross: {kross_msg}. "
+                    "Rispondi manualmente su Kross/OTA."
+                )
+                log.error(f"    → send-message 400 — escalating to host instead of retrying: {kross_msg}")
+                storage.record_notification({
+                    "id_thread":      id_thread,
+                    "id_message":     last_msg["id_message"],
+                    "id_reservation": id_reservation,
+                    "category":       "intervento_host",
+                    "home":           apartment_name,
+                    "guest_name":     res["label"],
+                    "channel":        res.get("channel"),
+                    "check_in":       res["arrival"],
+                    "check_out":      res["departure"],
+                    "message":        last_msg["message"],
+                    "summary":        reason,
+                })
+                notify_escalation(
+                    apartment_name, res["label"], res["arrival"], res["departure"],
+                    last_msg["created_at"], last_msg["message"], reason,
+                )
+                return "send_failed"
+            raise
         # Record the reply so we don't re-call Claude for this same message next
         # cycle if Kross hasn't yet reflected our sent reply in the thread history.
         storage.record_reply(id_thread, last_msg["id_message"])
@@ -640,6 +682,7 @@ def main():
             f"[CYCLE] done in {duration:.1f}s — "
             f"replies={stats['reply']} escalations={stats['escalate']} "
             f"photos={stats['photo']} duplicates={stats['duplicate']} "
+            f"send_failed={stats['send_failed']} "
             f"skipped={stats['skip']} errors={stats['error']}"
         )
         log.info(f"Sleeping {POLL_INTERVAL}s...")
