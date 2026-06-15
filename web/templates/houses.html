@@ -7,13 +7,69 @@
 <header class="topbar">
     <div class="topbar-text">
         <div class="app-title">🏠 Info case</div>
-        <div class="app-sub">Modifica le informazioni che l'assistente usa per rispondere agli ospiti.</div>
+        <div class="app-sub">Modifica le informazioni che l'assistente usa per rispondere agli ospiti. {{ active_count }} case attive per il bot.</div>
     </div>
 </header>
 
 {% if saved %}
 <div class="flash flash-ok">Modifiche salvate per <strong>{{ saved }}</strong>. Saranno attive al prossimo ciclo del bot.</div>
 {% endif %}
+{% if created %}
+<div class="flash flash-ok">Casa <strong>{{ created }}</strong> creata. Compila le informazioni qui sotto.</div>
+{% endif %}
+{% if kross_msg %}
+<div class="flash flash-ok">{{ kross_msg }}</div>
+{% endif %}
+{% if new_error %}
+<div class="flash flash-err">{{ new_error }}</div>
+{% endif %}
+{% if kross_error %}
+<div class="flash flash-err">Aggiornamento da Kross non riuscito: {{ kross_error }}</div>
+{% endif %}
+
+<section class="add-house">
+    <div class="add-house-head">
+        <div class="add-house-title">➕ Aggiungi casa</div>
+        <form method="post" action="/houses/refresh-kross">
+            <button type="submit" class="btn btn-filter">⟳ Aggiorna da Kross</button>
+        </form>
+    </div>
+
+    {% if candidates %}
+    <form class="add-house-form" method="post" action="/houses/new">
+        <select name="name" class="add-house-select" aria-label="Casa rilevata da Kross">
+            <option value="">Scegli una casa da Kross…</option>
+            {% for c in candidates %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">Crea e modifica</button>
+    </form>
+    <p class="editor-hint">
+        Case presenti su Kross che non hanno ancora una scheda. Il nome corrisponde
+        esattamente a quello su Kross, così il bot la troverà.
+        {% if kross_fetched_at %}<br>Elenco Kross aggiornato il {{ kross_fetched_at }}.{% endif %}
+    </p>
+    {% elif kross_fetched_at %}
+    <p class="editor-hint">Tutte le case presenti su Kross hanno già una scheda. (Elenco aggiornato il {{ kross_fetched_at }}.)</p>
+    {% else %}
+    <p class="editor-hint">Premi <strong>Aggiorna da Kross</strong> per caricare l'elenco delle case dal gestionale.</p>
+    {% endif %}
+
+    <details class="add-house-manual">
+        <summary>Inserisci il nome manualmente</summary>
+        <form class="add-house-form" method="post" action="/houses/new">
+            <input type="text" name="manual_name" class="add-house-input" autocomplete="off"
+                   placeholder="Nome esatto della casa su Kross">
+            <button type="submit" class="btn btn-primary">Crea e modifica</button>
+        </form>
+        <p class="editor-hint editor-warn">
+            ⚠️ Il nome deve corrispondere <strong>esattamente</strong> al nome della casa su
+            Kross, altrimenti il bot non troverà la scheda. Usa questa opzione solo se sei
+            sicuro del nome preciso.
+        </p>
+    </details>
+</section>
 
 <main class="list">
     {% if not homes %}
@@ -21,14 +77,24 @@
     {% endif %}
 
     {% for home in homes %}
-    <a class="card-link" href="/houses/{{ home | urlencode }}/edit">
-        <article class="card">
-            <div class="card-home">
-                {{ home }}
-                <span class="badges"><span class="badge" style="background:#e7f1ff;color:#1971c2;">Modifica →</span></span>
-            </div>
-        </article>
-    </a>
+    <article class="card house-row">
+        <div class="card-home">
+            {{ home.name }}
+            {% if home.active %}
+            <span class="badge badge-active">Bot attivo</span>
+            {% else %}
+            <span class="badge badge-inactive">Bot disattivo</span>
+            {% endif %}
+        </div>
+        <div class="house-row-actions">
+            <form method="post" action="/houses/{{ home.name | urlencode }}/active">
+                <button type="submit" class="btn btn-toggle {% if home.active %}toggle-on{% else %}toggle-off{% endif %}">
+                    {% if home.active %}Disattiva bot{% else %}Attiva bot{% endif %}
+                </button>
+            </form>
+            <a class="btn btn-edit" href="/houses/{{ home.name | urlencode }}/edit">Modifica →</a>
+        </div>
+    </article>
     {% endfor %}
 </main>
 {% endblock %}

@@ -25,6 +25,35 @@ BACKUP_DIR = os.path.join(APARTMENTS_DIR, ".backups")
 # How many timestamped backups to keep per apartment before pruning the oldest.
 MAX_BACKUPS_PER_APARTMENT = 20
 
+# Seed content for a brand-new apartment created from the web app. It is only a
+# scaffold to get the host started — the file is non-empty so subsequent edits
+# go through the normal write_apartment() path, and the bot has *some* context to
+# work with until the host fills it in. {name} is the apartment's display name.
+NEW_APARTMENT_TEMPLATE = """# {name}
+
+<!-- Compila queste informazioni: l'assistente le userà per rispondere agli ospiti di questa casa. -->
+
+## Indirizzo e accesso
+
+
+## Wi-Fi
+
+
+## Check-in / Check-out
+
+
+## Elettrodomestici e istruzioni
+
+
+## Regole della casa
+
+
+## Parcheggio e trasporti
+
+
+## Contatti e note
+"""
+
 
 def safe_filename(apartment_name):
     """Map a display name to its on-disk stem.
@@ -52,6 +81,33 @@ def list_apartments():
         )
     except OSError:
         return []
+
+
+def apartment_exists(apartment_name):
+    """True if there is already a file on disk for this apartment."""
+    return os.path.exists(apartment_path(apartment_name))
+
+
+def _validate_new_name(apartment_name):
+    """Return the cleaned display name, or raise ValueError if it is unusable.
+
+    write_apartment() never had to validate names because it refused to create
+    files — the name always came from an existing file. create_apartment() opens
+    that door, so we guard against names that would produce an empty file, a
+    hidden/dot file (e.g. ".", "..", or anything colliding with the .backups
+    folder), or a name made up entirely of separator/illegal characters. Path
+    traversal is already neutralized by safe_filename() (it strips / and \\).
+    """
+    name = (apartment_name or "").strip()
+    if not name:
+        raise ValueError("Il nome della casa è obbligatorio.")
+
+    stem = safe_filename(name).strip()
+    # Reject stems that collapse to nothing, that are only dots/dashes/spaces
+    # (".", "..", "--", etc.), or that would create a hidden/dot file.
+    if not stem or stem.startswith(".") or set(stem) <= {".", "-", " "}:
+        raise ValueError(f"Nome casa non valido: {apartment_name!r}")
+    return name
 
 
 def read_apartment(apartment_name):
@@ -140,3 +196,33 @@ def write_apartment(apartment_name, content):
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
     return backup
+
+
+def create_apartment(apartment_name, content=None):
+    """Create a brand-new apartment file (the web 'add house' flow).
+
+    Unlike write_apartment(), this is the ONE place allowed to create a file
+    that does not yet exist. Safety rules:
+    - the name must pass _validate_new_name() (no empty / dot / traversal names);
+    - it refuses to overwrite an existing apartment (use write_apartment to edit
+      one) — raises FileExistsError so the caller can just open the editor;
+    - when no content is given, the file is seeded with NEW_APARTMENT_TEMPLATE so
+      it is never empty (the bot reads it as plain text on its next cycle).
+
+    IMPORTANT: the filename must exactly match Kross's name_room_type for the bot
+    to find it; the web layer sources names from real reservations to guarantee
+    this. Returns the path created.
+    """
+    name = _validate_new_name(apartment_name)
+    path = apartment_path(name)
+    if os.path.exists(path):
+        raise FileExistsError(f"La casa '{name}' esiste già.")
+
+    if content is None or not content.strip():
+        content = NEW_APARTMENT_TEMPLATE.format(name=name)
+    content = content.replace("\r\n", "\n").replace("\r", "\n")
+
+    os.makedirs(APARTMENTS_DIR, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+    return path

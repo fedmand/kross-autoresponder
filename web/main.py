@@ -13,7 +13,7 @@ import json
 import os
 import sys
 from datetime import date, datetime
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 
 from fastapi import FastAPI, Form, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -26,6 +26,8 @@ REPO_ROOT = os.path.dirname(BASE_DIR)
 sys.path.insert(0, REPO_ROOT)
 import storage  # noqa: E402
 import apartments_store  # noqa: E402  shared apartments/*.md access (also used by the bot)
+import active_store  # noqa: E402  shared whitelist of apartments the bot may handle
+import kross_client  # noqa: E402  on-demand, cached Kross apartment list
 
 MOCK_PATH = os.path.join(REPO_ROOT, "gui", "data", "mock_notifications.json")
 APARTMENTS_DIR = apartments_store.APARTMENTS_DIR
@@ -84,6 +86,21 @@ def known_homes():
     apartment). Used so every apartment always appears as a filter option, even
     when it currently has no pending notification."""
     return apartments_store.list_apartments()
+
+
+def new_house_candidates():
+    """Kross apartment names (from the cached live list) that have no file yet.
+
+    The bot matches an info file to a reservation by Kross's name_room_type, so a
+    new file is only useful if its name matches that string EXACTLY. We therefore
+    offer the host a picker built from the real Kross apartment list, fetched on
+    demand via the "Aggiorna da Kross" button and cached to disk (kross_client).
+    Ordinary page loads only read the cache — they never call Kross. Names that
+    already have a file are filtered out. Returns ([], None) timestamp when the
+    cache is empty (host hasn't fetched yet)."""
+    names, fetched_at = kross_client.load_cache()
+    candidates = sorted(set(names) - set(known_homes()))
+    return candidates, fetched_at
 
 
 def compute_booking_status(check_in, check_out, today=None):
@@ -250,15 +267,76 @@ def api_notifications():
 # The bot re-reads the file on every reply, so a save here takes effect on the
 # next poll cycle with no restart.
 @app.get("/houses", response_class=HTMLResponse)
-def houses(request: Request, saved: str = ""):
+def houses(request: Request, saved: str = "", created: str = "",
+           new_error: str = "", kross_msg: str = "", kross_error: str = ""):
+    active = active_store.get_active()
+    homes = [{"name": h, "active": h in active} for h in sorted(known_homes())]
+    candidates, fetched_at = new_house_candidates()
     return templates.TemplateResponse(
         request,
         "houses.html",
         {
-            "homes": sorted(known_homes()),
+            "homes": homes,
+            "active_count": sum(1 for h in homes if h["active"]),
+            "candidates": candidates,
+            "kross_fetched_at": fetched_at,
             "saved": saved,
+            "created": created,
+            "new_error": new_error,
+            "kross_msg": kross_msg,
+            "kross_error": kross_error,
         },
     )
+
+
+@app.post("/houses/refresh-kross")
+def houses_refresh_kross():
+    # The ONLY place that calls Kross from the web app, and only on button press,
+    # so API credit usage stays predictable. On success the cache is updated; on
+    # failure we keep the previous cache and surface a friendly error.
+    try:
+        names, fetched_at = kross_client.refresh_cache()
+    except kross_client.KrossError as exc:
+        err = urlencode({"kross_error": str(exc)})
+        return RedirectResponse(url=f"/houses?{err}", status_code=303)
+    new_count = len(set(names) - set(known_homes()))
+    msg = urlencode({"kross_msg": f"Trovate {len(names)} case su Kross "
+                                  f"({new_count} senza scheda)."})
+    return RedirectResponse(url=f"/houses?{msg}", status_code=303)
+
+
+@app.post("/houses/{name}/active")
+def house_toggle_active(name: str):
+    # Flip whether the bot is allowed to handle this house. Only houses that
+    # already have an info file can be toggled (you can't activate a house the
+    # bot has no knowledge of).
+    if name not in known_homes():
+        return RedirectResponse(url="/houses", status_code=303)
+    active_store.toggle_active(name)
+    return RedirectResponse(url="/houses", status_code=303)
+
+
+@app.post("/houses/new")
+def house_new(name: str = Form(default=""), manual_name: str = Form(default="")):
+    # Two ways in: pick a Kross name from the dropdown (`name`), or type one by
+    # hand (`manual_name`). The manual field wins when filled — it's the escape
+    # hatch for a house the bot hasn't seen in a notification yet. Either way the
+    # name must match Kross exactly; create_apartment validates the shape, but the
+    # exact-match responsibility sits with the host for manual entries.
+    chosen = (manual_name or name or "").strip()
+    if not chosen:
+        err = urlencode({"new_error": "Seleziona o inserisci il nome di una casa."})
+        return RedirectResponse(url=f"/houses?{err}", status_code=303)
+    try:
+        apartments_store.create_apartment(chosen)
+    except FileExistsError:
+        # Already there — just open its editor instead of erroring.
+        return RedirectResponse(url=f"/houses/{quote(chosen)}/edit", status_code=303)
+    except (ValueError, OSError) as exc:
+        err = urlencode({"new_error": str(exc)})
+        return RedirectResponse(url=f"/houses?{err}", status_code=303)
+    # Land on the editor so the host fills in the details right away.
+    return RedirectResponse(url=f"/houses/{quote(chosen)}/edit", status_code=303)
 
 
 @app.get("/houses/{name}/edit", response_class=HTMLResponse)

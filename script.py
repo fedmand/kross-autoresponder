@@ -7,6 +7,7 @@ import requests     # make HTTP requests to Kross and Telegram APIs
 import anthropic    # official Anthropic SDK — wraps the Claude API
 import storage      # SQLite-backed notification store — dedup + shared GUI data
 import apartments_store  # shared apartments/*.md path + read/write (also used by web app)
+import active_store  # shared whitelist of apartments the bot may handle (web-managed)
 import logging      # structured, timestamped logging to file + console
 from logging.handlers import TimedRotatingFileHandler  # one log file per day
 from collections import deque, Counter  # rate-limit window + per-cycle tallies
@@ -54,10 +55,11 @@ TELEGRAM_CHAT_ID   = os.getenv("TELEGRAM_CHAT_ID")
 BASE_URL      = "https://api.krossbooking.com/v5"
 POLL_INTERVAL = 1000  # seconds between polling cycles (5 min, well within rate limits)
 
-# TESTING ONLY — remove this constant and the early-return check in process_thread() for full production.
-# Lists the apartments the bot is allowed to handle. All others are silently skipped.
-# Use the exact name_room_type string returned by Kross (e.g. as printed in the console logs).
-ACTIVE_APARTMENTS = {"Costantino Nigra 29", "Petrella 4", "Terraggio 21", "Pellegrini 26"}
+# Apartments the bot is allowed to handle ("whitelist"). All others are silently
+# skipped. This list is now managed from the host web app (Info case → toggle)
+# and persisted by active_store; the bot re-reads it every cycle, so onboarding a
+# house no longer needs a code change. An empty list means "handle nothing".
+# Seeded once from active_store.DEFAULT_ACTIVE so behaviour is unchanged at first.
 
 # Names that appear as last_message_from_name when a host/cohost sent the last message.
 # If the last sender is a known host, we skip get_thread() entirely — no reply needed.
@@ -451,13 +453,14 @@ def notify_error(apartment_name, error):
 
 
 # ── Process a single thread (thread = reservation)───────────────────────────────────────────────────
-def process_thread(thread):
+def process_thread(thread, active_apartments):
     id_thread      = thread["id_thread"]
     id_reservation = thread["id_reservation"]
     apartment_name = thread["name_room_type"]
 
-    # TESTING ONLY — remove this block for full production (together with ACTIVE_APARTMENTS above).
-    if ACTIVE_APARTMENTS and apartment_name not in ACTIVE_APARTMENTS:
+    # Whitelist gate: handle this apartment only if the host has activated it in
+    # the dashboard. active_apartments is read once per cycle in main().
+    if apartment_name not in active_apartments:
         return "skip"
 
     # Pre-filter: last_message_from_name comes free from get_threads() with no extra API call.
@@ -651,14 +654,17 @@ def main():
         cycle_start = time.time()
         stats = Counter()
         try:
+            # Re-read the whitelist every cycle so dashboard changes take effect
+            # without restarting the bot.
+            active_apartments = active_store.get_active()
             threads = get_threads()
             unread  = threads["data"]
-            active  = [t for t in unread if not ACTIVE_APARTMENTS or t.get("name_room_type") in ACTIVE_APARTMENTS]
+            active  = [t for t in unread if t.get("name_room_type") in active_apartments]
             log.info(f"Polling — {len(unread)} unread thread(s) total, {len(active)} in active apartments.")
 
             for thread in unread:
                 try:
-                    outcome = process_thread(thread) or "skip"
+                    outcome = process_thread(thread, active_apartments) or "skip"
                     stats[outcome] += 1
                     # Fix 2: record the thread's current last_update only after a
                     # clean (non-error) outcome, so next cycle skips it unless a new

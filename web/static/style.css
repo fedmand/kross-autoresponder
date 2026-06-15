@@ -194,6 +194,67 @@ body {
     gap: 12px; margin-top: 12px;
 }
 .editor-hint { color: var(--muted); font-size: 0.75rem; line-height: 1.4; margin: 10px 0 0; }
+.editor-warn { color: #e67700; }
+
+/* ── Add house ──────────────────────────────────────────── */
+.add-house {
+    border: 1px solid var(--border); border-radius: 11px;
+    background: #fff; padding: 12px 14px; margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.add-house-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; }
+.add-house-form { display: flex; gap: 8px; flex-wrap: wrap; }
+.add-house-select, .add-house-input {
+    flex: 1 1 220px; min-width: 0;
+    padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 0.85rem; background: #fff; color: var(--text);
+}
+.add-house-select:focus, .add-house-input:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(25,113,194,0.12);
+}
+.add-house-manual { margin-top: 12px; }
+.add-house-manual summary {
+    cursor: pointer; color: var(--accent); font-size: 0.8rem; font-weight: 600;
+    list-style: none; user-select: none;
+}
+.add-house-manual summary::-webkit-details-marker { display: none; }
+.add-house-manual summary::before { content: "+ "; }
+.add-house-manual[open] summary::before { content: "− "; }
+.add-house-manual[open] summary { margin-bottom: 8px; }
+
+.add-house-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; margin-bottom: 10px;
+}
+.add-house-head .add-house-title { margin-bottom: 0; }
+
+/* ── House rows (active toggle + edit) ──────────────────── */
+.house-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.house-row .card-home { display: flex; align-items: center; gap: 8px; }
+.house-row-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.badge-active { background: #ebfbee; color: #2b8a3e; }
+.badge-inactive { background: #f1f3f5; color: #868e96; }
+
+.btn-toggle { border: 1px solid transparent; }
+.toggle-on { background: #fff0f0; color: #c92a2a; border-color: #ffc9c9; }
+.toggle-on:hover { background: #ffe3e3; }
+.toggle-off { background: #ebfbee; color: #2b8a3e; border-color: #b2f2bb; }
+.toggle-off:hover { background: #d3f9d8; }
+
+.btn-edit {
+    background: #fff; color: var(--accent);
+    border: 1px solid var(--border);
+}
+.btn-edit:hover { border-color: var(--accent); }
+
+@media (max-width: 480px) {
+    .house-row { flex-direction: column; align-items: stretch; }
+    .house-row-actions { justify-content: flex-end; }
+}
 
 /* ── Mobile ─────────────────────────────────────────────── */
 @media (max-width: 480px) {
