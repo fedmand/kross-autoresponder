@@ -169,6 +169,32 @@ body {
 
 .source { color: var(--muted); font-size: 0.75rem; text-align: center; }
 
+/* ── House info editor ──────────────────────────────────── */
+.topbar-actions { flex-shrink: 0; display: inline-flex; gap: 8px; }
+
+.flash {
+    border-radius: 10px; padding: 10px 13px; margin: 0 0 14px;
+    font-size: 0.85rem; line-height: 1.35;
+}
+.flash-ok { background: #ebfbee; border: 1px solid #b2f2bb; color: #2b8a3e; }
+.flash-err { background: #fff5f5; border: 1px solid #ffc9c9; color: #c92a2a; }
+
+.editor { display: block; margin-top: 14px; }
+.editor-area {
+    width: 100%; min-height: 60vh; resize: vertical;
+    padding: 12px 13px; border: 1px solid var(--border); border-radius: 10px;
+    background: #fff; color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.82rem; line-height: 1.5; tab-size: 2;
+}
+.editor-area:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(25,113,194,0.12); }
+
+.editor-actions {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 12px; margin-top: 12px;
+}
+.editor-hint { color: var(--muted); font-size: 0.75rem; line-height: 1.4; margin: 10px 0 0; }
+
 /* ── Mobile ─────────────────────────────────────────────── */
 @media (max-width: 480px) {
     .meta { grid-template-columns: 1fr; }

@@ -9,9 +9,12 @@
         <div class="app-title">🏠 Notifiche host</div>
         <div class="app-sub">{{ count }} notifiche{% if not using_db %} · dati di esempio (DB non ancora creato){% endif %}</div>
     </div>
-    <button type="button" class="btn-filter" id="openFilters">
-        Filtri{% if active_count %} <span class="filter-count">{{ active_count }}</span>{% endif %}
-    </button>
+    <div class="topbar-actions">
+        <a class="btn-filter" href="/houses">Info case</a>
+        <button type="button" class="btn-filter" id="openFilters">
+            Filtri{% if active_count %} <span class="filter-count">{{ active_count }}</span>{% endif %}
+        </button>
+    </div>
 </header>
 
 <main class="list">

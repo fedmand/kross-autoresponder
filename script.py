@@ -6,6 +6,7 @@ import time         # sleep between polling cycles
 import requests     # make HTTP requests to Kross and Telegram APIs
 import anthropic    # official Anthropic SDK — wraps the Claude API
 import storage      # SQLite-backed notification store — dedup + shared GUI data
+import apartments_store  # shared apartments/*.md path + read/write (also used by web app)
 import logging      # structured, timestamped logging to file + console
 from logging.handlers import TimedRotatingFileHandler  # one log file per day
 from collections import deque, Counter  # rate-limit window + per-cycle tallies
@@ -253,14 +254,11 @@ def send_message(id_thread, message):
 
 # ── Apartment info files ──────────────────────────────────────────────────────
 def load_apartment_file(apartment_name):
-    # Apartment names can contain "/" (e.g. "Palestrina 4/B") which is invalid in file paths.
-    # We replace any filesystem-unsafe chars with "-" to get a consistent filename.
-    safe_name = re.sub(r'[<>:"/\\|?*]', "-", apartment_name)
-    path = os.path.join("apartments", f"{safe_name}.md")
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"No apartment file found for '{apartment_name}' (expected: {path})")
-    with open(path, encoding="utf-8") as f:
-        return f.read()
+    # Delegates to the shared module so the bot and the host web app always
+    # resolve to the same file on disk (absolute path, identical name
+    # sanitization). The file is read fresh on every reply, so prompt edits
+    # made from the web app take effect on the next poll cycle with no restart.
+    return apartments_store.read_apartment(apartment_name)
 
 
 # ── Claude ────────────────────────────────────────────────────────────────────

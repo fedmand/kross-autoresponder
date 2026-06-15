@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ name }} — Modifica info{% endblock %}
+
+{% block content %}
+<a class="back" href="/houses">← Info case</a>
+
+<header class="detail-head">
+    <h1>{{ name }}</h1>
+    <div class="app-sub">Queste informazioni vengono fornite all'assistente per rispondere agli ospiti di questa casa.</div>
+</header>
+
+{% if error %}
+<div class="flash flash-err">{{ error }}</div>
+{% endif %}
+
+<form class="editor" method="post" action="/houses/{{ name | urlencode }}">
+    <textarea name="content" class="editor-area" spellcheck="false"
+              aria-label="Informazioni casa">{{ content }}</textarea>
+    <div class="editor-actions">
+        <a class="btn btn-link" href="/houses">Annulla</a>
+        <button type="submit" class="btn btn-primary">Salva modifiche</button>
+    </div>
+    <p class="editor-hint">
+        Il salvataggio crea automaticamente un backup della versione precedente.
+        Le modifiche saranno attive al prossimo ciclo del bot (entro pochi minuti).
+    </p>
+</form>
+{% endblock %}

@@ -25,9 +25,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(BASE_DIR)
 sys.path.insert(0, REPO_ROOT)
 import storage  # noqa: E402
+import apartments_store  # noqa: E402  shared apartments/*.md access (also used by the bot)
 
 MOCK_PATH = os.path.join(REPO_ROOT, "gui", "data", "mock_notifications.json")
-APARTMENTS_DIR = os.path.join(REPO_ROOT, "apartments")
+APARTMENTS_DIR = apartments_store.APARTMENTS_DIR
 
 app = FastAPI(title="Kross — Notifiche host")
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
@@ -82,14 +83,7 @@ def known_homes():
     """All apartments we manage, taken from the apartments/ folder (one .md per
     apartment). Used so every apartment always appears as a filter option, even
     when it currently has no pending notification."""
-    try:
-        return [
-            os.path.splitext(f)[0]
-            for f in os.listdir(APARTMENTS_DIR)
-            if f.endswith(".md")
-        ]
-    except OSError:
-        return []
+    return apartments_store.list_apartments()
 
 
 def compute_booking_status(check_in, check_out, today=None):
@@ -247,3 +241,55 @@ def resolve(notif_id: str, next: str = Form(default="")):
 def api_notifications():
     """JSON endpoint — handy for debugging / future integrations."""
     return [build_view(n) for n in get_enriched()]
+
+
+# ── House info editor ─────────────────────────────────────────────────────────
+# Lets the host edit the per-apartment knowledge base (apartments/*.md) that the
+# bot feeds to Claude. Scope is deliberately limited to these per-house files —
+# the global base prompt lives in script.py and stays a developer-only change.
+# The bot re-reads the file on every reply, so a save here takes effect on the
+# next poll cycle with no restart.
+@app.get("/houses", response_class=HTMLResponse)
+def houses(request: Request, saved: str = ""):
+    return templates.TemplateResponse(
+        request,
+        "houses.html",
+        {
+            "homes": sorted(known_homes()),
+            "saved": saved,
+        },
+    )
+
+
+@app.get("/houses/{name}/edit", response_class=HTMLResponse)
+def house_edit(request: Request, name: str, error: str = ""):
+    if name not in known_homes():
+        return RedirectResponse(url="/houses", status_code=303)
+    try:
+        content = apartments_store.read_apartment(name)
+    except FileNotFoundError:
+        return RedirectResponse(url="/houses", status_code=303)
+    return templates.TemplateResponse(
+        request,
+        "house_edit.html",
+        {
+            "name": name,
+            "content": content,
+            "error": error,
+        },
+    )
+
+
+@app.post("/houses/{name}")
+def house_save(name: str, content: str = Form(default="")):
+    # Validate against the known list first — never let a URL name escape the
+    # apartments folder or create a brand-new file from the web.
+    if name not in known_homes():
+        return RedirectResponse(url="/houses", status_code=303)
+    try:
+        apartments_store.write_apartment(name, content)
+    except (FileNotFoundError, ValueError) as exc:
+        err = urlencode({"error": str(exc)})
+        return RedirectResponse(url=f"/houses/{name}/edit?{err}", status_code=303)
+    saved = urlencode({"saved": name})
+    return RedirectResponse(url=f"/houses?{saved}", status_code=303)

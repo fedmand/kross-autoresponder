@@ -220,3 +220,6 @@ notifications.db
 
 # Bot logs (daily-rotating files: bot.log, bot.log.2026-06-07, ...)
 logs/
+
+# Apartment-info backups written on every web-app save (runtime, host-specific)
+apartments/.backups/

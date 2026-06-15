@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Info case{% endblock %}
+
+{% block content %}
+<a class="back" href="/">← Notifiche</a>
+
+<header class="topbar">
+    <div class="topbar-text">
+        <div class="app-title">🏠 Info case</div>
+        <div class="app-sub">Modifica le informazioni che l'assistente usa per rispondere agli ospiti.</div>
+    </div>
+</header>
+
+{% if saved %}
+<div class="flash flash-ok">Modifiche salvate per <strong>{{ saved }}</strong>. Saranno attive al prossimo ciclo del bot.</div>
+{% endif %}
+
+<main class="list">
+    {% if not homes %}
+    <p class="empty">Nessuna casa trovata.</p>
+    {% endif %}
+
+    {% for home in homes %}
+    <a class="card-link" href="/houses/{{ home | urlencode }}/edit">
+        <article class="card">
+            <div class="card-home">
+                {{ home }}
+                <span class="badges"><span class="badge" style="background:#e7f1ff;color:#1971c2;">Modifica →</span></span>
+            </div>
+        </article>
+    </a>
+    {% endfor %}
+</main>
+{% endblock %}
