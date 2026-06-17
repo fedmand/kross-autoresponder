@@ -269,7 +269,7 @@ def api_notifications():
 # The bot re-reads the file on every reply, so a save here takes effect on the
 # next poll cycle with no restart.
 @app.get("/houses", response_class=HTMLResponse)
-def houses(request: Request, saved: str = "", created: str = "",
+def houses(request: Request, saved: str = "", created: str = "", deleted: str = "",
            new_error: str = "", kross_msg: str = "", kross_error: str = ""):
     active = active_store.get_active()
     homes = [{"name": h, "active": h in active} for h in sorted(known_homes())]
@@ -284,6 +284,7 @@ def houses(request: Request, saved: str = "", created: str = "",
             "kross_fetched_at": fetched_at,
             "saved": saved,
             "created": created,
+            "deleted": deleted,
             "new_error": new_error,
             "kross_msg": kross_msg,
             "kross_error": kross_error,
@@ -305,6 +306,23 @@ def houses_refresh_kross():
     msg = urlencode({"kross_msg": f"Trovate {len(names)} case su Kross "
                                   f"({new_count} senza scheda)."})
     return RedirectResponse(url=f"/houses?{msg}", status_code=303)
+
+
+@app.post("/houses/{name}/delete")
+def house_delete(name: str):
+    # Remove a house entirely: drop it from the active whitelist, delete its
+    # generated .md (backed up first), and delete its form JSON if present.
+    # Validated against the known list so a URL name can't escape the folder.
+    if name not in known_homes():
+        return RedirectResponse(url="/houses", status_code=303)
+    active_store.remove_active(name)
+    try:
+        apartments_store.delete_apartment(name)
+    except FileNotFoundError:
+        pass
+    houses_store.delete_house(name)
+    deleted = urlencode({"deleted": name})
+    return RedirectResponse(url=f"/houses?{deleted}", status_code=303)
 
 
 @app.post("/houses/{name}/active")

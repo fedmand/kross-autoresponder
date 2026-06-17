@@ -17,6 +17,9 @@
 {% if created %}
 <div class="flash flash-ok">Casa <strong>{{ created }}</strong> creata. Compila le informazioni qui sotto.</div>
 {% endif %}
+{% if deleted %}
+<div class="flash flash-ok">Casa <strong>{{ deleted }}</strong> eliminata.</div>
+{% endif %}
 {% if kross_msg %}
 <div class="flash flash-ok">{{ kross_msg }}</div>
 {% endif %}
@@ -93,6 +96,10 @@
                 </button>
             </form>
             <a class="btn btn-edit" href="/houses/{{ home.name | urlencode }}/edit">Modifica →</a>
+            <form method="post" action="/houses/{{ home.name | urlencode }}/delete"
+                  onsubmit="return confirm('Eliminare definitivamente «{{ home.name }}»? La scheda verrà rimossa (ne resta un backup) e il bot non gestirà più questa casa.');">
+                <button type="submit" class="btn btn-delete" aria-label="Elimina {{ home.name }}">Elimina</button>
+            </form>
         </div>
     </article>
     {% endfor %}

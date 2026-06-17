@@ -87,6 +87,15 @@ def init_house(name):
     _write_markdown(name, render_markdown(data))
 
 
+def delete_house(name):
+    """Remove a house's form JSON (source of truth). The generated apartment .md
+    is removed separately via apartments_store.delete_apartment. No-op if there
+    is no JSON (e.g. a legacy, non-form-managed house)."""
+    path = _json_path(name)
+    if os.path.exists(path):
+        os.remove(path)
+
+
 def save_form(name, form):
     """Build the house data from submitted form values, persist the JSON, and
     regenerate the apartment .md (with backup). Returns (data, markdown)."""

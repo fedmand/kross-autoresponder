@@ -251,6 +251,12 @@ body {
 }
 .btn-edit:hover { border-color: var(--accent); }
 
+.btn-delete {
+    background: #fff; color: #c92a2a;
+    border: 1px solid var(--border);
+}
+.btn-delete:hover { border-color: #ffa8a8; background: #fff5f5; }
+
 @media (max-width: 480px) {
     .house-row { flex-direction: column; align-items: stretch; }
     .house-row-actions { justify-content: flex-end; }

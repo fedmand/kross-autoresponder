@@ -198,6 +198,23 @@ def write_apartment(apartment_name, content):
     return backup
 
 
+def delete_apartment(apartment_name):
+    """Delete an apartment's .md file, backing it up first so a mistaken delete
+    can be recovered from apartments/.backups/.
+
+    Returns the backup path (or None if there was nothing to back up). Raises
+    FileNotFoundError if there is no file for this apartment.
+    """
+    path = apartment_path(apartment_name)
+    if not os.path.exists(path):
+        raise FileNotFoundError(
+            f"No apartment file found for '{apartment_name}' (expected: {path})"
+        )
+    backup = _backup_existing(apartment_name)
+    os.remove(path)
+    return backup
+
+
 def create_apartment(apartment_name, content=None):
     """Create a brand-new apartment file (the web 'add house' flow).
 
