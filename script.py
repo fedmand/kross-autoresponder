@@ -48,12 +48,16 @@ KROSS_USERNAME = os.getenv("KROSS_USERNAME")
 KROSS_PASSWORD = os.getenv("KROSS_PASSWORD")
 
 ANTHROPIC_API_KEY  = os.getenv("ANTHROPIC_API_KEY")
+DEEPSEEK_API_KEY   = os.getenv("DEEPSEEK_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID   = os.getenv("TELEGRAM_CHAT_ID")
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 BASE_URL      = "https://api.krossbooking.com/v5"
 POLL_INTERVAL = 1000  # seconds between polling cycles (5 min, well within rate limits)
+
+# Switch to "deepseek" to use DeepSeek instead of Claude (requires DEEPSEEK_API_KEY in .env).
+MODEL_PROVIDER = "deepseek"
 
 # Apartments the bot is allowed to handle ("whitelist"). All others are silently
 # skipped. This list is now managed from the host web app (Info case → toggle)
@@ -357,28 +361,39 @@ def build_conversation(all_messages, up_to_id_message):
     return messages
 
 
-def call_anthropic(system, messages):
+def call_llm(system, messages):
     global _claude_consecutive_failures, _claude_paused_until
-    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     try:
-        msg = client.messages.create(
-            model="claude-sonnet-4-6",  # good balance of quality and cost for guest replies
-            max_tokens=1024,
-            system=system,
-            messages=messages,
-        )
+        if MODEL_PROVIDER == "deepseek":
+            from openai import OpenAI
+            client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
+            resp = client.chat.completions.create(
+                model="deepseek-chat",
+                max_tokens=1024,
+                messages=[{"role": "system", "content": system}] + messages,
+            )
+            text = resp.choices[0].message.content
+        else:
+            client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+            msg = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=1024,
+                system=system,
+                messages=messages,
+            )
+            text = msg.content[0].text
     except Exception:
         _claude_consecutive_failures += 1
         if _claude_consecutive_failures >= CLAUDE_FAILURE_THRESHOLD:
             _claude_paused_until = time.time() + CLAUDE_COOLDOWN
             log.error(
-                f"[CIRCUIT] {_claude_consecutive_failures} consecutive Claude failures — "
-                f"pausing Claude calls for {CLAUDE_COOLDOWN}s"
+                f"[CIRCUIT] {_claude_consecutive_failures} consecutive LLM failures — "
+                f"pausing LLM calls for {CLAUDE_COOLDOWN}s"
             )
         raise
 
     _claude_consecutive_failures = 0  # reset on any success
-    return msg.content[0].text
+    return text
 
 
 def extract_escalation(reply):
@@ -563,7 +578,7 @@ def process_thread(thread, active_apartments):
     # Pass full history up to the last unread message — Claude sees the full context
     # and produces one aggregated reply instead of one reply per message.
     messages = build_conversation(all_messages, last_msg["id_message"])
-    reply    = call_anthropic(system, messages)
+    reply    = call_llm(system, messages)
 
     escalation_data = extract_escalation(reply)
     if escalation_data:
