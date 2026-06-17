@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ name }} — Modifica info{% endblock %}
+
+{% block content %}
+<a class="back" href="/houses">← Info case</a>
+
+<header class="detail-head">
+    <h1>{{ name }}</h1>
+    <div class="app-sub">
+        Compila solo i campi che ti servono: le categorie e i campi lasciati vuoti
+        non finiranno nella scheda generata per l'assistente.
+    </div>
+</header>
+
+{% if error %}
+<div class="flash flash-err">{{ error }}</div>
+{% endif %}
+
+<div class="house-editor">
+    <!-- ── INPUT: structured form ─────────────────────────────── -->
+    <form class="hform" method="post" action="/houses/{{ name | urlencode }}">
+        {% for cat in categories %}
+        <details class="hcat"{% if loop.first %} open{% endif %}>
+            <summary>{{ cat.title }}</summary>
+
+            {% if not cat.free_text %}
+            <div class="hfields">
+                {% for f in cat.fields %}
+                <label class="hfield">
+                    <span class="hfield-label">{{ f.label }}</span>
+                    <input type="text" name="{{ f.input_name }}" value="{{ f.value }}"
+                           autocomplete="off" spellcheck="false">
+                </label>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <label class="hfield hfield-instr">
+                <span class="hfield-label">{{ cat.instructions_label }}</span>
+                <textarea name="{{ cat.instructions_name }}" rows="3"
+                          spellcheck="false">{{ cat.instructions }}</textarea>
+            </label>
+        </details>
+        {% endfor %}
+
+        <div class="editor-actions">
+            <a class="btn btn-link" href="/houses">Annulla</a>
+            <button type="submit" class="btn btn-primary">Salva modifiche</button>
+        </div>
+        <p class="editor-hint">
+            Il salvataggio crea automaticamente un backup della versione precedente e
+            rigenera la scheda. Le modifiche saranno attive al prossimo ciclo del bot
+            (entro pochi minuti).
+        </p>
+    </form>
+
+    <!-- ── OUTPUT: generated markdown (read-only) ─────────────── -->
+    <section class="hpreview">
+        <div class="hpreview-head">Anteprima scheda generata (sola lettura)</div>
+        <pre class="hpreview-body">{{ preview }}</pre>
+    </section>
+</div>
+{% endblock %}

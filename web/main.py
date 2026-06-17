@@ -25,6 +25,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(BASE_DIR)
 sys.path.insert(0, REPO_ROOT)
 import storage  # noqa: E402
+import house_schema  # noqa: E402
+import houses_store  # noqa: E402
 import apartments_store  # noqa: E402  shared apartments/*.md access (also used by the bot)
 import active_store  # noqa: E402  shared whitelist of apartments the bot may handle
 import kross_client  # noqa: E402  on-demand, cached Kross apartment list
@@ -327,15 +329,17 @@ def house_new(name: str = Form(default=""), manual_name: str = Form(default=""))
     if not chosen:
         err = urlencode({"new_error": "Seleziona o inserisci il nome di una casa."})
         return RedirectResponse(url=f"/houses?{err}", status_code=303)
+    # An already-existing house: just open its editor (legacy or form, decided in
+    # house_edit) — never convert/overwrite a hand-written file into a form.
+    if apartments_store.apartment_exists(chosen):
+        return RedirectResponse(url=f"/houses/{quote(chosen)}/edit", status_code=303)
     try:
         apartments_store.create_apartment(chosen)
-    except FileExistsError:
-        # Already there — just open its editor instead of erroring.
-        return RedirectResponse(url=f"/houses/{quote(chosen)}/edit", status_code=303)
     except (ValueError, OSError) as exc:
         err = urlencode({"new_error": str(exc)})
         return RedirectResponse(url=f"/houses?{err}", status_code=303)
-    # Land on the editor so the host fills in the details right away.
+    # New house → manage it through the structured 23-category form.
+    houses_store.init_house(chosen)
     return RedirectResponse(url=f"/houses/{quote(chosen)}/edit", status_code=303)
 
 
@@ -343,6 +347,22 @@ def house_new(name: str = Form(default=""), manual_name: str = Form(default=""))
 def house_edit(request: Request, name: str, error: str = ""):
     if name not in known_homes():
         return RedirectResponse(url="/houses", status_code=303)
+
+    # Form-managed (new) houses get the structured 23-category editor; legacy
+    # hand-written houses keep the raw-markdown editor so their content is safe.
+    if houses_store.is_form_managed(name):
+        data = houses_store.load_house(name)
+        return templates.TemplateResponse(
+            request,
+            "house_form.html",
+            {
+                "name": name,
+                "categories": houses_store.form_view(data),
+                "preview": houses_store.render_markdown(data),
+                "error": error,
+            },
+        )
+
     try:
         content = apartments_store.read_apartment(name)
     except FileNotFoundError:
@@ -359,15 +379,28 @@ def house_edit(request: Request, name: str, error: str = ""):
 
 
 @app.post("/houses/{name}")
-def house_save(name: str, content: str = Form(default="")):
+async def house_save(request: Request, name: str, content: str = Form(default="")):
     # Validate against the known list first — never let a URL name escape the
     # apartments folder or create a brand-new file from the web.
     if name not in known_homes():
         return RedirectResponse(url="/houses", status_code=303)
+
+    if houses_store.is_form_managed(name):
+        # Structured form: rebuild the JSON from all submitted fields and
+        # regenerate the markdown deterministically.
+        form = await request.form()
+        try:
+            houses_store.save_form(name, form)
+        except (FileNotFoundError, ValueError) as exc:
+            err = urlencode({"error": str(exc)})
+            return RedirectResponse(url=f"/houses/{quote(name)}/edit?{err}", status_code=303)
+        saved = urlencode({"saved": name})
+        return RedirectResponse(url=f"/houses?{saved}", status_code=303)
+
     try:
         apartments_store.write_apartment(name, content)
     except (FileNotFoundError, ValueError) as exc:
         err = urlencode({"error": str(exc)})
-        return RedirectResponse(url=f"/houses/{name}/edit?{err}", status_code=303)
+        return RedirectResponse(url=f"/houses/{quote(name)}/edit?{err}", status_code=303)
     saved = urlencode({"saved": name})
     return RedirectResponse(url=f"/houses?{saved}", status_code=303)

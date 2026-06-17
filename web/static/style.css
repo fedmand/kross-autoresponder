@@ -256,6 +256,57 @@ body {
     .house-row-actions { justify-content: flex-end; }
 }
 
+/* ── Structured house form ──────────────────────────────── */
+.house-editor { margin-top: 14px; }
+
+.hcat {
+    border: 1px solid var(--border); border-radius: 11px;
+    background: #fff; margin-bottom: 8px; overflow: hidden;
+}
+.hcat > summary {
+    list-style: none; cursor: pointer; padding: 11px 13px;
+    font-size: 0.92rem; font-weight: 700; color: var(--text);
+}
+.hcat > summary::-webkit-details-marker { display: none; }
+.hcat > summary::before { content: "▸ "; color: var(--muted); }
+.hcat[open] > summary::before { content: "▾ "; }
+.hcat[open] > summary { border-bottom: 1px solid var(--border); }
+
+.hfields { padding: 10px 13px 0; }
+.hfield { display: block; margin-bottom: 10px; }
+.hfield-label {
+    display: block; font-size: 0.72rem; color: var(--muted);
+    margin-bottom: 3px; letter-spacing: 0.01em;
+}
+.hfield input[type="text"], .hfield textarea {
+    width: 100%; border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 10px; font-size: 0.88rem; font-family: inherit;
+    color: var(--text); background: #fff;
+}
+.hfield input[type="text"]:focus, .hfield textarea:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(25,113,194,0.12);
+}
+.hfield textarea { resize: vertical; line-height: 1.4; }
+.hfield-instr { padding: 4px 13px 12px; margin-bottom: 0; }
+
+/* ── Generated markdown preview ─────────────────────────── */
+.hpreview {
+    margin-top: 18px; border: 1px solid var(--border);
+    border-radius: 11px; background: #fbfcfd; overflow: hidden;
+}
+.hpreview-head {
+    padding: 9px 13px; font-size: 0.78rem; font-weight: 600;
+    color: var(--muted); border-bottom: 1px solid var(--border);
+    background: #f1f3f5;
+}
+.hpreview-body {
+    margin: 0; padding: 13px; font-size: 0.74rem; line-height: 1.45;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: var(--text-soft); max-height: 460px; overflow-y: auto;
+}
+
 /* ── Mobile ─────────────────────────────────────────────── */
 @media (max-width: 480px) {
     .meta { grid-template-columns: 1fr; }

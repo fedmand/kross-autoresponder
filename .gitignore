@@ -231,3 +231,7 @@ kross_apartments_cache.json.tmp
 # Web-managed whitelist of apartments the bot may handle (runtime, host-specific)
 active_apartments.json
 .active_*.tmp
+
+# Structured house-form data (source of truth for form-managed houses, created
+# at runtime from the dashboard; the generated apartments/*.md is the artifact)
+houses/
