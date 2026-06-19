@@ -475,7 +475,7 @@ def process_thread(thread, active_apartments):
 
     # Whitelist gate: handle this apartment only if the host has activated it in
     # the dashboard. active_apartments is read once per cycle in main().
-    if apartment_name not in active_apartments:
+    if apartments_store.safe_filename(apartment_name) not in active_apartments:
         return "skip"
 
     # Pre-filter: last_message_from_name comes free from get_threads() with no extra API call.
