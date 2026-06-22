@@ -57,7 +57,7 @@ BASE_URL      = "https://api.krossbooking.com/v5"
 POLL_INTERVAL = 1000  # seconds between polling cycles (5 min, well within rate limits)
 
 # Switch to "deepseek" to use DeepSeek instead of Claude (requires DEEPSEEK_API_KEY in .env).
-MODEL_PROVIDER = "deepseek"
+MODEL_PROVIDER = "claude"
 
 # Apartments the bot is allowed to handle ("whitelist"). All others are silently
 # skipped. This list is now managed from the host web app (Info case → toggle)
