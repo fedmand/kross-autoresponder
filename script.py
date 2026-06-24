@@ -674,7 +674,14 @@ def main():
             active_apartments = active_store.get_active()
             threads = get_threads()
             unread  = threads["data"]
-            active  = [t for t in unread if t.get("name_room_type") in active_apartments]
+            # Match the whitelist gate in process_thread: sanitize the Kross name
+            # before comparing, so houses whose name_room_type contains a
+            # filesystem-unsafe char (e.g. "Fantoni 1/I" → "Fantoni 1-I") are
+            # counted correctly here too.
+            active  = [
+                t for t in unread
+                if apartments_store.safe_filename(t.get("name_room_type", "")) in active_apartments
+            ]
             log.info(f"Polling — {len(unread)} unread thread(s) total, {len(active)} in active apartments.")
 
             for thread in unread:
