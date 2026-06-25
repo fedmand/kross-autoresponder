@@ -313,9 +313,45 @@ CRITICAL — output format rules:
 - When escalating, output ONLY the raw JSON object: no markdown code fences, no backticks, no text before or after it.
 - When NOT escalating, write ONLY the plain-text reply for the guest. NEVER include any JSON, curly braces, "action", "escalate", or any machine-readable content in a guest-facing reply. The escalation JSON is read by the system, never shown to the guest.
 
-Pay close attention to today's date (provided below in Italian time) when reasoning about check-in/check-out timing. Do NOT say "domani" / "oggi" unless it is actually correct relative to today's date — always compute the real date and refer to it explicitly (e.g. "il 18 giugno").
+The current date/time and the check-in/check-out dates are given below ALREADY with their weekday and a relative descriptor (oggi/domani/tra N giorni) precomputed for you. ALWAYS use those exact weekdays and dates as given — NEVER compute or guess the day of the week yourself. When referring to a day, use the weekday and date exactly as provided (e.g. "venerdì 26 giugno"); do NOT say "sabato" / "domani" / "oggi" unless it matches the precomputed value below.
 
 Otherwise (for ordinary questions with no fault or complaint) write a direct, helpful reply. Do not include any preamble or sign-off."""
+
+
+# Italian weekday/month names, indexed to match datetime.weekday() (Mon=0) and
+# month-1. Hard-coded so the output never depends on the server's locale.
+ITALIAN_DAYS = ["lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato", "domenica"]
+ITALIAN_MONTHS = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno",
+                  "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"]
+
+
+def format_italian_date(iso, today, with_relative=True):
+    """Turn an ISO date ("YYYY-MM-DD") into "venerdì 26 giugno 2026 (domani)".
+
+    The weekday and a relative descriptor (oggi/domani/ieri/tra N giorni) are
+    computed here in Python so the LLM never has to do date arithmetic itself —
+    that arithmetic is exactly what produced wrong weekdays ("sabato" for a
+    Friday) before. Returns the raw string unchanged if it can't be parsed.
+    """
+    try:
+        d = datetime.strptime(iso, "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return iso or "?"
+    label = f"{ITALIAN_DAYS[d.weekday()]} {d.day} {ITALIAN_MONTHS[d.month - 1]} {d.year}"
+    if not with_relative:
+        return label
+    delta = (d - today).days
+    if delta == 0:
+        rel = "oggi"
+    elif delta == 1:
+        rel = "domani"
+    elif delta == -1:
+        rel = "ieri"
+    elif delta > 1:
+        rel = f"tra {delta} giorni"
+    else:
+        rel = f"{-delta} giorni fa"
+    return f"{label} ({rel})"
 
 
 def build_system_prompt(apartment_name, apartment_info, reservation):
@@ -325,14 +361,19 @@ def build_system_prompt(apartment_name, apartment_info, reservation):
     rooms = res.get("rooms", [{}])[0]
 
     now_it = datetime.now(ZoneInfo("Europe/Rome"))
+    today  = now_it.date()
 
     lines = [
         SYSTEM_PROMPT_BASE,
         "\n--- Current Date/Time (Italy) ---",
-        f"Oggi è {now_it.strftime('%A %d %B %Y, %H:%M')} (ora italiana).",
+        f"Oggi è {format_italian_date(today.isoformat(), today, with_relative=False)}, "
+        f"ore {now_it.strftime('%H:%M')} (ora italiana).",
         "\n--- Reservation Context ---",
         f"Apartment: {apartment_name}",
-        f"Check-in: {res['arrival']} | Check-out: {res['departure']}",
+        # Weekday + relative day are precomputed so the model NEVER computes them
+        # itself (it used to guess the wrong weekday).
+        f"Check-in: {format_italian_date(res['arrival'], today)}",
+        f"Check-out: {format_italian_date(res['departure'], today)}",
         f"Guest: {res['label']} | Guests: {rooms.get('qt_guests', '?')} | Language: {res.get('lang', '?')}",
     ]
     if res.get("note"):
