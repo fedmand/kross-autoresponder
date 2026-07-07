@@ -8,24 +8,25 @@
 
 | FIELD | VALUE |
 |---|---|
-| Nome appartamento | Fantoni 1/I |
-| Nome annuncio | [Cinema]Airport 6'-warmed Idropool-patio |
-| Indirizzo completo | Via Fantoni 1/I bergamo (24121), se l'ospite ha solo inviato la richiesta di prenotazione scrivi soltanto il nome della via senza civico, mentre dopo aver effettuato e confermato la prenotazione comunicaglielo pure per esteso. |
-| Descrizione porta condominiale | Si tratta di un cancello in ferro rosso. |
-| Piano | l'appartamento si trova al piano Numero 1 |
-| Presenza ascensore | Sì, il condominio è dotato di ascensore 😊 Per utilizzarlo è necessario appoggiare il badge nell’apposito lettore. Per chiamare l’ascensore dal piano, posiziona il badge sul lettore che si trova sopra il pulsante numero 1. Una volta entrato nella cabina, troverai un secondo lettore sopra i pulsanti dei piani. Appoggia nuovamente il badge e poi seleziona il piano desiderato. Ricordati quindi di avere sempre il badge con te quando utilizzi l’ascensore 🔑 |
-| Metratura totale | La casa si sviluppa interamente su un unico piano e ha una superficie interna di circa 72 m² 😊 Dalla cucina è possibile accedere direttamente alla grande terrazza privata di circa 55 m², uno spazio ampio e comodo dove rilassarsi e trascorrere piacevoli momenti all’aperto ☀️ |
-| Numero camere da letto | La casa dispone di due camere da letto matrimoniali 🛏️ Nella seconda camera matrimoniale è presente anche un letto singolo che può essere utilizzato come posto letto singolo. Nel disimpegno tra le due camere si trova inoltre una poltrona letto, utilizzabile come ulteriore posto letto singolo 😊 In totale, l’appartamento può quindi ospitare fino a 6 persone. |
+| Nome appartamento | macchi 32 |
+| Nome annuncio | For family- 4'walkTrainStation-P.taVenezia4'walk |
+| Indirizzo completo | via mauro Macchi, 32 Milano (MI),20124 |
+| Descrizione palazzo (colore/numero piani totale) | Palazzo signorile residenziale color grigio |
+| Descrizione porta condominiale | si tratta di un cancello verde |
+| Piano | seminterrato luminoso molto silenzioso e ventilato |
+| Presenza ascensore | Sì, il condominio è dotato di ascensore 😊 |
+| Metratura totale | La casa si sviluppa interamente su un unico piano e ha una superficie interna di circa 40 metri quadri |
+| Numero camere da letto | una camera da letto matrimoniale |
 | Numero bagni | la casa dispone di un bagno |
-| Numero soggiorni | La casa dispone di un ampio disimpegno centrale, situato in una posizione comoda tra le due camere da letto, il bagno e la cucina 😊 Questo spazio collega facilmente tutti gli ambienti principali dell’appartamento e rende la casa pratica e ben organizzata. |
-| Numero massimo ospiti | 6 |
-| Numero letti totali | 4 |
-| Numero matrimoniali | 2 |
-| Numero singoli | 2 |
-| Divano letto presente (marca e tipologia) | il letto singolo (adibito come divano) in camera da letto è dell'ikea e anche la poltrona letto è dell'ikea. sono entrambi molto comodi |
-| Presenza balcone | no, è presente una grande terrazza |
-| Presenza terrazza | Sì, l’appartamento dispone di una grande terrazza di circa 55 m², perfetta per rilassarsi all’aperto ☀️ Sulla terrazza troverai una piscina gonfiabile riscaldata con idromassaggio Lay Z Spa, un grande ombrellone, due sdraio prendisole e una zona esterna con quattro posti a sedere e un tavolino. È uno spazio ideale per prendere il sole, rilassarsi, bere qualcosa o trascorrere piacevoli momenti all’aperto 😊 |
+| Numero soggiorni | La casa dispone di un ampio disimpegno centrale |
+| Numero massimo ospiti | 4 |
+| Numero letti totali | 2 |
+| Numero matrimoniali | 1 |
+| Divano letto presente (marca e tipologia) | 1 |
+| Presenza balcone | no |
+| Presenza terrazza | no |
 | Giardino privato | no, non ne dispone |
+| Vista particolare | no, non ne dispone |
 
 ---
 
@@ -33,17 +34,16 @@
 
 | FIELD | VALUE |
 |---|---|
-| Link accesso all'appartamento | l'invio delle istruzioni di check in viene inviato circa 48 ore prima dell'arrivo degli ospiti e questo è il link che viene inviato https://milanoholidayhomes.kross.travel/guest/check-in-instructions?tag=74715f067e394ef0295122fbed346f85 |
+| Link accesso all'appartamento | l'invio delle istruzioni di check in viene inviato circa 48 ore prima dell'arrivo degli ospiti e questo è il link che viene inviato https://milanoholidayhomes.kross.travel/guest/check-in-instructions?tag=2ba2c96a6df98f61cff09239f2641d5f |
 | Orario check-in | dalle ore 16.00 fino alle ore 22 |
 | Early check-in disponibile | per eseguire il check-in anticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa |
 | Costo early check-in | normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 | Self check-in | si, il check in avviene tramite keybox |
 | Check-in in presenza | no |
 | Codice portone | no |
-| Codice keybox | 2288 |
-| Posizione keybox | la keybox si trova sul cancello condominiale di ferro rosso a sinistra (il nostro locker è quello piu' esterno perche' ad oggi ne sono presenti due) |
-| Nome sul citofono | Lopez, se non fosse presente questo nome sul citofono è perche' l'amministartore condominiale l'ha sostituito con questo codice: IT016024B4FJI7YDT6 |
-| Piano corretto | L’appartamento si trova al primo piano del condominio. Per raggiungerlo, dopo aver superato il cancello rosso condominiale, bisogna girare subito a destra ed entrare nella prima porta presente. Da questo ingresso è possibile salire al primo piano utilizzando le scale oppure l’ascensore. La porta dell’appartamento è la prima porta del piano. Se l’ospite utilizza l’ascensore, una volta uscito deve girarsi verso destra. La porta dell’appartamento si trova subito sulla destra. Se l’ospite utilizza le scale, una volta arrivato al primo piano trova la porta dell’appartamento direttamente di fronte a sé. È la prima porta presente sul piano. |
+| Codice keybox | 1717 |
+| Posizione keybox | A destra rispetto al civico 32, poco prima dell’uscita dei box, troverete una cassetta di sicurezza |
+| Piano corretto | Il piano è seminterrato per cui dovrete prendere le scale, o l'ascensore e recarvi al piano sotterraneo dopodichè aprire la porta che trovate subito sulla sinistra all'uscita dell'ascensore, aperta quella porta la porta di casa è quella ancora a sinistra |
 | Foto ingresso | il guest puo' vederla tramite il link di istruzioni di accesso |
 
 > le info sensibili di accesso all’appartamento devono essere inviate solo dopo che l’ospite ha eseguito e confermato la prenotazione e non quando invia la richiesta di prenotazione.
@@ -56,13 +56,13 @@
 
 | FIELD | VALUE |
 |---|---|
-| Link istruzioni check out | https://milanoholidayhomes.kross.travel/guest/check-out-instructions?tag=74715f067e394ef0295122fbed346f85 |
+| Link istruzioni check out | https://milanoholidayhomes.kross.travel/guest/check-out-instructions?tag=2ba2c96a6df98f61cff09239f2641d5f |
 | Orario check-out | entro le ore 10..00 |
 | Late check-out disponibile | per eseguire il check-out posticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa |
 | Costo late check-out | normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 | Dove lasciare chiavi | all'interno del locker dove sono state prese per eseguire il check in |
 | Cosa fare prima di uscire | assicurarsi che il guest chiuda tutte le finestre, che spenga la luce e che non ci sia l'aria condizionata accesa |
-| Dove buttare immondizia | il locale immondizia si trova, superato il cancello |
+| Dove buttare immondizia | il locale immondizia si trova, usciti di casa, invece di prendere le scale per salire giria destra e vai sempre dritto finchè non trovi una porta, aprendola uscirai sul cortile interno vai a destra e poi prosegui sempre dritto e troverai i bidoni sulla rampa per uscire a sinistra |
 | Spegnere climatizzatore | sempre |
 | Lasciare finestre chiuse | sempre |
 | Lasciare stoviglie pulite | non è una regola scritta, ma è importante che non ci sia sporcizia extra che richiederebbe un intervento aggiuntivo alla società delle pulizie |
@@ -75,17 +75,17 @@
 
 | FIELD | VALUE |
 |---|---|
-| Numero camere | 2 |
-| Dimensione camere | circa 20 metri quadri l'una |
-| Letto matrimoniale | ci sono due letti matrimoniali (1 per ciascuna camera) |
-| Letti singoli | l'ho già riportato prima nella categoria "informazioni generali" |
+| Numero camere | 1 |
+| Dimensione camere | circa 15 metri quadrati |
+| Letto matrimoniale | è presente un letto matrimoniale e un divano letto matrimoniale |
+| Letti singoli | no |
 | Tipologia di materassi | non conosco la marca esatta ma sono tutti molto comodi |
-| Armadio | ci sono due grandi armadi in ciascuna delle due camere da letto |
-| Comodini | ci sono due comodini in ogni camera da letto e un comodino di fronte alla porta blindata d'ingresso |
+| Armadio | c'è un ampio armadio in camera da letto e una cassettiera |
+| Comodini | ci sono due comodini in ogni camera da letto |
 | Tende | si ci sono le tende e le tapparelle permettono di non far penetrare neanche un raggio di luce durante le prime ore della mattina per consentire un ottimo sonno |
 | Cuscini extra | si, negli armadi il guest dovrebbe trovarne |
 | Coperte extra | si, negli armadi il guest dovrebbe trovarne |
-| Aria condizionata | certamente, in ciascuna camera è presente un bocchettone dell'aria condizionata |
+| Aria condizionata | certamente, tramite fancoil |
 | Riscaldamento | certamente, in ciascuna camera ci sono i caloriferi che in inverno permettono di avere una temperatura adeguata regolabili tramite termovalvole |
 
 ---
@@ -95,20 +95,20 @@
 | FIELD | VALUE |
 |---|---|
 | Numero bagni | 1 |
-| Doccia | si |
+| Doccia | sì |
 | Vasca | no |
-| Bidet | si |
-| Asciugacapelli | si |
+| Bidet | sì |
+| Asciugacapelli | sì |
 | Sapone mani | si, in formato welcome kit quindi fornito in quantità solo strettamente necessarie e limitate |
 | Shampoo | si, in formato welcome kit quindi fornito in quantità solo strettamente necessarie e limitate |
 | Bagnoschiuma | no |
 | Carta igienica extra | solo su richiesta, normalmente viene fornito un solo rotolo |
-| Asciugamani viso | si |
-| Asciugamani doccia | si |
-| Tappetino bagno | si |
-| Scaldasalviette | no |
-| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://www.youtube.com/watch?v=GxQp0RQ9KU0 ) |
-| Stendino | si |
+| Asciugamani viso | sì |
+| Asciugamani doccia | sì |
+| Tappetino bagno | sì |
+| Scaldasalviette | sì |
+| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://drive.google.com/file/d/1RYiSaOp30T38MAfa7vOtJwScrmv5XK7v/view?usp=drive_link |
+| Stendino | sì |
 
 ---
 
@@ -116,34 +116,41 @@
 
 | FIELD | VALUE |
 |---|---|
-| Cucina completa | si |
-| Piano induzione | no |
-| Piano gas | si, qui il link di come far funzionare i fornelli (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://www.youtube.com/watch?v=yXSkzkpNhwY ) |
-| Forno | si |
-| Microonde | si |
-| Lavastoviglie | si, qui il link di come far funzionare la lavastoviglie (da inviare solo se il guest richiede espressamente come funziona : https://www.youtube.com/watch?v=qV6Ua3w6nwI ) |
-| Frigorifero | si |
-| Congelatore | si |
-| Bollitore | si |
-| Macchina caffè | si |
-| Pentole | si |
-| Padelle | si |
-| Piatti | si |
-| Bicchieri | si |
-| Calici vino | si |
-| Posate | si |
-| Apribottiglie | si |
+| Cucina completa | sì |
+| Piano induzione | si, qui il link di come far funzionare i fornelli (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://drive.google.com/file/d/1U0k0mx6b7TJYS_U43GsUqnyVJGzgxhOk/view?usp=drive_link |
+| Forno | si, qui il link di come far funzionare il forno (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://drive.google.com/file/d/1teaoyOmb9TkVHqiAlgP621VPDq_ADpwM/view?usp=drive_link |
+| Microonde | sì |
+| Lavastoviglie | no |
+| Frigorifero | sì |
+| Congelatore | sì |
+| Bollitore | sì |
+| Macchina caffè | sì |
+| Moka | no |
+| Pentole | sì |
+| Padelle | sì |
+| Piatti | sì |
+| Bicchieri | sì |
+| Calici vino | sì |
+| Posate | sì |
+| Apribottiglie | sì |
 | Sale | non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
 | Olio | non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
 | Zucchero | non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
 | Caffè | non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
-| Tè | non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
+| Tè | non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremonon presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
 
 ---
 
 # 7. SOGGIORNO
 
-> non è presente un vero e proprio soggiorno ma un largo e comodo disimpegno dove c'è presente un comodino, sopra il quale c'è il wifi e la poltrona letto dell'ikea
+| FIELD | VALUE |
+|---|---|
+| Divano | è presente un comodo e spazioso divano letto matrimoniale |
+| Divano letto | è presente un comodo e spazioso divano letto matrimoniale |
+| Smart TV | l'appartamento è dotato di una televisione smart |
+| Sedie disponibili | 4 comode sedie in legno attorno al tavolo da pranzo |
+| Aria condizionata | sì |
+| Riscaldamento | sì, autonomo tramite termovalvole, consigliabile impostarle a 2 e non di più |
 
 ---
 
@@ -151,16 +158,12 @@
 
 | FIELD | VALUE |
 |---|---|
-| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://www.youtube.com/watch?v=GxQp0RQ9KU0 ) |
-| Asciugatrice | si, la stessa macchina che fa da lavatrice consente anche di asciugare i vestiti e in piu' mettiamo a disposizione degli stendini |
-| Ferro da stiro | si |
-| Asse da stiro | si |
-| Aspirapolvere | si |
-| Robot aspirapolvere | no |
-| Phon | si |
-| Ventilatore | no |
-| Deumidificatore | no |
-| Caldaia | si, si trova nello sportello in cucina, a sinistra rispetto alle finestre che danno l'accesso sulla terrazza |
+| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento:https://drive.google.com/file/d/1RYiSaOp30T38MAfa7vOtJwScrmv5XK7v/view?usp=drive_link |
+| Asciugatrice | no |
+| Ferro da stiro | sì |
+| Asse da stiro | sì |
+| Phon | sì |
+| Caldaia | si, su richiesta dell'ospite invia questo link: https://drive.google.com/file/d/1_i7LDmvkxarebbwVxkuSlGkTYMG6Couf/view?usp=drive_link |
 
 ---
 
@@ -169,10 +172,9 @@
 | FIELD | VALUE |
 |---|---|
 | Aria condizionata | si, l'appartamento gode di un impianto di aria condizionata canalizzato con diffusori in ogni ambiente di modo che possa garantire le migliori temperature all'interno dell'appartamento |
-| Numero split/fancoil | ci sono tre uscite: una in cucina, una nella prima camera da letto e un'altra nella seconda camera da letto |
-| Riscaldamento autonomo | per il riscaldamento bisogna girare le apposite manopole (le termovalvole) presenti sui caloriferi per attivarli e svcegliere l'intensità del riscaldamento |
-| Tipo riscaldamento | tramite caloriferi che si possono regolare individualmente tramite eletrovalvole |
-| Termostato | per far funzionare l'aria condizionata bisogna schiacciare il tasto "C" che si trova sulla parte superiore del termostato e posizionarlo su on, una volta eseguito quest passaggio si puo' settare la temperatura piu' desiderata tramite i tasti + o - come mostrato in fotografia al seguente link : https://drive.google.com/file/d/1DCWDfNfU2LmtANwEO4O4ojPsCFMuoYz0/view?usp=drivesdk |
+| Numero split/fancoil | uno per ogni ambiente |
+| Riscaldamento autonomo | sì, autonomo tramite termovalvole, consigliabile impostarle a 2 e non di più |
+| Tipo riscaldamento | autonomo tramite termovalvole, consigliabile impostarle a 2 e non di più |
 
 ---
 
@@ -180,10 +182,8 @@
 
 | FIELD | VALUE |
 |---|---|
-| Nome Wi-Fi | FASTWEB-SJKUDS |
-| Password Wi-Fi | 6CESFAYTSS |
-| Router posizione | si trova sul mobile all'ingresso vicino alla porta blindata, si puo' eseguire l'accesso alla connessione inquadrando il qrcode presente sul retro del modem |
-| Procedura reset router | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem fastweb a inviare una proceedura efficace di reset |
+| Password Wi-Fi | su richiesta degli ospiti invia questo link: https://drive.google.com/file/d/1J1OCfSRzLUdmZeI460aZPOGb64HIpWYq/view?usp=drive_link |
+| Router posizione | in sala, accanto al tavolo da pranzo |
 
 ---
 
@@ -192,10 +192,10 @@
 | FIELD | VALUE |
 |---|---|
 | Estintore | si, presente da 6 kg in polvere |
-| Rilevatore monossido | si, è presente |
-| Kit pronto soccorso | si , è presente |
-| Quadro elettrico | si trova entrando in casa subito a sinistra |
-| Contatore elettrico | se salta la corrente, bisogna spiegare al guest che probabilmente ha utilizzato troppi elettrodomestici insieme e per riattivare la corrente deve alzare la leva del contatore generale che si trova a piano terra. allega questo link che mostra il video di come trovare il contatore (il nostro ha una targhetta "LOPEZ" per distinguerlo) link: https://drive.google.com/file/d/11hKzoc_UBC5rJzH7w6tRAkeDDq6atgDw/view?usp=drivesdk |
+| Rilevatore monossido | presente |
+| Kit pronto soccorso | presente |
+| Quadro elettrico | si trova entrando in casa subito a destra |
+| Contatore elettrico | se salta la corrente, bisogna spiegare al guest che probabilmente ha utilizzato troppi elettrodomestici insieme e per riattivare la corrente deve alzare la leva del contatore generale che si trova a piano meno uno, scrivendogli di portarsi la targhetta attaccata al mazzo dei telecomandi del box, allega questo link che mostra il video di come trovare il contatore: https://drive.google.com/file/d/1c35mSBNh_PCqPepkJR2srONVdTDi0jej/view?usp=drive_link |
 
 ---
 
@@ -215,11 +215,11 @@
 
 | FIELD | VALUE |
 |---|---|
-| Ascensore | si |
-| Rampe | ci sono una decina di gradini da percorrere per arrivare all'appartamento se non si vuole usare l'ascensore |
-| Accesso disabili | si, anche se c'è un piccolo gradino all'ingresso |
-| Doccia accessibile | si |
-| Piano terra | no, primo piano |
+| Ascensore | sì |
+| Rampe | ci sono una decina di gradini da percorrere per arrivare all'appartamento |
+| Accesso disabili | si, ci sono una decina di gradini da percorrere |
+| Doccia accessibile | sì |
+| Piano terra | no, seminterrato |
 
 ---
 
@@ -227,25 +227,14 @@
 
 | FIELD | VALUE |
 |---|---|
-| Culla | presente in struttura |
+| Culla | presente in struttura, invia questo link: https://www.youtube.com/watch?v=Tzjqg6G_ZGE%0A%0ACulla%20come%20si%20apre%0A |
 | Seggiolone | presente in struttura |
-| Lettino bambino | presente in struttura |
 | Giochi per bambini | no |
-| Animali ammessi | si |
+| Animali ammessi | sì |
 | Ciotole animali | no |
 | Deposito bagagli | spiega che per direttive della società delle pulizie, non è consentito ma che possono utilizzare servizi come "usebounce" o "radical storage" e che se sarà possibile gli faremo eseguire un early check in o late checkout (che deve essere notificato tramite frontend) |
 | Pulizie extra | solo su richiesta e deve essere coordinatoo con la società delle pulizie |
 | Cambio biancheria | solo su richiesta e deve essere coordinatoo con la società delle pulizie |
-
-> sulla terrazza è presente una piscina, queste sono le regole e il funzionamento :Per utilizzare la piscina, è obbligatorio fare la doccia prima di entrare. Potete utilizzare sia la doccia interna sia quella esterna 🚿
-> Prima di usare la piscina e soprattutto dopo l’utilizzo, ricordatevi di attivare il filtraggio dell’acqua:
-> Assicuratevi che la piscina sia collegata alla corrente.
-> Tenete premuto il pulsante di accensione finché non sentite un rumore.
-> Se vedete accesa la luce del lucchetto, tenete premuto per circa 5 secondi il pulsante con il lucchetto aperto, finché non sentite un suono.
-> A questo punto, premete il pulsante del ricircolo, riconoscibile dalle due frecce rivolte in direzioni opposte 🔄
-> Questo passaggio è molto importante perché, senza filtraggio, l’acqua si sporca velocemente. In caso di mancato utilizzo del sistema di filtraggio, potrebbe essere addebitato un costo di 50 € per la pulizia straordinaria della piscina.
-> Alla fine del soggiorno, vi chiediamo gentilmente di lasciare la piscina completamente vuota. Per svuotarla, è sufficiente aprire il tappo sul fondo e far defluire l’acqua nell’apposita griglia di scarico accanto alla piscina.
-> Grazie mille per la collaborazione e la comprensione ☺️
 
 ---
 
@@ -253,11 +242,11 @@
 
 | FIELD | VALUE |
 |---|---|
-| Vietato fumare | si, vietato all'inteerno dell'abitazione menetre è consentito sulla terrazza |
+| Vietato fumare | si, vietato all'inteerno dell'abitazione |
 | Vietate feste | si, vietato |
 | Orario silenzio | dalle 21 fino alle 9.00 del mattino |
-| Numero massimo ospiti | 6 |
-| Animali consentiti | si |
+| Numero massimo ospiti | 4 |
+| Animali consentiti | sì |
 | Ospiti esterni consentiti | no |
 
 ---
@@ -267,9 +256,8 @@
 | FIELD | VALUE |
 |---|---|
 | Mancanza acqua calda | se non c'è acqua calda devo ricevere una notifica di ri riparazione su front end ma nel mentre puoi pure inviare questo messaggio:Per l’errore A03, prova a spegnere completamente la caldaia e lasciala spenta per circa 5-10 minuti. Per spegnerla, gira la manopola di sinistra sul simbolo di accensione/spegnimento. Dopo qualche minuto, riaccendila e verifica se l’errore è scomparso 😊 Controlla anche la pressione dal barometro che si trova in basso a destra: è un piccolo quadrante rotondo con una lancetta. Se la lancetta si trova tra 1 e 1,5 bar, la pressione è corretta. Se invece è vicina a 0, devi aumentarla girando lentamente il rubinetto nero con quattro sporgenze che si trova sotto la caldaia. Aprilo poco alla volta e controlla il barometro finché la pressione arriva tra 1,2 e 1,5 bar. Appena raggiunge questo valore, è molto importante richiudere bene il rubinetto nero. Se hai difficoltà a individuarlo, mandami una foto della parte sotto la caldaia e ti indico quale girare 📸 |
-| Salta corrente | se salta la corrente, bisogna spiegare al guest che probabilmente ha utilizzato troppi elettrodomestici insieme e per riattivare la corrente deve alzare la leva del contatore generale che si trova a piano terra. allega questo link che mostra il video di come trovare il contatore (il nostro ha una targhetta "LOPEZ" per distinguerlo) link: https://drive.google.com/file/d/11hKzoc_UBC5rJzH7w6tRAkeDDq6atgDw/view?usp=drivesdk |
+| Salta corrente | se salta la corrente, bisogna spiegare al guest che probabilmente ha utilizzato troppi elettrodomestici insieme e per riattivare la corrente deve alzare la leva del contatore generale che si trova a piano terra. allega questo link che mostra il video di come trovare il contatore link: https://drive.google.com/file/d/1c35mSBNh_PCqPepkJR2srONVdTDi0jej/view?usp=drive_link |
 | Wi-Fi non funziona | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem fastweb a inviare una proceedura efficacie di reset |
-| Aria condizionata non funziona | per far funzionare l'aria condizionata bisogna schiacciare il tasto "C" che si trova sulla parte superiore del termostato e posizionarlo su on, una volta eseguito quest passaggio si puo' settare la temperatura piu' desiderata tramite i tasti + o - come mostrato in fotografia al seguente link : https://drive.google.com/file/d/1DCWDfNfU2LmtANwEO4O4ojPsCFMuoYz0/view?usp=drivesdk |
 | Serratura bloccata | provare a scuotere la porta, devo ricevere una notica da front end |
 
 ---
@@ -279,7 +267,7 @@
 | FIELD | VALUE |
 |---|---|
 | Raccolta differenziata | si, bisogna differenziare: carta, umido, plastica, vetro e organico ciascuno in sacchetti diversi |
-| Dove sono i bidoni | Non preoccuparti, ci occuperemo noi di buttare la spazzatura 😊 Se però preferisci occupartene personalmente, una volta uscito dall’ascensore scendi sulla destra e percorri il corridoio fino in fondo. Troverai una porta che conduce al locale dedicato ai rifiuti. Ti chiediamo gentilmente di prestare particolare attenzione alla raccolta differenziata, separando correttamente: • plastica • umido e organico • carta • vetro Grazie mille per la collaborazione 😊 |
+| Dove sono i bidoni | Non preoccuparti, ci occuperemo noi di buttare la spazzatura 😊 Se però preferisci occupartene personalmente, devi tornare nel cortile interno e sulla rampa per uscire sulla sinistra troverai i bidoni |
 
 ---
 
@@ -287,9 +275,9 @@
 
 | FIELD | VALUE |
 |---|---|
-| Taxi | consiglia al guest il numero verde radio taxi bergamo 035.451.90.90 questo è link da cui puo' gia prenotare: https://radiotaxibergamo.it/en/ spiegagli che purtoppo non possiamo essere noi a prenotargli la corsa per suo nome e per conto suo) |
-
-> per tutte queste informazioni di posizione voglio che sia l'LLM a rispondere sulla base della posizione già fornita della casa
+| Metro più vicina | La metro più vicina è caiazzo |
+| Bus più vicino | ci sono più di una fermata dell'autobus |
+| Stazione ferroviaria | La stazione centrale si trova a 5 minuti a piedi |
 
 ---
 
