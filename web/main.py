@@ -11,6 +11,7 @@ Production:   uvicorn web.main:app --host 127.0.0.1 --port 8000
 
 import json
 import os
+import subprocess
 import sys
 from datetime import date, datetime
 from urllib.parse import quote, urlencode
@@ -270,7 +271,8 @@ def api_notifications():
 # next poll cycle with no restart.
 @app.get("/houses", response_class=HTMLResponse)
 def houses(request: Request, saved: str = "", created: str = "", deleted: str = "",
-           new_error: str = "", kross_msg: str = "", kross_error: str = ""):
+           new_error: str = "", kross_msg: str = "", kross_error: str = "",
+           restarted: str = ""):
     active = active_store.get_active()
     homes = [{"name": h, "active": h in active} for h in sorted(known_homes())]
     candidates, fetched_at = new_house_candidates()
@@ -288,8 +290,29 @@ def houses(request: Request, saved: str = "", created: str = "", deleted: str = 
             "new_error": new_error,
             "kross_msg": kross_msg,
             "kross_error": kross_error,
+            "restarted": restarted,
         },
     )
+
+
+# ── Restart bot + dashboard ───────────────────────────────────────────────────
+# Systemd services (see DEPLOYMENT.md). The dashboard runs as `kross-web`, so
+# restarting it kills the very process handling this request. We therefore fire
+# the restart in a detached child that waits a moment first, letting the HTTP
+# redirect reach the browser before uvicorn is torn down and brought back up.
+RESTART_SERVICES = ("kross-bot", "kross-web")
+
+
+@app.post("/restart")
+def restart_services():
+    cmd = "sleep 1 && sudo systemctl restart " + " ".join(RESTART_SERVICES)
+    subprocess.Popen(
+        ["/bin/sh", "-c", cmd],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,  # detach so it survives this process being killed
+    )
+    return RedirectResponse(url="/houses?restarted=1", status_code=303)
 
 
 @app.post("/houses/refresh-kross")

@@ -229,6 +229,14 @@ body {
 }
 .add-house-head .add-house-title { margin-bottom: 0; }
 
+/* ── Manual-name row + restart ──────────────────────────── */
+.add-house-manual-row {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 12px; margin-top: 12px;
+}
+.add-house-manual-row .add-house-manual { margin-top: 0; flex: 1 1 auto; min-width: 0; }
+.add-house-manual-row .btn-delete { white-space: nowrap; flex: 0 0 auto; }
+
 /* ── House rows (active toggle + edit) ──────────────────── */
 .house-row {
     display: flex; align-items: center; justify-content: space-between; gap: 10px;

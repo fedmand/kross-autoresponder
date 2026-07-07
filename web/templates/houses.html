@@ -23,6 +23,10 @@
 {% if kross_msg %}
 <div class="flash flash-ok">{{ kross_msg }}</div>
 {% endif %}
+{% if restarted %}
+<div class="flash flash-ok" id="restartFlash">Riavvio di bot e dashboard in corso… la pagina si ricaricherà tra pochi secondi.</div>
+<script>setTimeout(function () { window.location.href = "/houses"; }, 6000);</script>
+{% endif %}
 {% if new_error %}
 <div class="flash flash-err">{{ new_error }}</div>
 {% endif %}
@@ -59,19 +63,25 @@
     <p class="editor-hint">Premi <strong>Aggiorna da Kross</strong> per caricare l'elenco delle case dal gestionale.</p>
     {% endif %}
 
-    <details class="add-house-manual">
-        <summary>Inserisci il nome manualmente</summary>
-        <form class="add-house-form" method="post" action="/houses/new">
-            <input type="text" name="manual_name" class="add-house-input" autocomplete="off"
-                   placeholder="Nome esatto della casa su Kross">
-            <button type="submit" class="btn btn-primary">Crea e modifica</button>
+    <div class="add-house-manual-row">
+        <details class="add-house-manual">
+            <summary>Inserisci il nome manualmente</summary>
+            <form class="add-house-form" method="post" action="/houses/new">
+                <input type="text" name="manual_name" class="add-house-input" autocomplete="off"
+                       placeholder="Nome esatto della casa su Kross">
+                <button type="submit" class="btn btn-primary">Crea e modifica</button>
+            </form>
+            <p class="editor-hint editor-warn">
+                ⚠️ Il nome deve corrispondere <strong>esattamente</strong> al nome della casa su
+                Kross, altrimenti il bot non troverà la scheda. Usa questa opzione solo se sei
+                sicuro del nome preciso.
+            </p>
+        </details>
+        <form method="post" action="/restart"
+              onsubmit="return confirm('Riavviare il bot e il server adesso? Il servizio sarà brevemente non disponibile per qualche secondo.');">
+            <button type="submit" class="btn btn-delete">⟳ Riavvia bot e server</button>
         </form>
-        <p class="editor-hint editor-warn">
-            ⚠️ Il nome deve corrispondere <strong>esattamente</strong> al nome della casa su
-            Kross, altrimenti il bot non troverà la scheda. Usa questa opzione solo se sei
-            sicuro del nome preciso.
-        </p>
-    </details>
+    </div>
 </section>
 
 <main class="list">
