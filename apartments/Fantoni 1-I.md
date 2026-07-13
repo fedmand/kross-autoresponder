@@ -253,7 +253,7 @@
 
 | FIELD | VALUE |
 |---|---|
-| Vietato fumare | si, vietato all'inteerno dell'abitazione menetre è consentito sulla terrazza |
+| Vietato fumare | si, vietato all'inteerno dell'abitazione mentre è consentito sulla terrazza |
 | Vietate feste | si, vietato |
 | Orario silenzio | dalle 21 fino alle 9.00 del mattino |
 | Numero massimo ospiti | 6 |
