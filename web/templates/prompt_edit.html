@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Prompt AI{% endblock %}
+
+{% block content %}
+<a class="back" href="/">← Notifiche</a>
+
+<header class="detail-head">
+    <h1>Prompt AI</h1>
+    <div class="app-sub">Istruzioni generali che l'assistente segue per rispondere a tutti gli ospiti, per tutte le case.</div>
+</header>
+
+{% if error %}
+<div class="flash flash-err">{{ error }}</div>
+{% endif %}
+{% if saved %}
+<div class="flash flash-ok">Modifiche salvate. Saranno attive al prossimo ciclo del bot.</div>
+{% endif %}
+
+<div class="flash flash-err">
+    Attenzione: non modificare le regole sul formato JSON di escalation
+    (le righe con {"action": "escalate", ...}) — sono lette direttamente dal
+    sistema, non solo dall'assistente. Modificarle o rimuoverle può far sì che
+    l'assistente smetta di segnalare i casi che richiedono un host, o mostri
+    testo tecnico agli ospiti.
+</div>
+
+<form class="editor" method="post" action="/prompt">
+    <textarea name="content" class="editor-area" spellcheck="false"
+              aria-label="Prompt AI">{{ content }}</textarea>
+    <div class="editor-actions">
+        <a class="btn btn-link" href="/">Annulla</a>
+        <button type="submit" class="btn btn-primary">Salva modifiche</button>
+    </div>
+    <p class="editor-hint">
+        Il salvataggio crea automaticamente un backup della versione precedente.
+        Le modifiche saranno attive al prossimo ciclo del bot (entro pochi minuti).
+    </p>
+</form>
+{% endblock %}

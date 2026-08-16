@@ -30,6 +30,7 @@ import house_schema  # noqa: E402
 import houses_store  # noqa: E402
 import apartments_store  # noqa: E402  shared apartments/*.md access (also used by the bot)
 import active_store  # noqa: E402  shared whitelist of apartments the bot may handle
+import prompt_store  # noqa: E402  shared system_prompt.md access (also used by the bot)
 import kross_client  # noqa: E402  on-demand, cached Kross apartment list
 
 MOCK_PATH = os.path.join(REPO_ROOT, "gui", "data", "mock_notifications.json")
@@ -445,3 +446,28 @@ async def house_save(request: Request, name: str, content: str = Form(default=""
         return RedirectResponse(url=f"/houses/{quote(name)}/edit?{err}", status_code=303)
     saved = urlencode({"saved": name})
     return RedirectResponse(url=f"/houses?{saved}", status_code=303)
+
+
+# ── System prompt editor ──────────────────────────────────────────────────────
+@app.get("/prompt", response_class=HTMLResponse)
+def prompt_edit(request: Request, error: str = "", saved: str = ""):
+    try:
+        content = prompt_store.read_prompt()
+    except FileNotFoundError as exc:
+        content = ""
+        error = error or str(exc)
+    return templates.TemplateResponse(
+        request,
+        "prompt_edit.html",
+        {"content": content, "error": error, "saved": saved},
+    )
+
+
+@app.post("/prompt")
+def prompt_save(content: str = Form(default="")):
+    try:
+        prompt_store.write_prompt(content)
+    except ValueError as exc:
+        err = urlencode({"error": str(exc)})
+        return RedirectResponse(url=f"/prompt?{err}", status_code=303)
+    return RedirectResponse(url="/prompt?saved=1", status_code=303)
