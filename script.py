@@ -484,6 +484,8 @@ def notify_error(apartment_name, error):
 
 # ── Process a single thread (thread = reservation)───────────────────────────────────────────────────
 def process_thread(thread, active_apartments):
+    """Returns a list of outcome strings (usually one, but a thread can produce
+    both a photo outcome and a text outcome in the same cycle — see below)."""
     id_thread      = thread["id_thread"]
     id_reservation = thread["id_reservation"]
     apartment_name = thread["name_room_type"]
@@ -491,12 +493,12 @@ def process_thread(thread, active_apartments):
     # Whitelist gate: handle this apartment only if the host has activated it in
     # the dashboard. active_apartments is read once per cycle in main().
     if apartments_store.safe_filename(apartment_name) not in active_apartments:
-        return "skip"
+        return ["skip"]
 
     # Pre-filter: last_message_from_name comes free from get_threads() with no extra API call.
     # If the last message was sent by a known host, the host already replied — nothing to do.
     if thread.get("last_message_from_name") in KNOWN_HOSTS:
-        return "skip"
+        return ["skip"]
 
     # Fix 2: skip threads with nothing new since we last handled them. get-threads
     # returns each thread's last_update for free; if it matches the value we stored
@@ -506,7 +508,7 @@ def process_thread(thread, active_apartments):
     # get-thread call every single cycle.
     last_update = thread.get("last_update")
     if last_update and storage.get_thread_last_seen(id_thread) == last_update:
-        return "skip"
+        return ["skip"]
 
     log.info(f"Thread {id_thread} ({apartment_name})")
 
@@ -529,22 +531,39 @@ def process_thread(thread, active_apartments):
 
     if not unread_guest_msgs:
         log.info("    → Skipped (already handled)")
-        return "skip"
+        return ["skip"]
 
-    # If any unread guest message has no text, it's a photo — Claude can't see images,
-    # so escalate the whole thread and let the host handle it.
-    if any(not m.get("message") for m in unread_guest_msgs):
-        photo_msg = next(m for m in unread_guest_msgs if not m.get("message"))
+    # Photos and text are handled independently from here on, each on its own
+    # id_message. Previously a single unread photo made the whole thread short-
+    # circuit into one generic "photo" escalation — which not only hid any other
+    # unread text in the same batch, but could permanently swallow *future* text
+    # too: an old already-notified photo that never gets cleared in Kross would
+    # keep matching "duplicate" and returning early forever, so a brand-new guest
+    # message arriving later in the same thread never got its own reply/escalation.
+    photo_msgs = [m for m in unread_guest_msgs if not m.get("message")]
+    text_msgs  = [m for m in unread_guest_msgs if m.get("message")]
 
+    outcomes = []
+    reservation = None  # fetched lazily, once, and shared between the photo/text paths
+
+    def get_res():
+        nonlocal reservation
+        if reservation is None:
+            reservation = get_reservation(id_reservation)
+            r = reservation["data"][0]
+            log.info(f"    Ospite: {r['label']} | Check-in: {r['arrival']} | Check-out: {r['departure']}")
+        return reservation
+
+    # ── Photos: each one escalated (or deduped) on its own id_message ───────────
+    for photo_msg in photo_msgs:
         # Dedup BEFORE fetching the reservation — already-notified photos cost nothing.
         if storage.notification_exists(id_thread, photo_msg["id_message"]):
-            log.info("    → Photo already notified — skipping")
-            return "duplicate"
+            log.info(f"    → Photo {photo_msg['id_message']} already notified — skipping")
+            outcomes.append("duplicate")
+            continue
 
-        reservation = get_reservation(id_reservation)
-        res         = reservation["data"][0]
-        log.info(f"    Ospite: {res['label']} | Check-in: {res['arrival']} | Check-out: {res['departure']}")
-        log.info("    → Photo detected, notifying host")
+        res = get_res()["data"][0]
+        log.info(f"    → Photo {photo_msg['id_message']} detected, notifying host")
         storage.record_notification({
             "id_thread":      id_thread,
             "id_message":     photo_msg["id_message"],
@@ -567,92 +586,50 @@ def process_thread(thread, active_apartments):
             f"L'ospite ha mandato una foto. Controlla su Kross.",
             parse_mode="Markdown",
         )
-        return "photo"
+        outcomes.append("photo")
 
-    # Dedup BEFORE any Claude call AND before the extra get_reservation Kross call.
-    # Skip if we already escalated on this message OR already auto-replied to it.
-    last_msg = unread_guest_msgs[-1]
-    if (storage.notification_exists(id_thread, last_msg["id_message"])
-            or storage.reply_exists(id_thread, last_msg["id_message"])):
-        log.info("    → Already handled for this message — skipping")
-        return "duplicate"
+    # ── Text: unchanged aggregated-reply logic, just no longer gated by photos ──
+    if text_msgs:
+        # Dedup BEFORE any Claude call AND before the extra get_reservation Kross call.
+        # Skip if we already escalated on this message OR already auto-replied to it.
+        last_msg = text_msgs[-1]
+        if (storage.notification_exists(id_thread, last_msg["id_message"])
+                or storage.reply_exists(id_thread, last_msg["id_message"])):
+            log.info("    → Already handled for this message — skipping")
+            outcomes.append("duplicate")
+        # Circuit breaker: if Claude has been failing repeatedly, don't keep calling it.
+        # The message stays unread, so it'll be retried once the cooldown elapses.
+        elif claude_circuit_open():
+            log.warning("    → Claude paused (circuit breaker open) — skipping for now")
+            outcomes.append("skip")
+        else:
+            reservation = get_res()
+            res         = reservation["data"][0]
 
-    # Circuit breaker: if Claude has been failing repeatedly, don't keep calling it.
-    # The message stays unread, so it'll be retried once the cooldown elapses.
-    if claude_circuit_open():
-        log.warning("    → Claude paused (circuit breaker open) — skipping for now")
-        return "skip"
+            apartment_info = load_apartment_file(apartment_name)
 
-    reservation = get_reservation(id_reservation)
-    res         = reservation["data"][0]
-    log.info(f"    Ospite: {res['label']} | Check-in: {res['arrival']} | Check-out: {res['departure']}")
+            system = build_system_prompt(apartment_name, apartment_info, reservation)
 
-    apartment_info = load_apartment_file(apartment_name)
+            # Pass full history up to the last unread message — Claude sees the full
+            # context and produces one aggregated reply instead of one reply per message.
+            messages = build_conversation(all_messages, last_msg["id_message"])
+            reply    = call_llm(system, messages)
 
-    system = build_system_prompt(apartment_name, apartment_info, reservation)
+            escalation_data = extract_escalation(reply)
+            if escalation_data:
+                reason   = escalation_data["reason"]
+                # Use Claude's category if it provided one; fall back to the generic
+                # intervento_host so the notification still appears under "Tutti".
+                category = escalation_data.get("category", "intervento_host")
+                if category not in ("riparazione", "checkin_checkout"):
+                    category = "intervento_host"
 
-    # Pass full history up to the last unread message — Claude sees the full context
-    # and produces one aggregated reply instead of one reply per message.
-    messages = build_conversation(all_messages, last_msg["id_message"])
-    reply    = call_llm(system, messages)
-
-    escalation_data = extract_escalation(reply)
-    if escalation_data:
-        reason   = escalation_data["reason"]
-        # Use Claude's category if it provided one; fall back to the generic
-        # intervento_host so the notification still appears under "Tutti".
-        category = escalation_data.get("category", "intervento_host")
-        if category not in ("riparazione", "checkin_checkout"):
-            category = "intervento_host"
-
-        log.info(f"    → Escalating ({category}): {reason}")
-        storage.record_notification({
-            "id_thread":      id_thread,
-            "id_message":     last_msg["id_message"],
-            "id_reservation": id_reservation,
-            "category":       category,
-            "home":           apartment_name,
-            "guest_name":     res["label"],
-            "channel":        res.get("channel"),
-            "check_in":       res["arrival"],
-            "check_out":      res["departure"],
-            "message":        last_msg["message"],
-            "summary":        reason,
-            "created_at":     last_msg["created_at"],
-        })
-        notify_escalation(apartment_name, res["label"], res["arrival"], res["departure"], last_msg["created_at"], last_msg["message"], reason)
-        return "escalate"
-    else:
-        log.info(f"    → Replying: {reply[:80]}...")
-        try:
-            send_message(id_thread, reply)
-        except requests.HTTPError as e:
-            # A 400 on send-message is not transient: it almost always means the
-            # OTA conversation is closed / read-only (thread closed after
-            # check-out, cancelled reservation, or a channel that doesn't accept
-            # outbound messages). Retrying every cycle would fail forever and spam
-            # the host with the generic error notification. Instead, escalate this
-            # message ONCE (deduped on id_thread+id_message via the notifications
-            # table) and return a non-error outcome so main() records the thread as
-            # seen and skips it until a genuinely new guest message arrives.
-            if e.response is not None and e.response.status_code == 400:
-                detail = {}
-                try:
-                    detail = e.response.json()
-                except ValueError:
-                    pass
-                kross_msg = detail.get("error_message", "Bad Request") if isinstance(detail, dict) else "Bad Request"
-                reason = (
-                    "Risposta automatica non inviata (errore 400 — conversazione "
-                    f"probabilmente chiusa o di sola lettura). Kross: {kross_msg}. "
-                    "Rispondi manualmente su Kross/OTA."
-                )
-                log.error(f"    → send-message 400 — escalating to host instead of retrying: {kross_msg}")
+                log.info(f"    → Escalating ({category}): {reason}")
                 storage.record_notification({
                     "id_thread":      id_thread,
                     "id_message":     last_msg["id_message"],
                     "id_reservation": id_reservation,
-                    "category":       "intervento_host",
+                    "category":       category,
                     "home":           apartment_name,
                     "guest_name":     res["label"],
                     "channel":        res.get("channel"),
@@ -662,16 +639,62 @@ def process_thread(thread, active_apartments):
                     "summary":        reason,
                     "created_at":     last_msg["created_at"],
                 })
-                notify_escalation(
-                    apartment_name, res["label"], res["arrival"], res["departure"],
-                    last_msg["created_at"], last_msg["message"], reason,
-                )
-                return "send_failed"
-            raise
-        # Record the reply so we don't re-call Claude for this same message next
-        # cycle if Kross hasn't yet reflected our sent reply in the thread history.
-        storage.record_reply(id_thread, last_msg["id_message"])
-        return "reply"
+                notify_escalation(apartment_name, res["label"], res["arrival"], res["departure"], last_msg["created_at"], last_msg["message"], reason)
+                outcomes.append("escalate")
+            else:
+                log.info(f"    → Replying: {reply[:80]}...")
+                try:
+                    send_message(id_thread, reply)
+                except requests.HTTPError as e:
+                    # A 400 on send-message is not transient: it almost always means the
+                    # OTA conversation is closed / read-only (thread closed after
+                    # check-out, cancelled reservation, or a channel that doesn't accept
+                    # outbound messages). Retrying every cycle would fail forever and spam
+                    # the host with the generic error notification. Instead, escalate this
+                    # message ONCE (deduped on id_thread+id_message via the notifications
+                    # table) and return a non-error outcome so main() records the thread as
+                    # seen and skips it until a genuinely new guest message arrives.
+                    if e.response is not None and e.response.status_code == 400:
+                        detail = {}
+                        try:
+                            detail = e.response.json()
+                        except ValueError:
+                            pass
+                        kross_msg = detail.get("error_message", "Bad Request") if isinstance(detail, dict) else "Bad Request"
+                        reason = (
+                            "Risposta automatica non inviata (errore 400 — conversazione "
+                            f"probabilmente chiusa o di sola lettura). Kross: {kross_msg}. "
+                            "Rispondi manualmente su Kross/OTA."
+                        )
+                        log.error(f"    → send-message 400 — escalating to host instead of retrying: {kross_msg}")
+                        storage.record_notification({
+                            "id_thread":      id_thread,
+                            "id_message":     last_msg["id_message"],
+                            "id_reservation": id_reservation,
+                            "category":       "intervento_host",
+                            "home":           apartment_name,
+                            "guest_name":     res["label"],
+                            "channel":        res.get("channel"),
+                            "check_in":       res["arrival"],
+                            "check_out":      res["departure"],
+                            "message":        last_msg["message"],
+                            "summary":        reason,
+                            "created_at":     last_msg["created_at"],
+                        })
+                        notify_escalation(
+                            apartment_name, res["label"], res["arrival"], res["departure"],
+                            last_msg["created_at"], last_msg["message"], reason,
+                        )
+                        outcomes.append("send_failed")
+                    else:
+                        raise
+                else:
+                    # Record the reply so we don't re-call Claude for this same message next
+                    # cycle if Kross hasn't yet reflected our sent reply in the thread history.
+                    storage.record_reply(id_thread, last_msg["id_message"])
+                    outcomes.append("reply")
+
+    return outcomes
 
 
 # ── Main loop ─────────────────────────────────────────────────────────────────
@@ -704,8 +727,12 @@ def main():
 
             for thread in unread:
                 try:
-                    outcome = process_thread(thread, active_apartments) or "skip"
-                    stats[outcome] += 1
+                    # A thread can yield more than one outcome now that photos and
+                    # text are handled independently (e.g. a photo escalation AND a
+                    # text reply from the same cycle).
+                    outcomes = process_thread(thread, active_apartments) or ["skip"]
+                    for outcome in outcomes:
+                        stats[outcome] += 1
                     # Fix 2: record the thread's current last_update only after a
                     # clean (non-error) outcome, so next cycle skips it unless a new
                     # message arrives. On error we deliberately skip recording so the
