@@ -29,6 +29,7 @@ fake_1 = {
     "check_in": "2026-05-22", "check_out": "2026-05-24",
     "message": "La doccia perde acqua, potete mandare qualcuno?",
     "summary": "Problema di manutenzione che richiede intervento fisico",
+    "created_at": "2026-05-22 09:14:00+02",
 }
 fake_2 = {
     "id_thread": 9070, "id_message": 1002, "id_reservation": 5302,
@@ -37,6 +38,7 @@ fake_2 = {
     "check_in": "2026-05-22", "check_out": "2026-05-24",
     "message": "Possiamo fare il check-out alle 13 invece delle 11?",
     "summary": "Richiesta di late check-out, serve approvazione host",
+    "created_at": "2026-05-22 10:47:00+02",
 }
 
 # ── TEST 1: dedup check su una coppia mai vista ───────────────────────────────

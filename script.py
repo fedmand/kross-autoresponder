@@ -557,6 +557,7 @@ def process_thread(thread, active_apartments):
             "check_out":      res["departure"],
             "message":        "[foto]",
             "summary":        "L'ospite ha mandato una foto — intervento necessario.",
+            "created_at":     photo_msg["created_at"],
         })
         notify(
             f"📷 *{apartment_name}*\n"
@@ -617,6 +618,7 @@ def process_thread(thread, active_apartments):
             "check_out":      res["departure"],
             "message":        last_msg["message"],
             "summary":        reason,
+            "created_at":     last_msg["created_at"],
         })
         notify_escalation(apartment_name, res["label"], res["arrival"], res["departure"], last_msg["created_at"], last_msg["message"], reason)
         return "escalate"
@@ -658,6 +660,7 @@ def process_thread(thread, active_apartments):
                     "check_out":      res["departure"],
                     "message":        last_msg["message"],
                     "summary":        reason,
+                    "created_at":     last_msg["created_at"],
                 })
                 notify_escalation(
                     apartment_name, res["label"], res["arrival"], res["departure"],

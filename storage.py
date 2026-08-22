@@ -136,7 +136,10 @@ def record_thread_seen(id_thread, last_update):
 
 def record_notification(notification):
     # notification: dict with keys matching the table columns, minus
-    # created_at/status/handled_by/read_by, which are set here.
+    # status/handled_by/read_by, which are set here. created_at must be the
+    # triggering message's own timestamp (as returned by Kross, offset and
+    # all) — NOT wall-clock time — so the dashboard shows when the guest/host
+    # actually sent it rather than when the bot's poll loop got to it.
     conn = sqlite3.connect(DB_PATH)
     try:
         conn.execute("""
@@ -150,7 +153,7 @@ def record_notification(notification):
             notification["category"], notification["home"], notification["guest_name"],
             notification["channel"], notification["check_in"], notification["check_out"],
             notification["message"], notification["summary"],
-            time.strftime("%Y-%m-%d %H:%M:%S"),
+            notification["created_at"],
         ))
         conn.commit()
     finally:

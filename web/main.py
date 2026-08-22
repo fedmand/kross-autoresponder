@@ -130,15 +130,19 @@ def fmt_date(iso):
 
 
 def fmt_datetime(value):
-    # created_at is stored as "YYYY-MM-DD HH:MM:SS" (DB) or "YYYY-MM-DD HH:MM"
-    # (mock). Render a compact "13 giu 09:15" for the card timestamp.
-    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M"):
-        try:
-            d = datetime.strptime(value, fmt)
-        except (ValueError, TypeError):
-            continue
-        return f"{d.day} {_MONTHS[d.month - 1]} {d.strftime('%H:%M')}"
-    return value or ""
+    # created_at is the triggering message's own Kross timestamp, e.g.
+    # "YYYY-MM-DD HH:MM:SS+02" (already Italy-local) — or, for older rows
+    # recorded before this was fixed, plain "YYYY-MM-DD HH:MM:SS"/"HH:MM".
+    # Slicing out HH:MM (rather than strptime with %z) sidesteps Kross's
+    # non-zero-padded offset ("+02", not "+0200") and works for all of them.
+    if not value:
+        return value or ""
+    try:
+        date_str, time_str = value.split(" ", 1)
+        d = datetime.strptime(date_str, "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return value or ""
+    return f"{d.day} {_MONTHS[d.month - 1]} {time_str[:5]}"
 
 
 def build_view(n):
