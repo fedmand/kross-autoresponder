@@ -134,26 +134,32 @@ def record_thread_seen(id_thread, last_update):
         conn.close()
 
 
-def record_notification(notification):
+def record_notification(notification, status="pending", handled_by=None):
     # notification: dict with keys matching the table columns, minus
     # status/handled_by/read_by, which are set here. created_at must be the
     # triggering message's own timestamp (as returned by Kross, offset and
     # all) — NOT wall-clock time — so the dashboard shows when the guest/host
     # actually sent it rather than when the bot's poll loop got to it.
+    #
+    # status/handled_by default to 'pending'/None (a normal host-facing
+    # notification). Pass status="resolved" for events the bot auto-handles
+    # without host involvement (e.g. a checkout-day lock photo) — these still
+    # get a row for the audit trail, but get_pending_notifications() excludes
+    # them so they never clutter the dashboard.
     conn = sqlite3.connect(DB_PATH)
     try:
         conn.execute("""
             INSERT INTO notifications (
                 id_thread, id_message, id_reservation, category, home,
                 guest_name, channel, check_in, check_out,
-                message, summary, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                message, summary, created_at, status, handled_by
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             notification["id_thread"], notification["id_message"], notification["id_reservation"],
             notification["category"], notification["home"], notification["guest_name"],
             notification["channel"], notification["check_in"], notification["check_out"],
             notification["message"], notification["summary"],
-            notification["created_at"],
+            notification["created_at"], status, handled_by,
         ))
         conn.commit()
     finally:

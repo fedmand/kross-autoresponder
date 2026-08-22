@@ -563,6 +563,32 @@ def process_thread(thread, active_apartments):
             continue
 
         res = get_res()["data"][0]
+
+        # Guests are asked to photograph the door lock on checkout day — that's
+        # expected clutter, not something Teo/Nico need to act on. If the photo's
+        # own date matches the checkout date, assume it's the lock photo and skip
+        # it: no Telegram ping, no pending-dashboard entry. It still gets a row
+        # (written straight as 'resolved') so there's an audit trail if this
+        # heuristic is ever wrong or a real issue needs to be traced back.
+        if photo_msg["created_at"][:10] == res["departure"]:
+            log.info(f"    → Photo {photo_msg['id_message']} on checkout day — assuming lock photo, skipping")
+            storage.record_notification({
+                "id_thread":      id_thread,
+                "id_message":     photo_msg["id_message"],
+                "id_reservation": id_reservation,
+                "category":       "intervento_host",
+                "home":           apartment_name,
+                "guest_name":     res["label"],
+                "channel":        res.get("channel"),
+                "check_in":       res["arrival"],
+                "check_out":      res["departure"],
+                "message":        "[foto]",
+                "summary":        "Foto ricevuta il giorno del checkout — presunta foto della serratura, ignorata automaticamente.",
+                "created_at":     photo_msg["created_at"],
+            }, status="resolved", handled_by="auto (foto giorno checkout)")
+            outcomes.append("photo_checkout_skip")
+            continue
+
         log.info(f"    → Photo {photo_msg['id_message']} detected, notifying host")
         storage.record_notification({
             "id_thread":      id_thread,
@@ -752,7 +778,8 @@ def main():
         log.info(
             f"[CYCLE] done in {duration:.1f}s — "
             f"replies={stats['reply']} escalations={stats['escalate']} "
-            f"photos={stats['photo']} duplicates={stats['duplicate']} "
+            f"photos={stats['photo']} photo_checkout_skips={stats['photo_checkout_skip']} "
+            f"duplicates={stats['duplicate']} "
             f"send_failed={stats['send_failed']} "
             f"skipped={stats['skip']} errors={stats['error']}"
         )
