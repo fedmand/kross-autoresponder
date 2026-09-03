@@ -8,23 +8,25 @@
 
 | FIELD | VALUE |
 |---|---|
-| Nome appartamento | Porta nuova 52a |
-| Nome annuncio | [View-Design-Brera-Duomo] Luxury apt. M2 1' walk |
-| Indirizzo completo | Corso di Porta Nuova 52 a, Milano 20121; se l'ospite ha solo inviato la richiesta di prenotazione scrivi soltanto il nome della via senza civico, mentre dopo aver effettuato e confermato la prenotazione comunicaglielo pure per esteso. |
-| Descrizione palazzo (colore/numero piani totale) | palazzo grigio, alto con una rampa di scale e delle piante all ingresso |
-| Descrizione porta condominiale | una porta a vetri grigia |
-| Piano | L'appartamento si trova al sesto piano |
+| Nome appartamento | Coni zugna 58 |
+| Nome annuncio | •Navigli-Tortona•350m METRO BLU400m METRO VERDE |
+| Indirizzo completo | Viale Coni Zugna 58, Milano (MI) 20144 |
+| Descrizione palazzo (colore/numero piani totale) | palazzo grigio con un porticato |
+| Descrizione porta condominiale | cancello di ferro |
+| Piano | l'appartamento si trova al piano numero 1 |
 | Presenza ascensore | Sì, il condominio è dotato di ascensore 😊 |
-| Metratura totale | circa 25 metri quadrati |
-| Numero camere da letto | si tratta di un monolocale, quindi la sala fa anche da camera da letto |
+| Metratura totale | circa 60 metri quadrati |
+| Numero camere da letto | 1 |
 | Numero bagni | 1 |
-| Numero massimo ospiti | 3 |
-| Numero letti totali | 2 |
-| Numero matrimoniali | 1 |
-| Numero singoli | poltrona letto singola molto comoda |
-| Presenza balcone | no |
-| Presenza terrazza | no |
+| Numero soggiorni | 1 |
+| Numero massimo ospiti | 4 |
+| Numero letti totali | la casa dispone di un ampio e comodo letto matrimoniale in camera da letto e un divano letto matrimoniale in sala |
+| Numero matrimoniali | la casa dispone di un ampio e comodo letto matrimoniale in camera da letto e un divano letto matrimoniale in sala |
+| Numero singoli | 0 |
+| Divano letto presente (marca e tipologia) | sì è presente in sala non so la marca ma assicuro che è molto comodo |
+| Presenza balcone | sì è presente un ampio balcone dove godersi dei piacevoli momenti all'aria aperta |
 | Giardino privato | no |
+| Vista particolare | no |
 
 ---
 
@@ -32,16 +34,16 @@
 
 | FIELD | VALUE |
 |---|---|
-| Link accesso all'appartamento | l'invio delle istruzioni di check in viene inviato circa 48 ore prima dell'arrivo degli ospiti e questo è il link che viene inviato: https://milanoholidayhomes.kross.travel/guest/check-in-instructions?tag=7a359a318ccce9b771874a39f1e70e0e |
-| Orario check-in | dalle ore 16.00 fino alle ore 22 |
+| Link accesso all'appartamento | l'invio delle istruzioni di check in viene inviato circa 48 ore prima dell'arrivo degli ospiti e questo è il link che viene inviato: https://milanoholidayhomes.kross.travel/guest/check-in-instructions?tag=32770d82311ae8dcbfdac5fbdd57f1cd |
+| Orario check-in | dalle 16.00 fino alle 21 |
 | Early check-in disponibile | per eseguire il check-in anticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa |
 | Costo early check-in | normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 | Self check-in | si, il check in avviene tramite keybox |
 | Check-in in presenza | no |
 | Codice portone | no |
-| Codice keybox | 1722 |
-| Posizione keybox | la keybox si trova su una rastrelliera delle biciclette di fronte all'ingresso del carrefour, per arrivarci una volta che siete di fronte al civico 52a andate a sinistra fino alla fine della via, sulla destra troverete il supermercato con l'insegna verde e di fronte la rastrelliera alla quale è appoggiata la keybox. |
-| Piano corretto | l'appartamento si trova al sesto piano, una volta entrati nello stabile, prendete l'ascensore e dirigetevi al sesto piano, una volta usciti la casa è la prima sulla sinistra, come si evince anche dalle istruzioni |
+| Codice keybox | 8558 |
+| Posizione keybox | Guardando la porta condominiale del civico 58, andare a destra fino alla farmacia e poi girare a destra in via pacioli, proseguire dritto fino al benzinaio, una volta arrivati dirigetevi dove c'è l'oggetto blu della eni e sulla cancellata troverete il locker. inviare sempre il link delle istruzioni perchè è molto piu chiaro https://milanoholidayhomes.kross.travel/guest/check-in-instructions?tag=32770d82311ae8dcbfdac5fbdd57f1cd |
+| Piano corretto | una volta arrivati al civico entrare dalla cancelata, girare subito a destra e la scala corretta è la prima porta sulla destra, una volta aperta salire le scale/prendere l'ascensore e dirigersi al primo piano, se salite dalle scale la porta di casa è esattamente quella di fronte a voi o comunque quella con lo zerbino con sopra scritto "you, again" |
 | Foto ingresso | il guest puo' vederla tramite il link di istruzioni di accesso |
 
 > le info sensibili di accesso all’appartamento devono essere inviate solo dopo che l’ospite ha eseguito e confermato la prenotazione e non quando invia la richiesta di prenotazione.
@@ -54,13 +56,13 @@
 
 | FIELD | VALUE |
 |---|---|
-| Link istruzioni check out | https://milanoholidayhomes.kross.travel/guest/check-out-instructions?tag=7a359a318ccce9b771874a39f1e70e0e |
+| Link istruzioni check out | https://milanoholidayhomes.kross.travel/guest/check-out-instructions?tag=32770d82311ae8dcbfdac5fbdd57f1cd |
 | Orario check-out | entro le ore 10..00 |
 | Late check-out disponibile | per eseguire il check-out posticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa |
 | Costo late check-out | normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 | Dove lasciare chiavi | all'interno del locker dove sono state prese per eseguire il check in |
 | Cosa fare prima di uscire | assicurarsi che il guest chiuda tutte le finestre, che spenga la luce e che non ci sia l'aria condizionata accesa |
-| Dove buttare immondizia | il locale immondizia si trova al piano terra |
+| Dove buttare immondizia | Se non è troppa spazzatura ce ne occupiamo noi 😊assicurati di aver fatto correttamente la raccolta indifferenziata spiega quindi che devono dividere: carta, umido, plastica , vetro e indifferenziata |
 | Spegnere climatizzatore | sempre |
 | Lasciare finestre chiuse | sempre |
 | Lasciare stoviglie pulite | non è una regola scritta, ma è importante che non ci sia sporcizia extra che richiederebbe un intervento aggiuntivo alla società delle pulizie |
@@ -73,17 +75,18 @@
 
 | FIELD | VALUE |
 |---|---|
-| Numero camere | è un monolocale |
-| Letto matrimoniale | è presente un letto matrimoniale |
-| Letti singoli | è presente una poltona-letto singola |
+| Numero camere | 1 ma il soggiorno è ben diviso da due porte che garantiscono molta privacy |
+| Dimensione camere | circa 15 metri quadrati |
+| Letto matrimoniale | c'è un letto matrimoniale in camera e un divano letto matrimoniale in soggiorno |
+| Letti singoli | 0 |
 | Tipologia di materassi | non conosco la marca esatta ma sono tutti molto comodi |
-| Armadio | è presente uno spazioso armadio in sala |
-| Comodini | sono presenti due pratici comodini |
+| Armadio | è presente un garnde armadio nella camera da letto |
+| Appendiabiti | sì |
+| Comodini | sono presenti in ogni camera |
 | Tende | si ci sono le tende e le tapparelle permettono di non far penetrare neanche un raggio di luce durante le prime ore della mattina per consentire un ottimo sonno |
 | Cuscini extra | si, negli armadi il guest dovrebbe trovarne |
 | Coperte extra | si, negli armadi il guest dovrebbe trovarne |
-| Aria condizionata | certamente, in ciascuna stanza è presente un bocchettone dell'aria condizionata |
-| Riscaldamento | è presente, canalizzato |
+| Aria condizionata | certamente, sia in camera da letto che in sala sono presenti due split dell'aria condizionata che permettono di avere un'ottima tempertaura |
 
 ---
 
@@ -104,7 +107,7 @@
 | Asciugamani doccia | sì |
 | Tappetino bagno | sì |
 | Scaldasalviette | no |
-| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/vYlJQWFdLvg?si=YYcjOEfSalAl5Nxj |
+| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/vxy6JHCw3iA?si=ACXkrFsWqT3QPQCk |
 | Stendino | sì |
 
 ---
@@ -114,17 +117,14 @@
 | FIELD | VALUE |
 |---|---|
 | Cucina completa | sì |
-| Piano induzione | si, qui il link di come far funzionare i fornelli (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/ousItWURzNQ?si=eCughKhpep2ETAEv |
-| Piano gas | no |
-| Forno | no |
+| Piano gas | si, qui il link di come far funzionare i fornelli (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/XC0DGBMBVlk?si=GlNc4rCRAQWHXD8k |
+| Forno | si, qui il link di come far funzionare il forno (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/TClmSGftglA?si=IB8oauci1XsiQGIb |
 | Microonde | sì |
-| Lavastoviglie | no |
-| Frigorifero | sì |
+| Lavastoviglie | si, qui il link di come far funzionare la lavastoviglie (da inviare solo se il guest richiede espressamente come funziona : https://youtu.be/SbVGB-5-ics?si=hvl34L_YiHCrYYIo |
+| Frigorifero | sì, ampio e spazioso |
 | Congelatore | sì |
 | Bollitore | sì |
-| Macchina caffè | sì |
-| Moka | no |
-| Tostapane | no |
+| Macchina caffè | sì, nespresso |
 | Pentole | sì |
 | Padelle | sì |
 | Piatti | sì |
@@ -143,7 +143,15 @@
 
 # 7. SOGGIORNO
 
-> non è presente un vero e proprio soggiorno dato che è un monolocale è un unico ampio ambiente che fa sia da zona giorno che da zona notte ma che è comunque molto accogliente
+| FIELD | VALUE |
+|---|---|
+| Divano | è presente un comodo e spazioso divano letto matrimoniale a scomparsa in modo tale da risparmiare spazio e concedere l'adeguato comfort agli ospiti |
+| Divano letto | è presente un comodo e spazioso divano letto matrimoniale a scomparsa in modo tale da risparmiare spazio e concedere l'adeguato comfort agli ospiti |
+| Smart TV | sì |
+| Dimensione TV | circa 40 pollici |
+| Tavolo da pranzo | 6 sul tavolo in cucina e altre sul balcone |
+| Sedie disponibili | 6 sul tavolo in cucina e altre sul balcone |
+| Aria condizionata | presente un bocchettone in ogni ambiente |
 
 ---
 
@@ -151,15 +159,13 @@
 
 | FIELD | VALUE |
 |---|---|
-| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/vYlJQWFdLvg?si=YYcjOEfSalAl5Nxj |
+| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/vxy6JHCw3iA?si=ACXkrFsWqT3QPQCk |
 | Asciugatrice | no |
 | Ferro da stiro | sì |
 | Asse da stiro | sì |
-| Aspirapolvere | no |
-| Robot aspirapolvere | no |
 | Phon | sì |
-| Ventilatore | sì |
-| Deumidificatore | no |
+| Ventilatore | no, aria condizionata |
+| Scaldabagno | si trova in cucina |
 
 ---
 
@@ -167,9 +173,10 @@
 
 | FIELD | VALUE |
 |---|---|
-| Aria condizionata | si, l'appartamento gode di un impianto di aria condizionata canalizzato con diffusori in ogni ambiente di modo che possa garantire le migliori temperature all'interno dell'appartamento |
-| Numero split/fancoil | Sia il riscaldamento che l'aria condizionata sono canalizzati |
-| Riscaldamento autonomo | Sia il riscaldamento che l'aria condizionata sono canalizzati |
+| Aria condizionata | si, l'appartamento gode di un impianto di aria condizionata con split in ogni ambiente di modo che possa garantire le migliori temperature all'interno dell'appartamento |
+| Numero split/fancoil | ci sono due uscite: una in soggiorno/cucina, una nella camera da letto |
+| Riscaldamento autonomo | si |
+| Tipo riscaldamento | Il riscaldamento dell’appartamento è autonomo e può essere regolato tramite le termovalvole presenti sui caloriferi. Le termovalvole si trovano sulla valvola superiore destra di ciascun calorifero. Girando la manopola, il guest può aumentare o diminuire l’intensità del riscaldamento. Consiglia di non superare normalmente il livello 2, così da mantenere una temperatura confortevole senza surriscaldare eccessivamente l’ambiente. Se il guest segnala che nell’appartamento fa particolarmente freddo e ritiene che il riscaldamento dei caloriferi non sia sufficiente, suggerisci di utilizzare anche gli split dell’aria condizionata in modalità riscaldamento, così da avere una fonte di calore aggiuntiva e aumentare più rapidamente la temperatura dell’ambiente. |
 
 ---
 
@@ -177,10 +184,10 @@
 
 | FIELD | VALUE |
 |---|---|
-| Nome Wi-Fi | FASTWEB-XDFXYH |
-| Password Wi-Fi | ZGZZ3N6CNU |
-| Router posizione | il router si trova in sala |
-| Procedura reset router | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem fastweb a inviare una proceedura efficace di reset |
+| Nome Wi-Fi | Vodafone-C00080167 |
+| Password Wi-Fi | eep3ezYsqtpEyr76 |
+| Router posizione | nel corridoio esattamente prima di entrare in sala, circa a mezo metro da terra |
+| Procedura reset router | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem Vodafone a inviare una proceedura efficace di reset |
 
 ---
 
@@ -191,7 +198,10 @@
 | Estintore | si, presente da 6 kg in polvere |
 | Rilevatore monossido | si, è presente |
 | Kit pronto soccorso | si, è presente |
-| Quadro elettrico | si trova entrando in casa subito a sinistra |
+| Quadro elettrico | Se il guest chiede dove si trova il quadro elettrico dell’appartamento, spiegagli che si trova nello stesso punto del contatore generale. Entrando in appartamento, deve percorrere il corridoio che conduce verso la sala. Poco prima di entrare in sala, sulla sinistra e ad altezza occhi, troverà l’armadietto del contatore elettrico. Il quadro elettrico si trova esattamente di fianco al contatore generale. Per individuare più facilmente la posizione, indica sempre al guest anche questo link, dove è presente una foto: il contatore generale è quello evidenziato in blu e il quadro elettrico si trova immediatamente al suo fianco. https://drive.google.com/file/d/1V3nfchvDG8L4k-7_FQh7TAF8tCFX0Wy9/view |
+| Contatore elettrico | Se salta la corrente, spiega al guest che probabilmente sono stati utilizzati troppi elettrodomestici contemporaneamente. Per riattivare la corrente, il guest deve utilizzare il contatore generale che si trova all’interno dell’appartamento. Entrando in appartamento, deve percorrere il corridoio che conduce verso la sala. Poco prima di entrare in sala, sulla sinistra e ad altezza occhi, troverà un armadietto che contiene il contatore elettrico. Sarà sufficiente aprire l’armadietto e alzare la leva del contatore per ripristinare l’energia elettrica nell’appartamento. Per individuare più facilmente il contatore, indica sempre al guest anche questo link, dove è presente una foto che mostra esattamente dove si trova: https://drive.google.com/file/d/1V3nfchvDG8L4k-7_FQh7TAF8tCFX0Wy9/view |
+| Contatore gas | si trova nella prima porta con lo specchio chiusa a chiave. per aprirla bisogna prendere le chiavi che si trovano dietro le piantine sulle mensole poste entrando in casa a sinistra. una volta aperta la porta specchiata, il contatore dedl gas si troverà in basso. |
+| Rubinetto acqua generale | si trova in bagno, alla sinistra del wc. |
 
 ---
 
@@ -201,7 +211,8 @@
 |---|---|
 | Garage privato | purtoppo la casa non ha un garage privato |
 | Box auto | purtroppo la casa non dispone di un box privato |
-| Telepass/ZTL | La casa si trova nella ztl area c di milano per cui nei giorni feriali dalle 7:30 alle 19:30 ci si può entrare solo se si ha pagato il ticket di ingresso, consiglio di andare sul sito oppure chiedere a un tabaccaio di farvela pagare, se lo scoprite dopo ricordate che potete pagarla fino alla mezzanotte del giorno successivo al quale avete oltrepasato la ztl |
+| Parcheggio gratuito | purtroppo non disponiamo di un parcheggio gratuito |
+| Parcheggio a pagamento | sulla via dell'appartamento e in quelle adiacenti è molto presente |
 
 > per tutti i parcheggi custoditi a pagamento/ autorimesse voglio che sia LLM a rispondere in base alla posizione della casa gia' fornita e voglio che riporti eventuali costi giornalieri solo se è sicuro delle informazioni
 
@@ -212,9 +223,7 @@
 | FIELD | VALUE |
 |---|---|
 | Ascensore | sì |
-| Rampe | ci sono una decina di gradini da percorrere per arrivare all'ascensore |
-| Accesso disabili | ci sono poche rampe di scale (circa 10 gradini) per arrivare all'ascensore. per il resto la casa è tutta su un piano. |
-| Piano terra | no, sesto piano |
+| Piano terra | no, primo piano |
 
 ---
 
@@ -224,6 +233,7 @@
 |---|---|
 | Culla | presente in struttura |
 | Seggiolone | presente in struttura |
+| Lettino bambino | presente in struttura |
 | Giochi per bambini | no |
 | Animali ammessi | sì |
 | Ciotole animali | no |
@@ -238,10 +248,10 @@
 
 | FIELD | VALUE |
 |---|---|
-| Vietato fumare | si, vietato all'interno dell'abitazione |
-| Vietate feste | si, vietato |
+| Vietato fumare | si, vietato all'interno dell'abitazione mentre è consentito sul balcone |
+| Vietate feste | sì, vietato |
 | Orario silenzio | dalle 21 fino alle 9.00 del mattino |
-| Numero massimo ospiti | 3 |
+| Numero massimo ospiti | 4 |
 | Animali consentiti | sì |
 | Ospiti esterni consentiti | no |
 
@@ -251,14 +261,15 @@
 
 | FIELD | VALUE |
 |---|---|
-| Mancanza acqua calda | se non c'è acqua calda devo ricevere una notifica di ri riparazione su front end |
-| Salta corrente | se salta la corrente, bisogna spiegare al guest che probabilmente ha utilizzato troppi elettrodomestici insieme e per riattivare la corrente deve alzare la leva del contatore generale che si trova a piano terra, (inviami una notifica frontend). |
-| Wi-Fi non funziona | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem fastweb a inviare una proceedura efficacie di reset |
-| Serratura bloccata | provare a scuotere la porta, devo ricevere una notica da front end |
+| Mancanza acqua calda | se non c'è acqua calda devo ricevere una notifica di riparazione su front end |
+| Salta corrente | Se salta la corrente, spiega al guest che probabilmente sono stati utilizzati troppi elettrodomestici contemporaneamente. Per riattivare la corrente, il guest deve utilizzare il contatore generale che si trova all’interno dell’appartamento. Entrando in appartamento, deve percorrere il corridoio che conduce verso la sala. Poco prima di entrare in sala, sulla sinistra e ad altezza occhi, troverà un armadietto che contiene il contatore elettrico. Sarà sufficiente aprire l’armadietto e alzare la leva del contatore per ripristinare l’energia elettrica nell’appartamento. Per individuare più facilmente il contatore, indica sempre al guest anche questo link, dove è presente una foto che mostra esattamente dove si trova: https://drive.google.com/file/d/1V3nfchvDG8L4k-7_FQh7TAF8tCFX0Wy9/view |
+| Wi-Fi non funziona | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem Vodafone a inviare una proceedura efficacie di reset |
+| Aria condizionata non funziona | controllare che le pile del telecomando degli split funzioni |
+| Serratura bloccata | tirare verso di sè stessi la maniglia della porta |
 | Perdite d'acqua | se gli ospiti lamentano perdite o disservizi simili mandami una notifica front end,prima però fatti mandare una foto |
-| Odori strani | se gli ospiti lamentano disservizi simili mandami una notifica front end,prima però fatti mandare una foto |
-| Insetti | se gli ospiti lamentano disservizi simili mandami una notifica front end,prima però fatti mandare una foto |
-| Guasto elettrodomestici | se gli ospiti lamentano disservizi simili mandami una notifica front end,prima però fatti mandare una foto |
+| Odori strani | se gli ospiti lamentano disservizi simili mandami una notifica front end, prima però fatti mandare una foto |
+| Insetti | se gli ospiti lamentano disservizi simili mandami una notifica front end, prima però fatti mandare una foto |
+| Guasto elettrodomestici | se gli ospiti lamentano disservizi simili mandami una notifica front end, prima però fatti mandare una foto, o fatti spiegare cosa è successo |
 
 ---
 
@@ -275,10 +286,10 @@
 
 | FIELD | VALUE |
 |---|---|
-| Metro più vicina | metro mm2 stazione moscova |
-| Bus più vicino | ci sono parecchie linee di bus nelle vicinanze dell'appartamento |
-| Aeroporto | Il più vicino è chiaramente Linate, poi orio al serio (BG) infine malpensa, ma sono tutti molto ben collegati con la città di Milano |
-| Taxi | dì loro di chiamare Taxi Milano 028585 |
+| Metro più vicina | coni zugna sulla metro blu |
+| Bus più vicino | ci sono parecchie fermate nella zona della casa |
+| Aeroporto | linate il più comodo |
+| Taxi | A Milano puoi chiamare un taxi tramite i numeri 028585, 024040 o il numero unico 02 7777, disponibili 24 ore su 24. |
 
 > per tutte queste informazioni di posizione voglio che sia l'LLM a rispondere sulla base della posizione già fornita della casa
 

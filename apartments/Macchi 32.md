@@ -22,7 +22,7 @@
 | Numero massimo ospiti | 4 |
 | Numero letti totali | 2 |
 | Numero matrimoniali | 1 |
-| Divano letto presente (marca e tipologia) | 1 |
+| Divano letto presente (marca e tipologia) | 1 divano letto molto comodo dell'ikea |
 | Presenza balcone | no |
 | Presenza terrazza | no |
 | Giardino privato | no, non ne dispone |
@@ -34,15 +34,15 @@
 
 | FIELD | VALUE |
 |---|---|
-| Link accesso all'appartamento | l'invio delle istruzioni di check in viene inviato circa 48 ore prima dell'arrivo degli ospiti e questo è il link che viene inviato https://milanoholidayhomes.kross.travel/guest/check-in-instructions?tag=2ba2c96a6df98f61cff09239f2641d5f |
+| Link accesso all'appartamento | l'invio delle istruzioni di check in viene inviato circa 48 ore prima dell'arrivo degli ospiti e questo è il link https://milanoholidayhomes.kross.travel/guest/check-in-instructions?tag=fd0bb952437b8b955122c9eeed0fa791 che viene inviato |
 | Orario check-in | dalle ore 16.00 fino alle ore 22 |
 | Early check-in disponibile | per eseguire il check-in anticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa |
 | Costo early check-in | normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
-| Self check-in | si, il check in avviene tramite keybox |
+| Self check-in | si, il check in avviene secondo il link delle istruzioni: bisogna aprire il cancello condominiale schiacciando il simbolo della chiave e poi 2507 e poi ancora il simbolo della chiave. dopo di questo le chiavi si troveranno dentro un key box appeso sul muro di fianco alla aporta blindata di casa il cui codice è 1717. questo viene tutto riportato nel link di istruzioni di accesso |
 | Check-in in presenza | no |
-| Codice portone | no |
+| Codice portone | schiacciare chiiave 2507 e poi ancora chiave |
 | Codice keybox | 1717 |
-| Posizione keybox | A destra rispetto al civico 32, poco prima dell’uscita dei box, troverete una cassetta di sicurezza |
+| Posizione keybox | di fianco alla porta blindata di casa |
 | Piano corretto | Il piano è seminterrato per cui dovrete prendere le scale, o l'ascensore e recarvi al piano sotterraneo dopodichè aprire la porta che trovate subito sulla sinistra all'uscita dell'ascensore, aperta quella porta la porta di casa è quella ancora a sinistra |
 | Foto ingresso | il guest puo' vederla tramite il link di istruzioni di accesso |
 
@@ -58,7 +58,7 @@
 |---|---|
 | Link istruzioni check out | https://milanoholidayhomes.kross.travel/guest/check-out-instructions?tag=2ba2c96a6df98f61cff09239f2641d5f |
 | Orario check-out | entro le ore 10..00 |
-| Late check-out disponibile | per eseguire il check-out posticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa |
+| Late check-out disponibile | https://milanoholidayhomes.kross.travel/guest/check-out-instructions?tag=fd0bb952437b8b955122c9eeed0fa791 |
 | Costo late check-out | normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 | Dove lasciare chiavi | all'interno del locker dove sono state prese per eseguire il check in |
 | Cosa fare prima di uscire | assicurarsi che il guest chiuda tutte le finestre, che spenga la luce e che non ci sia l'aria condizionata accesa |
@@ -66,6 +66,7 @@
 | Spegnere climatizzatore | sempre |
 | Lasciare finestre chiuse | sempre |
 | Lasciare stoviglie pulite | non è una regola scritta, ma è importante che non ci sia sporcizia extra che richiederebbe un intervento aggiuntivo alla società delle pulizie |
+| Procedura check-out | allegare il link di spiegazione, bisogna mettere le chiavi nel locker in cui le hanno ritirate il cui codice è 1717 |
 
 > è importante, se gli ospiti lo richiedono, che non è necessario che la casa venga pulita in modo profondo al momento del check out ma che non venga lasciata in eccessivo disordine e sporicizia ma in buono stato senza danni-
 
@@ -76,17 +77,17 @@
 | FIELD | VALUE |
 |---|---|
 | Numero camere | 1 |
-| Dimensione camere | circa 15 metri quadrati |
+| Dimensione camere | la casa ha 1 camera da letto da circa 15 metri quadrati |
 | Letto matrimoniale | è presente un letto matrimoniale e un divano letto matrimoniale |
 | Letti singoli | no |
-| Tipologia di materassi | non conosco la marca esatta ma sono tutti molto comodi |
+| Tipologia di materassi | sono materassi tutti molto comodi |
 | Armadio | c'è un ampio armadio in camera da letto e una cassettiera |
 | Comodini | ci sono due comodini in ogni camera da letto |
-| Tende | si ci sono le tende e le tapparelle permettono di non far penetrare neanche un raggio di luce durante le prime ore della mattina per consentire un ottimo sonno |
+| Tende | si ci sono le tende e le tapparelle permettono di non far penetrare neanche un raggio di luce durante le prime ore della mattina per consentire un ottimo sonno. si possono attivare schiacciando i tasti delle frecce posti di fianco agi interruttori della luce vicino alle finestre. Allega questo link di istruzioni che ne mostra il funzionamento https://drive.google.com/file/d/1Uw-XKIyvNPUMlWdvKtteNvEj_vN-q3lE/view?usp=drivesdk |
 | Cuscini extra | si, negli armadi il guest dovrebbe trovarne |
 | Coperte extra | si, negli armadi il guest dovrebbe trovarne |
-| Aria condizionata | certamente, tramite fancoil |
-| Riscaldamento | certamente, in ciascuna camera ci sono i caloriferi che in inverno permettono di avere una temperatura adeguata regolabili tramite termovalvole |
+| Aria condizionata | certamente, tramite fancoil posto in soggiorno |
+| Riscaldamento | certamente, in ciascuna camera ci sono i caloriferi che in inverno permettono di avere una temperatura adeguata regolabili tramite termovalvole come visionabile dal seguente link di istruzioni: https://drive.google.com/file/d/166VA4dU1dzAlzTIrj6Q8klo7VPZ8gLBr/view?usp=drivesdk |
 
 ---
 
@@ -106,7 +107,7 @@
 | Asciugamani viso | sì |
 | Asciugamani doccia | sì |
 | Tappetino bagno | sì |
-| Scaldasalviette | sì |
+| Scaldasalviette | sì, utilizzabile come mostrato dal seguente link: https://drive.google.com/file/d/18J24tNfZwkNJwaqBhpzSTiKArjiKhW4r/view?usp=drivesdk |
 | Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://drive.google.com/file/d/1RYiSaOp30T38MAfa7vOtJwScrmv5XK7v/view?usp=drive_link |
 | Stendino | sì |
 
@@ -118,13 +119,14 @@
 |---|---|
 | Cucina completa | sì |
 | Piano induzione | si, qui il link di come far funzionare i fornelli (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://drive.google.com/file/d/1U0k0mx6b7TJYS_U43GsUqnyVJGzgxhOk/view?usp=drive_link |
-| Forno | si, qui il link di come far funzionare il forno (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://drive.google.com/file/d/1teaoyOmb9TkVHqiAlgP621VPDq_ADpwM/view?usp=drive_link |
+| Piano gas | non presente |
+| Forno | si, qui il link di come far funzionare il forno (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://drive.google.com/file/d/1VgZ9sNVEn1i1roHKzM1iBRbOmk9pK8__/view?usp=drivesdk |
 | Microonde | sì |
 | Lavastoviglie | no |
 | Frigorifero | sì |
 | Congelatore | sì |
 | Bollitore | sì |
-| Macchina caffè | sì |
+| Macchina caffè | sì, nespresso |
 | Moka | no |
 | Pentole | sì |
 | Padelle | sì |
@@ -145,12 +147,18 @@
 
 | FIELD | VALUE |
 |---|---|
-| Divano | è presente un comodo e spazioso divano letto matrimoniale |
-| Divano letto | è presente un comodo e spazioso divano letto matrimoniale |
-| Smart TV | l'appartamento è dotato di una televisione smart |
+| Divano | è presente un comodo e spazioso divano letto matrimoniale di marca ikea |
+| Divano letto | è presente un comodo e spazioso divano letto matrimoniale di marca ikea |
+| Smart TV | l'appartamento è dotato di una televisione smart posta nella camera da letto |
+| Dimensione TV | 45 pollici circa |
+| Netflix | non incluso |
+| Prime Video | non incluso |
+| Disney+ | non incluso |
+| Wi-Fi | presente |
+| Tavolo da pranzo | un tavolo quadrato comodo per 4 persone, ciascuna su ogni lato |
 | Sedie disponibili | 4 comode sedie in legno attorno al tavolo da pranzo |
 | Aria condizionata | sì |
-| Riscaldamento | sì, autonomo tramite termovalvole, consigliabile impostarle a 2 e non di più |
+| Riscaldamento | sì, autonomo tramite termovalvole, consigliabile impostarle a 3 e non di più come illustrato nel seguente link https://drive.google.com/file/d/166VA4dU1dzAlzTIrj6Q8klo7VPZ8gLBr/view?usp=drivesdk |
 
 ---
 
@@ -162,8 +170,10 @@
 | Asciugatrice | no |
 | Ferro da stiro | sì |
 | Asse da stiro | sì |
+| Aspirapolvere | si |
 | Phon | sì |
-| Caldaia | si, su richiesta dell'ospite invia questo link: https://drive.google.com/file/d/1_i7LDmvkxarebbwVxkuSlGkTYMG6Couf/view?usp=drive_link |
+| Caldaia | non presente, è full elettrica |
+| Scaldabagno | si, su richiesta dell'ospite invia questo link: https://drive.google.com/file/d/1_i7LDmvkxarebbwVxkuSlGkTYMG6Couf/view?usp=drive_link |
 
 ---
 
@@ -171,10 +181,10 @@
 
 | FIELD | VALUE |
 |---|---|
-| Aria condizionata | si, l'appartamento gode di un impianto di aria condizionata canalizzato con diffusori in ogni ambiente di modo che possa garantire le migliori temperature all'interno dell'appartamento |
-| Numero split/fancoil | uno per ogni ambiente |
-| Riscaldamento autonomo | sì, autonomo tramite termovalvole, consigliabile impostarle a 2 e non di più |
-| Tipo riscaldamento | autonomo tramite termovalvole, consigliabile impostarle a 2 e non di più |
+| Aria condizionata | si, l'appartamento gode di un impianto di aria condizionata che diffonde fresco tramite fancoil posto in soggiorno |
+| Numero split/fancoil | uno in sala |
+| Riscaldamento autonomo | sì, autonomo tramite termovalvole, consigliabile impostarle a 3 e non di più https://drive.google.com/file/d/166VA4dU1dzAlzTIrj6Q8klo7VPZ8gLBr/view?usp=drivesdk |
+| Tipo riscaldamento | autonomo tramite termovalvole, consigliabile impostarle a 3 e non di più https://drive.google.com/file/d/166VA4dU1dzAlzTIrj6Q8klo7VPZ8gLBr/view?usp=drivesdk |
 
 ---
 
@@ -182,7 +192,8 @@
 
 | FIELD | VALUE |
 |---|---|
-| Password Wi-Fi | su richiesta degli ospiti invia questo link: https://drive.google.com/file/d/1J1OCfSRzLUdmZeI460aZPOGb64HIpWYq/view?usp=drive_link |
+| Nome Wi-Fi | FASTWEB-4G7ZAT |
+| Password Wi-Fi | Xx29YA3nn6kH |
 | Router posizione | in sala, accanto al tavolo da pranzo |
 
 ---
@@ -194,8 +205,8 @@
 | Estintore | si, presente da 6 kg in polvere |
 | Rilevatore monossido | presente |
 | Kit pronto soccorso | presente |
-| Quadro elettrico | si trova entrando in casa subito a destra |
-| Contatore elettrico | se salta la corrente, bisogna spiegare al guest che probabilmente ha utilizzato troppi elettrodomestici insieme e per riattivare la corrente deve alzare la leva del contatore generale che si trova a piano meno uno, scrivendogli di portarsi la targhetta attaccata al mazzo dei telecomandi del box, allega questo link che mostra il video di come trovare il contatore: https://drive.google.com/file/d/1c35mSBNh_PCqPepkJR2srONVdTDi0jej/view?usp=drive_link |
+| Quadro elettrico | si trova entrando in casa subito a destra di fianco al cirofono |
+| Contatore elettrico | se salta la corrente, bisogna spiegare al guest che probabilmente ha utilizzato troppi elettrodomestici insieme e per riattivare la corrente deve alzare la leva del contatore seguendo le istruzioni al seguente link: |
 
 ---
 
@@ -217,7 +228,7 @@
 |---|---|
 | Ascensore | sì |
 | Rampe | ci sono una decina di gradini da percorrere per arrivare all'appartamento |
-| Accesso disabili | si, ci sono una decina di gradini da percorrere |
+| Accesso disabili | ci sono una decina di gradini da percorrere senza macchine apposite da poter utilizzare. |
 | Doccia accessibile | sì |
 | Piano terra | no, seminterrato |
 
@@ -227,14 +238,18 @@
 
 | FIELD | VALUE |
 |---|---|
-| Culla | presente in struttura, invia questo link: https://www.youtube.com/watch?v=Tzjqg6G_ZGE%0A%0ACulla%20come%20si%20apre%0A |
-| Seggiolone | presente in struttura |
+| Culla | presente in struttura, invia questo link per mostrare come si apre : https://www.youtube.com/watch?v=Tzjqg6G_ZGE%0A%0ACulla%20come%20si%20apre%0A |
+| Seggiolone | presente in struttura ma da montare, si trova sotto al letto matrimoniale |
+| Lettino bambino | presente in struttura, invia questo link per mostrare come si apre : https://www.youtube.com/watch?v=Tzjqg6G_ZGE%0A%0ACulla%20come%20si%20apre%0A |
 | Giochi per bambini | no |
 | Animali ammessi | sì |
 | Ciotole animali | no |
 | Deposito bagagli | spiega che per direttive della società delle pulizie, non è consentito ma che possono utilizzare servizi come "usebounce" o "radical storage" e che se sarà possibile gli faremo eseguire un early check in o late checkout (che deve essere notificato tramite frontend) |
 | Pulizie extra | solo su richiesta e deve essere coordinatoo con la società delle pulizie |
 | Cambio biancheria | solo su richiesta e deve essere coordinatoo con la società delle pulizie |
+| Taxi convenzionato | consigliamo di utilizzare radio taxi milano, contattabile al numero 028585. non possiamo prenotarlo direttamente per loro ma devono essere i guest a chiamare per avviare una prenotazione. a milano funziona anche uber e questo è il link di radio taxi milano https://www.bing.com/ck/a?!&&p=468cd466c33923e10210eb0b59c09adaff5baeade76b8448e440b6484192ae76JmltdHM9MTc4Njc1MjAwMA&ptn=3&ver=2&hsh=4&fclid=08fa574e-7c71-633b-0aff-402c7d9f6299&u=a1aHR0cHM6Ly9taWxhbm9yYWRpb3RheGkuaXQv |
+
+> per tutte le info di taxivoglio che sia LLM a rispondere in base alla posizione della casa gia' fornita e voglio che riporti eventuali costi giornalieri solo se è sicuro delle informazioni
 
 ---
 
@@ -255,7 +270,6 @@
 
 | FIELD | VALUE |
 |---|---|
-| Mancanza acqua calda | se non c'è acqua calda devo ricevere una notifica di ri riparazione su front end ma nel mentre puoi pure inviare questo messaggio:Per l’errore A03, prova a spegnere completamente la caldaia e lasciala spenta per circa 5-10 minuti. Per spegnerla, gira la manopola di sinistra sul simbolo di accensione/spegnimento. Dopo qualche minuto, riaccendila e verifica se l’errore è scomparso 😊 Controlla anche la pressione dal barometro che si trova in basso a destra: è un piccolo quadrante rotondo con una lancetta. Se la lancetta si trova tra 1 e 1,5 bar, la pressione è corretta. Se invece è vicina a 0, devi aumentarla girando lentamente il rubinetto nero con quattro sporgenze che si trova sotto la caldaia. Aprilo poco alla volta e controlla il barometro finché la pressione arriva tra 1,2 e 1,5 bar. Appena raggiunge questo valore, è molto importante richiudere bene il rubinetto nero. Se hai difficoltà a individuarlo, mandami una foto della parte sotto la caldaia e ti indico quale girare 📸 |
 | Salta corrente | se salta la corrente, bisogna spiegare al guest che probabilmente ha utilizzato troppi elettrodomestici insieme e per riattivare la corrente deve alzare la leva del contatore generale che si trova a piano terra. allega questo link che mostra il video di come trovare il contatore link: https://drive.google.com/file/d/1c35mSBNh_PCqPepkJR2srONVdTDi0jej/view?usp=drive_link |
 | Wi-Fi non funziona | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem fastweb a inviare una proceedura efficacie di reset |
 | Serratura bloccata | provare a scuotere la porta, devo ricevere una notica da front end |
@@ -267,7 +281,7 @@
 | FIELD | VALUE |
 |---|---|
 | Raccolta differenziata | si, bisogna differenziare: carta, umido, plastica, vetro e organico ciascuno in sacchetti diversi |
-| Dove sono i bidoni | Non preoccuparti, ci occuperemo noi di buttare la spazzatura 😊 Se però preferisci occupartene personalmente, devi tornare nel cortile interno e sulla rampa per uscire sulla sinistra troverai i bidoni |
+| Dove sono i bidoni | Non preoccuparti, ci occuperemo noi di buttare la spazzatura 😊 Se però preferisci occupartene personalmente, devi andare nel cortile interno e sulla rampa per uscire sulla sinistra troverai i bidoni. devi uscre dalla porta di casa e superare l'ascensore e le scale , sulla destra troverai una porta: aprila e poi una volta aperta vai ancora a destra e sulla rampa d'uscita troverai i vari bidoni. |
 
 ---
 
@@ -278,6 +292,8 @@
 | Metro più vicina | La metro più vicina è caiazzo |
 | Bus più vicino | ci sono più di una fermata dell'autobus |
 | Stazione ferroviaria | La stazione centrale si trova a 5 minuti a piedi |
+
+> per tutti i mezzi di trasporto voglio che sia LLM a rispondere in base alla posizione della casa gia' fornita e voglio che riporti eventuali costi giornalieri solo se è sicuro delle informazioni
 
 ---
 
@@ -291,9 +307,9 @@
 
 | FIELD | VALUE |
 |---|---|
-| Tassa di soggiorno | se la prenotazione avviene da airbnb la tassa di soggiorno è inclusa nel prezzo che viene riportato nella dashboard di riepilogo della prenotazione. SE il guest prenota da booking la tassa di soggiorno viene riscossa tramite il link dopo che hanno caricato i documenti. la tassa di soggiorno è un obbligo normativo che viene versata integralmente al comune di bergamo. La tassa di soggiorno nel Comune di Bergamo è obbligatoria per gli ospiti non residenti che pernottano in città. L’importo viene calcolato per ogni ospite e per ogni notte ed è pari al 7% del costo del pernottamento per persona, fino a un massimo di 5 € a persona per notte. La tassa viene applicata soltanto per i primi 5 pernottamenti consecutivi. Dalla sesta notte in poi non è più dovuta. Per calcolare l’importo, il costo dell’alloggio viene diviso per il numero degli ospiti e sul risultato viene applicato il 7%. Esempio: se una notte costa 100 € e soggiornano 2 ospiti, il costo per persona è di 50 €. La tassa di soggiorno sarà quindi di 3,50 € per ciascun ospite, per un totale di 7 € |
+| Tassa di soggiorno | se la prenotazione avviene da airbnb la tassa di soggiorno è inclusa nel prezzo che viene riportato nella dashboard di riepilogo della prenotazione. SE il guest prenota da booking la tassa di soggiorno viene riscossa tramite il link dopo che hanno caricato i documenti. la tassa di soggiorno è un obbligo normativo che viene versata integralmente al comune di bergamo. La tassa di soggiorno nel Comune di Bergamo è obbligatoria per gli ospiti non residenti che pernottano in città. L’importo viene calcolato per ogni ospite e per ogni notte ed è pari a 9,50 eur a testa a persona. |
 | Modalità pagamento | tramite link di pagamento, viene richiesta nella procedura di invio documenti |
-| Fattura disponibile | si, è possibile ricevere una fattura. è importante fornire tutti i dati necessari per la corretta emissione |
+| Fattura disponibile | no, è possibile ricevere pero' una ricevuta fiscale è importante fornire tutti i dati necessari per la corretta emissione. |
 | Early check-in | per eseguire il check-in anticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa. normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 | Late check-out | per eseguire il check-out posticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa. normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 

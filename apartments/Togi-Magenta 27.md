@@ -8,23 +8,25 @@
 
 | FIELD | VALUE |
 |---|---|
-| Nome appartamento | Porta nuova 52a |
-| Nome annuncio | [View-Design-Brera-Duomo] Luxury apt. M2 1' walk |
-| Indirizzo completo | Corso di Porta Nuova 52 a, Milano 20121; se l'ospite ha solo inviato la richiesta di prenotazione scrivi soltanto il nome della via senza civico, mentre dopo aver effettuato e confermato la prenotazione comunicaglielo pure per esteso. |
-| Descrizione palazzo (colore/numero piani totale) | palazzo grigio, alto con una rampa di scale e delle piante all ingresso |
-| Descrizione porta condominiale | una porta a vetri grigia |
-| Piano | L'appartamento si trova al sesto piano |
+| Nome appartamento | Togi-Magenta 27 |
+| Nome annuncio | •NEW! S.Ambrogio M2 200 metri[centre of the city] |
+| Indirizzo completo | Corso Magenta 27, Milano (MI) |
+| Descrizione palazzo (colore/numero piani totale) | palazzo storico grigio |
+| Descrizione porta condominiale | portone di legno con apertura automatica |
+| Piano | L'appartamento si trova al primo piano |
 | Presenza ascensore | Sì, il condominio è dotato di ascensore 😊 |
-| Metratura totale | circa 25 metri quadrati |
+| Metratura totale | circa 35 metri quadrati |
 | Numero camere da letto | si tratta di un monolocale, quindi la sala fa anche da camera da letto |
 | Numero bagni | 1 |
 | Numero massimo ospiti | 3 |
-| Numero letti totali | 2 |
+| Numero letti totali | 2, un divano letto matrimoniale e una poltrona letto singola entrambi estremamente comodi |
 | Numero matrimoniali | 1 |
-| Numero singoli | poltrona letto singola molto comoda |
+| Numero singoli | una poltrona letto singola |
+| Anno ristrutturazione | recente ristrutturazione |
 | Presenza balcone | no |
 | Presenza terrazza | no |
 | Giardino privato | no |
+| Vista particolare | no |
 
 ---
 
@@ -32,7 +34,7 @@
 
 | FIELD | VALUE |
 |---|---|
-| Link accesso all'appartamento | l'invio delle istruzioni di check in viene inviato circa 48 ore prima dell'arrivo degli ospiti e questo è il link che viene inviato: https://milanoholidayhomes.kross.travel/guest/check-in-instructions?tag=7a359a318ccce9b771874a39f1e70e0e |
+| Link accesso all'appartamento | l'invio delle istruzioni di check in viene inviato circa 48 ore prima dell'arrivo degli ospiti e questo è il link che viene inviato: https://milanoholidayhomes.kross.travel/guest/check-in-instructions?tag=809df6bd354c5c19302933c5183f3cb9 |
 | Orario check-in | dalle ore 16.00 fino alle ore 22 |
 | Early check-in disponibile | per eseguire il check-in anticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa |
 | Costo early check-in | normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
@@ -40,8 +42,9 @@
 | Check-in in presenza | no |
 | Codice portone | no |
 | Codice keybox | 1722 |
-| Posizione keybox | la keybox si trova su una rastrelliera delle biciclette di fronte all'ingresso del carrefour, per arrivarci una volta che siete di fronte al civico 52a andate a sinistra fino alla fine della via, sulla destra troverete il supermercato con l'insegna verde e di fronte la rastrelliera alla quale è appoggiata la keybox. |
-| Piano corretto | l'appartamento si trova al sesto piano, una volta entrati nello stabile, prendete l'ascensore e dirigetevi al sesto piano, una volta usciti la casa è la prima sulla sinistra, come si evince anche dalle istruzioni |
+| Posizione keybox | avendo alle spalle il civico 27 guardare dall'altro lato della strada, c'è una gelateria alla destra del tendone della gelateria ci sono due pilastri con una catena su di essa c'è il locker |
+| Nome sul citofono | o "Giannotta" oppure il CIN della struttura, cioè il seguente codice alfanumerico "IT015146C2CVTKONL2" |
+| Piano corretto | entrati dal portone condominiale, girare a destra verso le scale, salire fino al primo piano, girare a sinistra e aprire la porta di legno di destra che è già aperta, aperta quella seguire dritto e la porta di casa sarà di fronte a voi |
 | Foto ingresso | il guest puo' vederla tramite il link di istruzioni di accesso |
 
 > le info sensibili di accesso all’appartamento devono essere inviate solo dopo che l’ospite ha eseguito e confermato la prenotazione e non quando invia la richiesta di prenotazione.
@@ -54,13 +57,13 @@
 
 | FIELD | VALUE |
 |---|---|
-| Link istruzioni check out | https://milanoholidayhomes.kross.travel/guest/check-out-instructions?tag=7a359a318ccce9b771874a39f1e70e0e |
+| Link istruzioni check out | https://milanoholidayhomes.kross.travel/guest/check-out-instructions?tag=809df6bd354c5c19302933c5183f3cb9 |
 | Orario check-out | entro le ore 10..00 |
 | Late check-out disponibile | per eseguire il check-out posticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa |
 | Costo late check-out | normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 | Dove lasciare chiavi | all'interno del locker dove sono state prese per eseguire il check in |
 | Cosa fare prima di uscire | assicurarsi che il guest chiuda tutte le finestre, che spenga la luce e che non ci sia l'aria condizionata accesa |
-| Dove buttare immondizia | il locale immondizia si trova al piano terra |
+| Dove buttare immondizia | Non preoccuparti, ci occuperemo noi di buttare la spazzatura 😊assicurati di aver fatto correttamente la raccolta indifferenziata spiega quindi che devono dividere: carta, umido, plastica , vetro e indifferenziata. Se il guest insiste per buttare la spazzatura spiegagli che il locale spazzatura si trova in fondo al corriodio d'entrata sulla destra. è estremamente obbligatorio che venga fatta l'indifferenziata correttamente come spiegato |
 | Spegnere climatizzatore | sempre |
 | Lasciare finestre chiuse | sempre |
 | Lasciare stoviglie pulite | non è una regola scritta, ma è importante che non ci sia sporcizia extra che richiederebbe un intervento aggiuntivo alla società delle pulizie |
@@ -75,7 +78,7 @@
 |---|---|
 | Numero camere | è un monolocale |
 | Letto matrimoniale | è presente un letto matrimoniale |
-| Letti singoli | è presente una poltona-letto singola |
+| Letti singoli | è presente una poltona-letto singola estrememente comoda, l'abbiamo pagata circa 400 euro |
 | Tipologia di materassi | non conosco la marca esatta ma sono tutti molto comodi |
 | Armadio | è presente uno spazioso armadio in sala |
 | Comodini | sono presenti due pratici comodini |
@@ -83,7 +86,7 @@
 | Cuscini extra | si, negli armadi il guest dovrebbe trovarne |
 | Coperte extra | si, negli armadi il guest dovrebbe trovarne |
 | Aria condizionata | certamente, in ciascuna stanza è presente un bocchettone dell'aria condizionata |
-| Riscaldamento | è presente, canalizzato |
+| Riscaldamento | Presente tramite caloriferi regolabili |
 
 ---
 
@@ -103,8 +106,8 @@
 | Asciugamani viso | sì |
 | Asciugamani doccia | sì |
 | Tappetino bagno | sì |
-| Scaldasalviette | no |
-| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/vYlJQWFdLvg?si=YYcjOEfSalAl5Nxj |
+| Scaldasalviette | sì |
+| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/MU3bmV2-9DM?si=4NB3RKkHL2OiaheI |
 | Stendino | sì |
 
 ---
@@ -114,17 +117,15 @@
 | FIELD | VALUE |
 |---|---|
 | Cucina completa | sì |
-| Piano induzione | si, qui il link di come far funzionare i fornelli (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/ousItWURzNQ?si=eCughKhpep2ETAEv |
+| Piano induzione | si, qui il link di come far funzionare i fornelli (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/07D547d-6QQ?si=VcIGUgNbh2Cm8k4W |
 | Piano gas | no |
-| Forno | no |
-| Microonde | sì |
-| Lavastoviglie | no |
-| Frigorifero | sì |
+| Forno | sì |
+| Microonde | no |
+| Lavastoviglie | :si, qui il link di come far funzionare la lavastoviglie (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/wOm11aMVh1Y?si=sr9Nf0PBSJXBM-LY |
+| Frigorifero | sì, ampio e spazioso |
 | Congelatore | sì |
 | Bollitore | sì |
-| Macchina caffè | sì |
-| Moka | no |
-| Tostapane | no |
+| Macchina caffè | sì, nespresso |
 | Pentole | sì |
 | Padelle | sì |
 | Piatti | sì |
@@ -136,12 +137,19 @@
 | Sale | non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
 | Olio | non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
 | Zucchero | non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
-| Caffè | non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
-| Tè | non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
+| Caffè | non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremonon presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremonon presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
+| Tè | non presente in appartamento non presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremonon presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremonon presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremonon presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremonon presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremonon presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremonon presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremonon presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremonon presente in appartamento , se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo, se serve i guest possono acquistarlo al supermercato piu' vicino e li rimborseremo |
 
 ---
 
 # 7. SOGGIORNO
+
+| FIELD | VALUE |
+|---|---|
+| Divano | si, è un divano letto estremamente comodo con un materasso che permette di dormire alla perfezione |
+| Divano letto | si, è un divano letto estremamente comodo con un materasso che permette di dormire alla perfezione |
+| Smart TV | si |
+| Dimensione TV | circa 40 pollici |
 
 > non è presente un vero e proprio soggiorno dato che è un monolocale è un unico ampio ambiente che fa sia da zona giorno che da zona notte ma che è comunque molto accogliente
 
@@ -151,14 +159,12 @@
 
 | FIELD | VALUE |
 |---|---|
-| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/vYlJQWFdLvg?si=YYcjOEfSalAl5Nxj |
+| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/MU3bmV2-9DM?si=4NB3RKkHL2OiaheI |
 | Asciugatrice | no |
-| Ferro da stiro | sì |
-| Asse da stiro | sì |
-| Aspirapolvere | no |
-| Robot aspirapolvere | no |
-| Phon | sì |
-| Ventilatore | sì |
+| Ferro da stiro | presente |
+| Asse da stiro | presente |
+| Phon | presente |
+| Ventilatore | no, aria condizionata |
 | Deumidificatore | no |
 
 ---
@@ -167,9 +173,10 @@
 
 | FIELD | VALUE |
 |---|---|
-| Aria condizionata | si, l'appartamento gode di un impianto di aria condizionata canalizzato con diffusori in ogni ambiente di modo che possa garantire le migliori temperature all'interno dell'appartamento |
-| Numero split/fancoil | Sia il riscaldamento che l'aria condizionata sono canalizzati |
-| Riscaldamento autonomo | Sia il riscaldamento che l'aria condizionata sono canalizzati |
+| Aria condizionata | si, l'appartamento gode di un impianto di aria condizionata con split di modo che possa garantire le migliori temperature all'interno dell'appartamento |
+| Numero split/fancoil | uno split sopra la porta della sala |
+| Tipo riscaldamento | regolabile tramite termostato come da istruzioni del seguente video https://youtu.be/3KSYav0JaQw?si=zyQvUPerZt6ejGpi |
+| Termostato | regolabile tramite termostato come da istruzioni del seguente video https://youtu.be/3KSYav0JaQw?si=zyQvUPerZt6ejGpi |
 
 ---
 
@@ -177,10 +184,10 @@
 
 | FIELD | VALUE |
 |---|---|
-| Nome Wi-Fi | FASTWEB-XDFXYH |
-| Password Wi-Fi | ZGZZ3N6CNU |
-| Router posizione | il router si trova in sala |
-| Procedura reset router | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem fastweb a inviare una proceedura efficace di reset |
+| Nome Wi-Fi | Iliad-box |
+| Password Wi-Fi | 6hbznqrhczqxxntzqbs3b2 |
+| Router posizione | esattamente sotto la televisione |
+| Procedura reset router | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem Iliad box a inviare una proceedura efficace di reset |
 
 ---
 
@@ -189,9 +196,10 @@
 | FIELD | VALUE |
 |---|---|
 | Estintore | si, presente da 6 kg in polvere |
-| Rilevatore monossido | si, è presente |
-| Kit pronto soccorso | si, è presente |
-| Quadro elettrico | si trova entrando in casa subito a sinistra |
+| Rilevatore monossido | si, presente |
+| Kit pronto soccorso | si, presente |
+| Quadro elettrico | si trova entrando in casa a destra vicino agli armadi |
+| Contatore elettrico | se salta la corrente, bisogna spiegare al guest che probabilmente ha utilizzato troppi elettrodomestici insieme e per riattivare la corrente deve alzare la leva del contatore generale che si trova nel cortile interno, se succede inoltra questo link: https://youtu.be/_nduimbbQfQ?si=YRnRg7aNDsBjuwDy |
 
 ---
 
@@ -201,7 +209,7 @@
 |---|---|
 | Garage privato | purtoppo la casa non ha un garage privato |
 | Box auto | purtroppo la casa non dispone di un box privato |
-| Telepass/ZTL | La casa si trova nella ztl area c di milano per cui nei giorni feriali dalle 7:30 alle 19:30 ci si può entrare solo se si ha pagato il ticket di ingresso, consiglio di andare sul sito oppure chiedere a un tabaccaio di farvela pagare, se lo scoprite dopo ricordate che potete pagarla fino alla mezzanotte del giorno successivo al quale avete oltrepasato la ztl |
+| Telepass/ZTL | La casa si trova nell' area c di milano per cui nei giorni feriali dalle 7:30 alle 19:30 ci si può entrare solo se si ha pagato il ticket di ingresso, consiglio di andare sul sito oppure chiedere a un tabaccaio di farvela pagare, se lo scoprite dopo ricordate che potete pagarla fino alla mezzanotte del giorno successivo al quale avete oltrepasato la ztl |
 
 > per tutti i parcheggi custoditi a pagamento/ autorimesse voglio che sia LLM a rispondere in base alla posizione della casa gia' fornita e voglio che riporti eventuali costi giornalieri solo se è sicuro delle informazioni
 
@@ -211,10 +219,11 @@
 
 | FIELD | VALUE |
 |---|---|
-| Ascensore | sì |
-| Rampe | ci sono una decina di gradini da percorrere per arrivare all'ascensore |
-| Accesso disabili | ci sono poche rampe di scale (circa 10 gradini) per arrivare all'ascensore. per il resto la casa è tutta su un piano. |
-| Piano terra | no, sesto piano |
+| Ascensore | presente |
+| Rampe | due piccoli gradini |
+| Accesso disabili | sì |
+| Doccia accessibile | sì |
+| Piano terra | no, primo |
 
 ---
 
@@ -224,6 +233,7 @@
 |---|---|
 | Culla | presente in struttura |
 | Seggiolone | presente in struttura |
+| Lettino bambino | presente in struttura |
 | Giochi per bambini | no |
 | Animali ammessi | sì |
 | Ciotole animali | no |
@@ -252,9 +262,10 @@
 | FIELD | VALUE |
 |---|---|
 | Mancanza acqua calda | se non c'è acqua calda devo ricevere una notifica di ri riparazione su front end |
-| Salta corrente | se salta la corrente, bisogna spiegare al guest che probabilmente ha utilizzato troppi elettrodomestici insieme e per riattivare la corrente deve alzare la leva del contatore generale che si trova a piano terra, (inviami una notifica frontend). |
-| Wi-Fi non funziona | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem fastweb a inviare una proceedura efficacie di reset |
-| Serratura bloccata | provare a scuotere la porta, devo ricevere una notica da front end |
+| Salta corrente | se salta la corrente, bisogna spiegare al guest che probabilmente ha utilizzato troppi elettrodomestici insieme e per riattivare la corrente deve alzare la leva del contatore generale che si trova nel cortile interno, se succede inoltra questo link: https://youtu.be/_nduimbbQfQ?si=YRnRg7aNDsBjuwDy |
+| Wi-Fi non funziona | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem iliad box a inviare una proceedura efficacie di reset |
+| Aria condizionata non funziona | controllare le pile del telcomando dello split |
+| Serratura bloccata | tirare verso se stessi la porta di casa |
 | Perdite d'acqua | se gli ospiti lamentano perdite o disservizi simili mandami una notifica front end,prima però fatti mandare una foto |
 | Odori strani | se gli ospiti lamentano disservizi simili mandami una notifica front end,prima però fatti mandare una foto |
 | Insetti | se gli ospiti lamentano disservizi simili mandami una notifica front end,prima però fatti mandare una foto |
@@ -266,19 +277,12 @@
 
 | FIELD | VALUE |
 |---|---|
-| Raccolta differenziata | si, bisogna differenziare: carta, umido, plastica, vetro e organico ciascuno in sacchetti diversi |
-| Dove sono i bidoni | Non preoccuparti, ci occuperemo noi di buttare la spazzatura 😊assicurati di aver fatto correttamente la raccolta indifferenziata spiega quindi che devono dividere: carta, umido, plastica , vetro e indifferenziata |
+| Raccolta differenziata | Non preoccuparti, ci occuperemo noi di buttare la spazzatura 😊assicurati di aver fatto correttamente la raccolta indifferenziata spiega quindi che devono dividere: carta, umido, plastica , vetro e indifferenziata. Se il guest insiste per buttare la spazzatura spiegagli che il locale spazzatura si trova in fondo al corriodio d'entrata sulla destra. è estremamente obbligatorio che venga fatta l'indifferenziata correttamente come spiegato |
+| Dove sono i bidoni | Non preoccuparti, ci occuperemo noi di buttare la spazzatura 😊assicurati di aver fatto correttamente la raccolta indifferenziata spiega quindi che devono dividere: carta, umido, plastica , vetro e indifferenziata. Se il guest insiste per buttare la spazzatura spiegagli che il locale spazzatura si trova in fondo al corriodio d'entrata sulla destra. è estremamente obbligatorio che venga fatta l'indifferenziata correttamente come spiegato |
 
 ---
 
 # 18. TRASPORTI
-
-| FIELD | VALUE |
-|---|---|
-| Metro più vicina | metro mm2 stazione moscova |
-| Bus più vicino | ci sono parecchie linee di bus nelle vicinanze dell'appartamento |
-| Aeroporto | Il più vicino è chiaramente Linate, poi orio al serio (BG) infine malpensa, ma sono tutti molto ben collegati con la città di Milano |
-| Taxi | dì loro di chiamare Taxi Milano 028585 |
 
 > per tutte queste informazioni di posizione voglio che sia l'LLM a rispondere sulla base della posizione già fornita della casa
 
@@ -294,9 +298,8 @@
 
 | FIELD | VALUE |
 |---|---|
-| Tassa di soggiorno | se la prenotazione avviene da airbnb la tassa di soggiorno è inclusa nel prezzo che viene riportato nella dashboard di riepilogo della prenotazione. SE il guest prenota da booking la tassa di soggiorno viene riscossa tramite il link dopo che hanno caricato i documenti. la tassa di soggiorno è un obbligo normativo che viene versata integralmente al comune di Milano. La tassa di soggiorno nel Comune di MIlano è obbligatoria per gli ospiti non residenti che pernottano in città. L’importo viene calcolato per ogni ospite e per ogni notte ed è pari a 9,30 eur a notte ad ospite |
 | Modalità pagamento | tramite link di pagamento, viene richiesta nella procedura di invio documenti |
-| Fattura disponibile | no, è possibile ricevere una ricevuta fiscale è importante fornire tutti i dati necessari per la corretta emissione |
+| Fattura disponibile | si, è possibile ricevere una fattura. è importante fornire tutti i dati necessari per la corretta emissione |
 | Prolungamento soggiorno | bisogna prima controllare la disponibilità dell'appartamento, inviami una notifica front end |
 | Early check-in | per eseguire il check-in anticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa. normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 | Late check-out | per eseguire il check-out posticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa. normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |

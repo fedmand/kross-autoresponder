@@ -22,7 +22,7 @@
 | Numero letti totali | 3 |
 | Numero matrimoniali | 2 |
 | Numero singoli | 1 |
-| Divano letto presente (marca e tipologia) | la poltrona letto è della deghi |
+| Divano letto presente (marca e tipologia) | la poltrona letto è della deghi e si trasforma in un divano singolo (per un solo guest) |
 | Presenza balcone | no |
 | Presenza terrazza | no |
 | Giardino privato | no |
@@ -44,7 +44,7 @@
 | Codice keybox | 2217 |
 | Posizione keybox | la keybox si trova su una cancellata di ferro color rosso mattone che si trova, se si sta guardando il portone condominiale, alle proprie spalle facendo qualche passo verso destra |
 | Piano corretto | L'appartamento si trova al secondo piano, per raggiungerlo bisogna superare il portone condominiale e salire i primi due piani di scale, una volta fatto questo girare a destra e l'appartamento è esattamente la seconda porta che vedete sulla destra |
-| Foto ingresso | il guest puo' vederla tramite il link di istruzioni di accesso |
+| Foto ingresso | il guest puo' vederla tramite il link di istruzioni di accesso https://milanoholidayhomes.kross.travel/guest/check-in-instructions?tag=d1b9d3d04d52e72659daf02ecb3cc4e6 |
 
 > le info sensibili di accesso all’appartamento devono essere inviate solo dopo che l’ospite ha eseguito e confermato la prenotazione e non quando invia la richiesta di prenotazione.
 > nel caso in cui invia una richiesta di prenotazione le risposte sulle info di accesso possono solo descrivere come avverrà il checkin in modo generico (self check in/check in presenza) e comunicare solo la via dove si trova la casa senza comunicarne il civico.
@@ -56,7 +56,7 @@
 
 | FIELD | VALUE |
 |---|---|
-| Link istruzioni check out | https://milanoholidayhomes.kross.travel/guest/check-out-instructions?tag=d1b9d3d04d52e72659daf02ecb3cc4e6 |
+| Link istruzioni check out | https://milanoholidayhomes.kross.travel/guest/check-out-instructions?tag=faecd6dbe9b48de3295afb107c6a4c5a |
 | Orario check-out | entro le ore 10..00 |
 | Late check-out disponibile | per eseguire il check-out posticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa |
 | Costo late check-out | normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
@@ -150,8 +150,8 @@
 | Smart TV | sì è presente |
 | Dimensione TV | circa un 42 pollici |
 | Tavolo da pranzo | sì |
-| Aria condizionata | sì, canalizzata |
-| Riscaldamento | sì, canalizzato |
+| Aria condizionata | sì, canalizzata bisogna attivre il trermostato qui il link di come far funzionare (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/-5gXmTmkRyE?si=KcyejoLnyDvOiczQ |
+| Riscaldamento | sì, canalizzato bisogna attivre il trermostato qui il link di come far funzionare (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/-5gXmTmkRyE?si=KcyejoLnyDvOiczQ |
 
 ---
 
@@ -178,7 +178,8 @@
 |---|---|
 | Aria condizionata | si, l'appartamento gode di un impianto di aria condizionata canalizzato con diffusori in ogni ambiente di modo che possa garantire le migliori temperature all'interno dell'appartamento |
 | Numero split/fancoil | ci sono tre uscite: una in cucina, una nella prima camera da letto e un'altra nel soggiorno |
-| Riscaldamento autonomo | bisogna attivre il trermostato qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/-5gXmTmkRyE?si=KcyejoLnyDvOiczQ |
+| Riscaldamento autonomo | bisogna attivre il trermostato qui il link di come far funzionare (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/-5gXmTmkRyE?si=KcyejoLnyDvOiczQ |
+| Tipo riscaldamento | bisogna attivre il trermostato qui il link di come far funzionare (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/-5gXmTmkRyE?si=KcyejoLnyDvOiczQ |
 | Termostato | bisogna attivre il trermostato qui il link di come farlo funzionare (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/-5gXmTmkRyE?si=KcyejoLnyDvOiczQ |
 
 ---
@@ -212,7 +213,7 @@
 |---|---|
 | Garage privato | purtoppo la casa non ha un garage privato |
 | Box auto | purtroppo la casa non dispone di un box privato |
-| Telepass/ZTL | via San Bernardino 37 a Bergamo rientra nella ZTL “Via San Bernardino – Borgo San Leonardo”, che è attiva tutti i giorni dalle 23:00 alle 7:00 ed è controllata da varchi elettronici. |
+| Telepass/ZTL | si, via San Bernardino 37 a Bergamo rientra nella ZTL “Via San Bernardino – Borgo San Leonardo”, che è attiva tutti i giorni dalle 23:00 alle 7:00 ed è controllata da varchi elettronici. |
 
 > per tutti i parcheggi custoditi a pagamento/ autorimesse voglio che sia LLM a rispondere in base alla posizione della casa gia' fornita e voglio che riporti eventuali costi giornalieri solo se è sicuro delle informazioni
 
@@ -302,7 +303,7 @@
 |---|---|
 | Tassa di soggiorno | se la prenotazione avviene da airbnb la tassa di soggiorno è inclusa nel prezzo che viene riportato nella dashboard di riepilogo della prenotazione. SE il guest prenota da booking la tassa di soggiorno viene riscossa tramite il link dopo che hanno caricato i documenti. la tassa di soggiorno è un obbligo normativo che viene versata integralmente al comune di bergamo. La tassa di soggiorno nel Comune di Bergamo è obbligatoria per gli ospiti non residenti che pernottano in città. L’importo viene calcolato per ogni ospite e per ogni notte ed è pari al 7% del costo del pernottamento per persona, fino a un massimo di 5 € a persona per notte. La tassa viene applicata soltanto per i primi 5 pernottamenti consecutivi. Dalla sesta notte in poi non è più dovuta. Per calcolare l’importo, il costo dell’alloggio viene diviso per il numero degli ospiti e sul risultato viene applicato il 7%. Esempio: se una notte costa 100 € e soggiornano 2 ospiti, il costo per persona è di 50 €. La tassa di soggiorno sarà quindi di 3,50 € per ciascun ospite, per un totale di 7 € |
 | Modalità pagamento | tramite link di pagamento, viene richiesta nella procedura di invio documenti |
-| Fattura disponibile | si, è possibile ricevere una fattura. è importante fornire tutti i dati necessari per la corretta emissione |
+| Fattura disponibile | no, è possibile ricevere una ricevuta fiscale è importante fornire tutti i dati necessari per la corretta emissione |
 | Early check-in | per eseguire il check-in anticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa. normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 | Late check-out | per eseguire il check-out posticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa. normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 
