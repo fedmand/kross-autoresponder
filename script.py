@@ -58,13 +58,17 @@ BASE_URL      = "https://api.krossbooking.com/v5"
 POLL_INTERVAL = 1000  # seconds between polling cycles (5 min, well within rate limits)
 
 # ── Booking priority gate ────────────────────────────────────────────────────
-# Guests currently staying (or arriving imminently) get checked every single
-# poll cycle, same as before. Guests whose stay is entirely in the future or
-# already over get rechecked only this often — a couple of times a day is
-# plenty for a booking that isn't happening right now. See
-# is_current_booking() and its call site in process_thread().
-NON_CURRENT_RECHECK_SECONDS = 12 * 60 * 60  # 12h → ~2x/day
-CURRENT_ARRIVAL_BUFFER_DAYS = 1  # treat "arriving tomorrow" as already current
+# Three tiers, checked every poll cycle only for the first one:
+#   current      — guest is staying now, or arrives within CURRENT_ARRIVAL_BUFFER_DAYS
+#   near future  — arrives within NEAR_FUTURE_ARRIVAL_DAYS: more likely to have
+#                  last-minute questions (directions, parking, early check-in)
+#                  than a booking further out, so it gets a shorter leash
+#   everything else (further-future or already-past bookings)
+# See booking_recheck_seconds() and its call site in process_thread().
+CURRENT_ARRIVAL_BUFFER_DAYS = 1              # treat "arriving tomorrow" as already current
+NEAR_FUTURE_ARRIVAL_DAYS    = 7              # treat "arriving within a week" as near future
+NEAR_FUTURE_RECHECK_SECONDS = 3 * 60 * 60    # 3h → ~8x/day
+NON_CURRENT_RECHECK_SECONDS = 12 * 60 * 60   # 12h → ~2x/day, for everything further out
 
 # Switch to "deepseek" to use DeepSeek instead of Claude (requires DEEPSEEK_API_KEY in .env).
 MODEL_PROVIDER = "claude"
@@ -316,17 +320,23 @@ def format_italian_date(iso, today, with_relative=True):
     return f"{label} ({rel})"
 
 
-def is_current_booking(arrival_iso, departure_iso, today):
-    """True if `today` falls inside the stay (plus a short pre-arrival buffer),
-    i.e. this guest should be checked every poll cycle rather than deferred.
-    Unparseable dates fail open (treated as current) so a bad date never
-    silently starves a thread of replies."""
+def booking_recheck_seconds(arrival_iso, departure_iso, today):
+    """None if this booking should be checked every poll cycle (current stay,
+    or arriving within CURRENT_ARRIVAL_BUFFER_DAYS); otherwise the number of
+    seconds to wait before rechecking it again — a short leash for arrivals
+    within NEAR_FUTURE_ARRIVAL_DAYS, a long one for everything else (further
+    future, or already past). Unparseable dates fail open (None, i.e.
+    "current") so a bad date never silently starves a thread of replies."""
     try:
         arrival   = datetime.strptime(arrival_iso, "%Y-%m-%d").date()
         departure = datetime.strptime(departure_iso, "%Y-%m-%d").date()
     except (ValueError, TypeError):
-        return True
-    return (arrival - timedelta(days=CURRENT_ARRIVAL_BUFFER_DAYS)) <= today <= departure
+        return None
+    if (arrival - timedelta(days=CURRENT_ARRIVAL_BUFFER_DAYS)) <= today <= departure:
+        return None
+    if today < arrival <= today + timedelta(days=NEAR_FUTURE_ARRIVAL_DAYS):
+        return NEAR_FUTURE_RECHECK_SECONDS
+    return NON_CURRENT_RECHECK_SECONDS
 
 
 def build_system_prompt(apartment_name, apartment_info, reservation):
@@ -522,21 +532,17 @@ def process_thread(thread, active_apartments):
     if thread.get("last_message_from_name") in KNOWN_HOSTS:
         return ["skip"]
 
-    # Fix 2: skip threads with nothing new since we last handled them. get-threads
-    # returns each thread's last_update for free; if it matches the value we stored
-    # after fully handling this thread, no message changed and we avoid the
-    # expensive get-thread call. This is what stops permanently to_read threads
-    # (host replied via Airbnb/Booking, which never clears to_read) from costing a
-    # get-thread call every single cycle.
-    last_update = thread.get("last_update")
-    if last_update and storage.get_thread_last_seen(id_thread) == last_update:
-        return ["skip"]
-
-    # Priority gate: current-stay guests are checked every cycle, same as
-    # always. Guests whose booking is entirely in the future or already over
-    # are only rechecked every NON_CURRENT_RECHECK_SECONDS — so shortening
-    # POLL_INTERVAL to serve current guests faster doesn't also multiply
-    # API/Claude cost for bookings that aren't happening right now.
+    # Priority gate: current-stay guests (and near-future arrivals) are checked
+    # every cycle, same as always. Everything else is only rechecked every
+    # `recheck_seconds` — so shortening POLL_INTERVAL to serve current guests
+    # faster doesn't also multiply API/Claude cost for bookings that aren't
+    # happening right now. This MUST run before the last_update dedup check
+    # below and must NOT record the thread as "seen" when it defers: a
+    # deferred thread's last_update never changes on its own (no new
+    # message), so if we recorded it as seen, the dedup check would then
+    # skip it on every future cycle too — silently starving it of the
+    # recheck this gate is supposed to guarantee. See main()'s matching
+    # "deferred" exclusion when calling record_thread_seen.
     arrival, departure = storage.get_thread_dates(id_thread)
     pre_fetched_reservation = None
     if arrival is None or departure is None:
@@ -549,14 +555,25 @@ def process_thread(thread, active_apartments):
         storage.cache_thread_dates(id_thread, arrival, departure)
 
     today = datetime.now(ZoneInfo("Europe/Rome")).date()
-    if is_current_booking(arrival, departure, today):
+    recheck_seconds = booking_recheck_seconds(arrival, departure, today)
+    if recheck_seconds is None:
         storage.set_next_eligible(id_thread, None)
     else:
         next_eligible = storage.get_next_eligible(id_thread)
         now_ts = time.time()
         if next_eligible is not None and now_ts < next_eligible:
             return ["deferred"]
-        storage.set_next_eligible(id_thread, now_ts + NON_CURRENT_RECHECK_SECONDS)
+        storage.set_next_eligible(id_thread, now_ts + recheck_seconds)
+
+    # Fix 2: skip threads with nothing new since we last handled them. get-threads
+    # returns each thread's last_update for free; if it matches the value we stored
+    # after fully handling this thread, no message changed and we avoid the
+    # expensive get-thread call. This is what stops permanently to_read threads
+    # (host replied via Airbnb/Booking, which never clears to_read) from costing a
+    # get-thread call every single cycle.
+    last_update = thread.get("last_update")
+    if last_update and storage.get_thread_last_seen(id_thread) == last_update:
+        return ["skip"]
 
     log.info(f"Thread {id_thread} ({apartment_name})")
 
@@ -813,8 +830,13 @@ def main():
                     # Fix 2: record the thread's current last_update only after a
                     # clean (non-error) outcome, so next cycle skips it unless a new
                     # message arrives. On error we deliberately skip recording so the
-                    # thread is retried.
-                    if thread.get("last_update"):
+                    # thread is retried. Also skip it on "deferred": that outcome
+                    # means the priority gate declined to even look at the thread
+                    # this cycle, so recording it as "seen" would let the dedup
+                    # check above silently skip it forever instead of rechecking
+                    # once its recheck window passes (see the gate's comment in
+                    # process_thread).
+                    if thread.get("last_update") and "deferred" not in outcomes:
                         storage.record_thread_seen(thread["id_thread"], thread["last_update"])
                 except Exception as e:
                     stats["error"] += 1
