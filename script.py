@@ -12,7 +12,7 @@ import prompt_store  # shared system_prompt.md path + read/write (also used by w
 import logging      # structured, timestamped logging to file + console
 from logging.handlers import TimedRotatingFileHandler  # one log file per day
 from collections import deque, Counter  # rate-limit window + per-cycle tallies
-from datetime import datetime   # current Italian date/time for Claude's context
+from datetime import datetime, timedelta   # current Italian date/time for Claude's context
 from zoneinfo import ZoneInfo   # Europe/Rome timezone (handles CET/CEST automatically)
 from dotenv import load_dotenv
 
@@ -56,6 +56,15 @@ TELEGRAM_CHAT_ID   = os.getenv("TELEGRAM_CHAT_ID")
 # ── Constants ─────────────────────────────────────────────────────────────────
 BASE_URL      = "https://api.krossbooking.com/v5"
 POLL_INTERVAL = 1000  # seconds between polling cycles (5 min, well within rate limits)
+
+# ── Booking priority gate ────────────────────────────────────────────────────
+# Guests currently staying (or arriving imminently) get checked every single
+# poll cycle, same as before. Guests whose stay is entirely in the future or
+# already over get rechecked only this often — a couple of times a day is
+# plenty for a booking that isn't happening right now. See
+# is_current_booking() and its call site in process_thread().
+NON_CURRENT_RECHECK_SECONDS = 12 * 60 * 60  # 12h → ~2x/day
+CURRENT_ARRIVAL_BUFFER_DAYS = 1  # treat "arriving tomorrow" as already current
 
 # Switch to "deepseek" to use DeepSeek instead of Claude (requires DEEPSEEK_API_KEY in .env).
 MODEL_PROVIDER = "claude"
@@ -307,6 +316,19 @@ def format_italian_date(iso, today, with_relative=True):
     return f"{label} ({rel})"
 
 
+def is_current_booking(arrival_iso, departure_iso, today):
+    """True if `today` falls inside the stay (plus a short pre-arrival buffer),
+    i.e. this guest should be checked every poll cycle rather than deferred.
+    Unparseable dates fail open (treated as current) so a bad date never
+    silently starves a thread of replies."""
+    try:
+        arrival   = datetime.strptime(arrival_iso, "%Y-%m-%d").date()
+        departure = datetime.strptime(departure_iso, "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return True
+    return (arrival - timedelta(days=CURRENT_ARRIVAL_BUFFER_DAYS)) <= today <= departure
+
+
 def build_system_prompt(apartment_name, apartment_info, reservation):
     # Reservation and apartment context go in the system prompt so Claude has them
     # as standing background, separate from the conversation turns.
@@ -510,6 +532,32 @@ def process_thread(thread, active_apartments):
     if last_update and storage.get_thread_last_seen(id_thread) == last_update:
         return ["skip"]
 
+    # Priority gate: current-stay guests are checked every cycle, same as
+    # always. Guests whose booking is entirely in the future or already over
+    # are only rechecked every NON_CURRENT_RECHECK_SECONDS — so shortening
+    # POLL_INTERVAL to serve current guests faster doesn't also multiply
+    # API/Claude cost for bookings that aren't happening right now.
+    arrival, departure = storage.get_thread_dates(id_thread)
+    pre_fetched_reservation = None
+    if arrival is None or departure is None:
+        # First time we've seen this thread — one-off lookup to learn its
+        # dates. They never change once booked, so this is cached forever
+        # after and every later cycle classifies for free, with no API call.
+        pre_fetched_reservation = get_reservation(id_reservation)
+        res = pre_fetched_reservation["data"][0]
+        arrival, departure = res["arrival"], res["departure"]
+        storage.cache_thread_dates(id_thread, arrival, departure)
+
+    today = datetime.now(ZoneInfo("Europe/Rome")).date()
+    if is_current_booking(arrival, departure, today):
+        storage.set_next_eligible(id_thread, None)
+    else:
+        next_eligible = storage.get_next_eligible(id_thread)
+        now_ts = time.time()
+        if next_eligible is not None and now_ts < next_eligible:
+            return ["deferred"]
+        storage.set_next_eligible(id_thread, now_ts + NON_CURRENT_RECHECK_SECONDS)
+
     log.info(f"Thread {id_thread} ({apartment_name})")
 
     time.sleep(20)  # avoid hitting Kross rate limits on sequential get-thread calls
@@ -544,7 +592,10 @@ def process_thread(thread, active_apartments):
     text_msgs  = [m for m in unread_guest_msgs if m.get("message")]
 
     outcomes = []
-    reservation = None  # fetched lazily, once, and shared between the photo/text paths
+    # Seeded with whatever the priority gate above already fetched (if this was
+    # a new thread), otherwise fetched lazily here — either way, once, and
+    # shared between the photo/text paths.
+    reservation = pre_fetched_reservation
 
     def get_res():
         nonlocal reservation
@@ -781,7 +832,7 @@ def main():
             f"photos={stats['photo']} photo_checkout_skips={stats['photo_checkout_skip']} "
             f"duplicates={stats['duplicate']} "
             f"send_failed={stats['send_failed']} "
-            f"skipped={stats['skip']} errors={stats['error']}"
+            f"skipped={stats['skip']} deferred={stats['deferred']} errors={stats['error']}"
         )
         log.info(f"Sleeping {POLL_INTERVAL}s...")
         time.sleep(POLL_INTERVAL)

@@ -66,6 +66,15 @@ def init_db():
             seen_at      TEXT NOT NULL
         )
     """)
+    # Migrate older DBs: add the columns backing the current/future-booking
+    # priority gate (see script.py's is_current_booking / next-eligible check).
+    # arrival/departure cache the reservation dates so classification is free
+    # after the first lookup (dates never change once booked); next_eligible_at
+    # is a Unix timestamp gating how often a non-current thread is rechecked.
+    existing_cols = {row[1] for row in conn.execute("PRAGMA table_info(thread_state)")}
+    for col, decl in (("arrival", "TEXT"), ("departure", "TEXT"), ("next_eligible_at", "REAL")):
+        if col not in existing_cols:
+            conn.execute(f"ALTER TABLE thread_state ADD COLUMN {col} {decl}")
     conn.commit()
     conn.close()
 
@@ -128,6 +137,60 @@ def record_thread_seen(id_thread, last_update):
             "ON CONFLICT(id_thread) DO UPDATE SET last_update = excluded.last_update, "
             "seen_at = excluded.seen_at",
             (id_thread, last_update, time.strftime("%Y-%m-%d %H:%M:%S")),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def get_thread_dates(id_thread):
+    # Cached reservation dates for this thread, or (None, None) if we haven't
+    # looked them up yet. Dates never change once a reservation is booked, so
+    # callers can cache indefinitely — no need to re-fetch from Kross.
+    conn = sqlite3.connect(DB_PATH)
+    row = conn.execute(
+        "SELECT arrival, departure FROM thread_state WHERE id_thread = ?",
+        (id_thread,),
+    ).fetchone()
+    conn.close()
+    return (row[0], row[1]) if row else (None, None)
+
+
+def cache_thread_dates(id_thread, arrival, departure):
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        conn.execute(
+            "INSERT INTO thread_state (id_thread, arrival, departure, seen_at) "
+            "VALUES (?, ?, ?, ?) "
+            "ON CONFLICT(id_thread) DO UPDATE SET arrival = excluded.arrival, "
+            "departure = excluded.departure",
+            (id_thread, arrival, departure, time.strftime("%Y-%m-%d %H:%M:%S")),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def get_next_eligible(id_thread):
+    # Unix timestamp after which a non-current-stay thread may be rechecked
+    # again, or None if it's never been gated (or is currently eligible).
+    conn = sqlite3.connect(DB_PATH)
+    row = conn.execute(
+        "SELECT next_eligible_at FROM thread_state WHERE id_thread = ?",
+        (id_thread,),
+    ).fetchone()
+    conn.close()
+    return row[0] if row else None
+
+
+def set_next_eligible(id_thread, next_eligible_at):
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        conn.execute(
+            "INSERT INTO thread_state (id_thread, next_eligible_at, seen_at) "
+            "VALUES (?, ?, ?) "
+            "ON CONFLICT(id_thread) DO UPDATE SET next_eligible_at = excluded.next_eligible_at",
+            (id_thread, next_eligible_at, time.strftime("%Y-%m-%d %H:%M:%S")),
         )
         conn.commit()
     finally:
