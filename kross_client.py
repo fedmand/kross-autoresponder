@@ -1,15 +1,17 @@
 """
-Minimal, read-only Kross client used by the host web app.
+Minimal Kross client used by the host web app.
 
 The bot (script.py) has its own battle-tested Kross client with full rate-limit
 tracking and exponential backoff. This module is deliberately separate and tiny:
-the web app needs exactly ONE thing from Kross — the list of all apartment
-(name_room_type) values — and only on demand, when the host clicks
-"Aggiorna da Kross". Keeping it here avoids importing script.py (which would spin
-up the bot's logging and other side effects).
+the web app needs, from Kross, the list of all apartment (name_room_type) values
+(only on demand, when the host clicks "Aggiorna da Kross") and the ability to
+send a host-drafted reply to a guest thread (only on demand, when the host sends
+a draft from a notification). Keeping it here avoids importing script.py (which
+would spin up the bot's logging and other side effects).
 
-The fetched list is cached to disk so ordinary page loads NEVER call Kross — only
-the explicit refresh button does. This keeps API credit usage predictable.
+The fetched apartment list is cached to disk so ordinary page loads NEVER call
+Kross — only the explicit refresh button does. This keeps API credit usage
+predictable.
 """
 import json
 import os
@@ -112,6 +114,22 @@ def fetch_apartment_names():
     except (requests.RequestException, ValueError) as exc:
         raise KrossError(f"Lettura appartamenti da Kross fallita: {exc}") from exc
     return sorted(names)
+
+
+def send_message(id_thread, message):
+    """Sends a message to the guest in this thread. Raises KrossError on failure.
+
+    Used only by the host-drafted-reply flow (web/main.py) — a deliberate,
+    on-demand write, unlike the read-only apartment-list fetch above. Fetches
+    a fresh token per call rather than caching one: this path fires rarely
+    (a host clicking "send"), so the extra auth round-trip is negligible.
+    """
+    token = _get_token()
+    try:
+        return _post("/messaging/send-message",
+                      {"id_thread": id_thread, "message": message}, token)
+    except requests.RequestException as exc:
+        raise KrossError(f"Invio messaggio a Kross fallito: {exc}") from exc
 
 
 def refresh_cache():

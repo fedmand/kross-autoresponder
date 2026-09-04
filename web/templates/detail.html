@@ -31,8 +31,32 @@
     <p class="reason">{{ n.summary }}</p>
 </section>
 
+<section class="block draft-block">
+    <h2>Rispondi con l'aiuto dell'IA</h2>
+    {% if draft_error %}<p class="draft-error">{{ draft_error }}</p>{% endif %}
+    {% if send_error %}<p class="draft-error">{{ send_error }}</p>{% endif %}
+
+    <form method="post" action="/notification/{{ n.id }}/draft" class="draft-form">
+        <input type="hidden" name="next" value="{{ next }}">
+        <label class="hfield-label" for="host_instruction">Cosa vuoi rispondere?</label>
+        <textarea id="host_instruction" name="host_instruction" rows="3"
+                  placeholder="Es: digli che il late check-out non è possibile, ma può lasciare i bagagli in portineria fino alle 18">{{ host_instruction or "" }}</textarea>
+        <button type="submit" class="btn btn-primary">Genera bozza</button>
+    </form>
+
+    {% if draft_text %}
+    <form method="post" action="/notification/{{ n.id }}/send" class="draft-form draft-send-form">
+        <input type="hidden" name="next" value="{{ next }}">
+        <input type="hidden" name="host_instruction" value="{{ host_instruction or '' }}">
+        <label class="hfield-label" for="draft_text">Bozza (modificabile prima dell'invio)</label>
+        <textarea id="draft_text" name="draft_text" rows="5">{{ draft_text }}</textarea>
+        <button type="submit" class="btn btn-primary btn-resolve">Invia all'ospite</button>
+    </form>
+    {% endif %}
+</section>
+
 <form class="resolve" method="post" action="/notification/{{ n.id }}/resolve">
     <input type="hidden" name="next" value="{{ next }}">
-    <button type="submit" class="btn btn-primary btn-resolve">Segna come gestita</button>
+    <button type="submit" class="btn btn-link btn-resolve">Segna come gestita senza rispondere</button>
 </form>
 {% endblock %}

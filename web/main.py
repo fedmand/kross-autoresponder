@@ -31,7 +31,8 @@ import houses_store  # noqa: E402
 import apartments_store  # noqa: E402  shared apartments/*.md access (also used by the bot)
 import active_store  # noqa: E402  shared whitelist of apartments the bot may handle
 import prompt_store  # noqa: E402  shared system_prompt.md access (also used by the bot)
-import kross_client  # noqa: E402  on-demand, cached Kross apartment list
+import kross_client  # noqa: E402  on-demand, cached Kross apartment list + send-message
+import draft_service  # noqa: E402  Claude-drafted replies for the host to review/send
 
 MOCK_PATH = os.path.join(REPO_ROOT, "gui", "data", "mock_notifications.json")
 APARTMENTS_DIR = apartments_store.APARTMENTS_DIR
@@ -228,14 +229,18 @@ def index(
     )
 
 
+def find_notification(notif_id):
+    """The enriched notification dict matching this id, or None if it's
+    already resolved or unknown. Shared by detail/draft/send below."""
+    for n in get_enriched():
+        if str(n["id"]) == notif_id:
+            return n
+    return None
+
+
 @app.get("/notification/{notif_id}", response_class=HTMLResponse)
 def detail(request: Request, notif_id: str, next: str = ""):
-    items = get_enriched()
-    match = None
-    for n in items:
-        if str(n["id"]) == notif_id:
-            match = n
-            break
+    match = find_notification(notif_id)
     if match is None:
         # Already resolved or unknown — send the user back to the list.
         return RedirectResponse(url=("/?" + next) if next else "/", status_code=303)
@@ -258,6 +263,76 @@ def resolve(notif_id: str, next: str = Form(default="")):
             storage.mark_resolved(int(notif_id))
         except (ValueError, TypeError):
             pass
+    target = "/?" + next if next else "/"
+    return RedirectResponse(url=target, status_code=303)
+
+
+# ── Host-drafted replies ──────────────────────────────────────────────────────
+# The host writes a short instruction ("tell them late check-out isn't
+# possible but they can leave bags at reception"); Claude drafts the actual
+# guest-facing message using the same knowledge base and tone as the bot's own
+# replies. Deliberately a two-step, review-before-send flow — draft renders
+# back into the same page for the host to edit, and only /send actually
+# writes to Kross. Both steps re-render detail.html directly (no redirect) so
+# the drafted/edited text survives without needing any session storage.
+@app.post("/notification/{notif_id}/draft", response_class=HTMLResponse)
+def draft_notification(request: Request, notif_id: str,
+                        host_instruction: str = Form(default=""),
+                        next: str = Form(default="")):
+    match = find_notification(notif_id)
+    if match is None:
+        return RedirectResponse(url=("/?" + next) if next else "/", status_code=303)
+
+    ctx = {
+        "n": build_view(match),
+        "next": next,
+        "using_db": using_db(),
+        "host_instruction": host_instruction,
+    }
+    try:
+        ctx["draft_text"] = draft_service.draft_reply(match, host_instruction)
+    except draft_service.DraftError as exc:
+        ctx["draft_error"] = str(exc)
+    return templates.TemplateResponse(request, "detail.html", ctx)
+
+
+@app.post("/notification/{notif_id}/send", response_class=HTMLResponse)
+def send_notification(request: Request, notif_id: str,
+                       draft_text: str = Form(default=""),
+                       host_instruction: str = Form(default=""),
+                       next: str = Form(default="")):
+    match = find_notification(notif_id)
+    if match is None:
+        return RedirectResponse(url=("/?" + next) if next else "/", status_code=303)
+
+    ctx = {
+        "n": build_view(match),
+        "next": next,
+        "using_db": using_db(),
+        "host_instruction": host_instruction,
+        "draft_text": draft_text,
+    }
+
+    if not draft_text.strip():
+        ctx["send_error"] = "La bozza è vuota."
+        return templates.TemplateResponse(request, "detail.html", ctx)
+    if not using_db() or not match.get("id_thread"):
+        ctx["send_error"] = "Invio non disponibile (nessuna connessione al database reale)."
+        return templates.TemplateResponse(request, "detail.html", ctx)
+
+    try:
+        kross_client.send_message(match["id_thread"], draft_text)
+    except kross_client.KrossError as exc:
+        ctx["send_error"] = str(exc)
+        return templates.TemplateResponse(request, "detail.html", ctx)
+
+    # Mirror what the bot does after its own auto-replies: mark the triggering
+    # guest message as answered so the bot's next poll cycle doesn't also try
+    # to reply to it, then close out the notification.
+    if match.get("id_message"):
+        storage.record_reply(match["id_thread"], match["id_message"])
+    storage.mark_resolved(int(notif_id), handled_by="host (bozza IA)")
+
     target = "/?" + next if next else "/"
     return RedirectResponse(url=target, status_code=303)
 

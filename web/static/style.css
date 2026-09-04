@@ -164,8 +164,28 @@ body {
 .msg { background: #e7f5ff; border: 1px solid #d0ebff; color: #1864ab; }
 .reason { background: #fff9db; border: 1px solid #ffec99; color: #e67700; }
 
-.resolve { margin: 20px 0 10px; }
+.resolve { margin: 10px 0; }
 .btn-resolve { width: 100%; padding: 12px; font-size: 0.95rem; }
+
+.draft-block { margin: 18px 0; }
+.draft-form { margin-top: 8px; }
+.draft-form + .draft-form { margin-top: 14px; }
+.draft-form textarea {
+    display: block; width: 100%; box-sizing: border-box;
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 9px 11px; font-size: 0.88rem; font-family: inherit;
+    line-height: 1.4; resize: vertical; color: var(--text); background: #fff;
+    margin-bottom: 8px;
+}
+.draft-form textarea:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(25,113,194,0.12);
+}
+.draft-error {
+    margin: 0 0 10px; padding: 9px 12px; border-radius: 8px;
+    background: #fff5f5; border: 1px solid #ffc9c9; color: #c92a2a;
+    font-size: 0.85rem;
+}
 
 .source { color: var(--muted); font-size: 0.75rem; text-align: center; }
 
