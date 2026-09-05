@@ -50,10 +50,12 @@ def _build_system_prompt(notification):
         "The host has already decided how to handle this guest's message and is "
         "giving you an instruction below on what to tell them. You are NOT deciding "
         "whether to escalate — ignore any escalation instructions above, they don't "
-        "apply here. Write ONLY the guest-facing reply message itself, in the same "
-        "language the guest used in their message below, matching the tone/style "
-        "guidance above. Output nothing but the reply text: no JSON, no preamble, "
-        "no explanation, no quotation marks around it."
+        "apply here. Write ONLY the guest-facing reply message itself, ALWAYS IN "
+        "ITALIAN regardless of what language the guest's message below is in (Kross "
+        "translates it for the guest automatically on send — the host reviewing this "
+        "draft needs to read it in Italian), matching the tone/style guidance above. "
+        "Output nothing but the reply text: no JSON, no preamble, no explanation, "
+        "no quotation marks around it."
     )
     return "\n".join(lines)
 

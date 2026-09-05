@@ -8,24 +8,25 @@
 
 | FIELD | VALUE |
 |---|---|
-| Nome appartamento | Solari 3 |
-| Nome annuncio | 3min Tubo-Tortona Design - Navigli- balcony w view |
-| Indirizzo completo | Via Andrea Solari, 3 Milano (MI) |
-| Descrizione palazzo (colore/numero piani totale) | palazzo di 7 piani marrone |
-| Descrizione porta condominiale | una porta di vetro con una cancellata di ferro |
-| Piano | l'appartamento si trova al sesto piano |
-| Presenza ascensore | Sì, il condominio è dotato di ascensore 😊 |
-| Metratura totale | L'appartamento misura circa 80 metri quadri |
+| Nome appartamento | San Sisto 6 |
+| Nome annuncio | 7Guest Duomo5Min walk-CiNEMAPopCorn-Castle 6'- A/C |
+| Indirizzo completo | Via san Sisto,6 Milano (MI) |
+| Descrizione palazzo (colore/numero piani totale) | palazzo storico signorile di tre piani, colore giallo |
+| Descrizione porta condominiale | grosso portone di legno colore grigio |
+| Piano | l'appartamento si trova al piano terra |
+| Presenza ascensore | no, ma si trova al piano terra |
+| Metratura totale | circa 80 metri quadri |
 | Numero camere da letto | 2 |
-| Numero bagni | 1 |
-| Numero soggiorni | 1 |
-| Numero massimo ospiti | 4 |
-| Numero letti totali | 2, un letto matrimoniale e un divano letto matrimoniale |
-| Numero matrimoniali | 2 |
+| Numero bagni | 2 |
+| Numero massimo ospiti | 7 |
+| Numero letti totali | 4, di cui due matrimoniali, un signolo e un divano letto |
+| Numero matrimoniali | 2 e un divano letto matrimoniale |
+| Numero singoli | 1 |
 | Divano letto presente (marca e tipologia) | sì è presente in sala non so la marca ma assicuro che è molto comodo |
-| Presenza balcone | si, presente un ampio balcone dove trascorrere dei piacevoli momenti all'aria aperta |
-| Presenza terrazza | presente un ampio balcone |
-| Vista particolare | vista sulla città |
+| Presenza balcone | no |
+| Presenza terrazza | no |
+| Giardino privato | no |
+| Vista particolare | no |
 
 ---
 
@@ -33,16 +34,16 @@
 
 | FIELD | VALUE |
 |---|---|
-| Link accesso all'appartamento | l'invio delle istruzioni di check in viene inviato circa 48 ore prima dell'arrivo degli ospiti e questo è il link che viene inviato: https://milanoholidayhomes.kross.travel/guest/check-in-instructions?tag=7099a98530ad8b8a73f1de77984c783b |
-| Orario check-in | dalle 16.00 fino alle 21 |
+| Link accesso all'appartamento | l'invio delle istruzioni di check in viene inviato circa 48 ore prima dell'arrivo degli ospiti e questo è il link che viene inviato: https://milanoholidayhomes.kross.travel/guest/check-in-instructions?tag=c4b362fe003f00fa701e96b9780626cb |
+| Orario check-in | dalle ore 16.00 fino alle ore 22 |
 | Early check-in disponibile | per eseguire il check-in anticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa |
 | Costo early check-in | normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
-| Self check-in | si, il check in avviene tramite keybox |
+| Self check-in | si, il check in avviene tramite keybox che si trova sulla porta blindata dell'appartamento, dopo aver sbloccato i portoni condominiali tramite citofono |
 | Check-in in presenza | no |
-| Codice portone | no |
-| Codice keybox | 0805 |
-| Posizione keybox | Dal civico 3 di via Andrea Solari, dirigetevi dalla parte opposta della strada, come vedete nelle foto, e cercate questo pannello di ferro. Troverete attaccato il locker con le chiavi al suo interno, spiega loro che i guest dovranno vedere le istruzioni con le foto che spiegano perfettamente come arrivare al locker |
-| Piano corretto | entrati dal portone del civico 3, girare a sinistra aprire il secondo portone di vetro e dirigersi all'ascensore, salire fino al sesto piano, una volta usciti dall'ascensore la porta dell'appartamento è quella più a destra, identificabile con la targhetta con su scritto "Paola Ascani" |
+| Codice portone | i guest devono suonare il numero 21 due volte e il primo cancello di legno si aprirà, suoneranno ancora il numero 21 al secondo citofono |
+| Codice keybox | 1717 |
+| Posizione keybox | Alla sinistra della porta |
+| Piano corretto | entrati dal portone del civico, continuare dritti fino al secondo portone superato quello l'appartamento è esattamente il primo sulla destra |
 | Foto ingresso | il guest puo' vederla tramite il link di istruzioni di accesso |
 
 > le info sensibili di accesso all’appartamento devono essere inviate solo dopo che l’ospite ha eseguito e confermato la prenotazione e non quando invia la richiesta di prenotazione.
@@ -55,13 +56,13 @@
 
 | FIELD | VALUE |
 |---|---|
-| Link istruzioni check out | https://milanoholidayhomes.kross.travel/guest/check-out-instructions?tag=7099a98530ad8b8a73f1de77984c783b |
+| Link istruzioni check out | https://milanoholidayhomes.kross.travel/guest/check-out-instructions?tag=c4b362fe003f00fa701e96b9780626cb |
 | Orario check-out | entro le ore 10..00 |
 | Late check-out disponibile | per eseguire il check-out posticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa |
 | Costo late check-out | normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 | Dove lasciare chiavi | all'interno del locker dove sono state prese per eseguire il check in |
 | Cosa fare prima di uscire | assicurarsi che il guest chiuda tutte le finestre, che spenga la luce e che non ci sia l'aria condizionata accesa |
-| Dove buttare immondizia | Se non è troppa spazzatura ce ne occupiamo noi 😊assicurati di aver fatto correttamente la raccolta indifferenziata spiega quindi che devono dividere: carta, umido, plastica , vetro e indifferenziata |
+| Dove buttare immondizia | Se il guest chiede dove lasciare o buttare la spazzatura, informa che, se la quantità di rifiuti non è eccessiva, può lasciarla nell’appartamento e ce ne occuperemo noi. È fondamentale ricordare sempre al guest di effettuare correttamente la raccolta differenziata, separando i rifiuti in sacchetti diversi per: * plastica; * vetro; * umido; * carta; * indifferenziata. |
 | Spegnere climatizzatore | sempre |
 | Lasciare finestre chiuse | sempre |
 | Lasciare stoviglie pulite | non è una regola scritta, ma è importante che non ci sia sporcizia extra che richiederebbe un intervento aggiuntivo alla società delle pulizie |
@@ -74,17 +75,17 @@
 
 | FIELD | VALUE |
 |---|---|
-| Numero camere | 2 |
-| Dimensione camere | circa 15 metri quadrati l'una |
-| Letto matrimoniale | c'è un letto matrimoniale in camera e un divano letto matrimoniale in soggiorno |
+| Numero camere | 3 |
+| Dimensione camere | circa 15 metri quadrat |
+| Letto matrimoniale | 2 e un divano letto matrimoniale |
+| Letti singoli | uno |
 | Tipologia di materassi | non conosco la marca esatta ma sono tutti molto comodi |
-| Armadio | è presente un garnde armadio nella camera da letto e una comodissima cabina armadio |
 | Comodini | sono presenti in ogni camera |
-| Tende | si ci sono le tende e le tapparelle permettono di non far penetrare neanche un raggio di luce durante le prime ore della mattina per consentire un ottimo sonno |
+| Tende | si ci sono le tende e le persiane permettono di non far penetrare neanche un raggio di luce durante le prime ore della mattina per consentire un ottimo sonno |
 | Cuscini extra | si, negli armadi il guest dovrebbe trovarne |
 | Coperte extra | si, negli armadi il guest dovrebbe trovarne |
-| Aria condizionata | certamente, sia in camera da letto che in sala sono presenti due split dell'aria condizionata che permettono di avere un'ottima tempertaura |
-| Riscaldamento | tramite caloriferi regolabili tramite termovalvole apposte su di essi |
+| Aria condizionata | certamente, sia in ogni camera da letto che in sala sono presenti due split dell'aria condizionata che permettono di avere un'ottima tempertaura |
+| Riscaldamento | tramite caloriferi regolabili con le apposite termovalvole |
 
 ---
 
@@ -92,10 +93,11 @@
 
 | FIELD | VALUE |
 |---|---|
-| Numero bagni | 1 |
-| Doccia | sì |
-| Bidet | sì |
-| Asciugacapelli | sì |
+| Numero bagni | 2 |
+| Doccia | in entrambi i bagni |
+| Vasca | no |
+| Bidet | presenti |
+| Asciugacapelli | presente |
 | Sapone mani | si, in formato welcome kit quindi fornito in quantità solo strettamente necessarie e limitate |
 | Shampoo | si, in formato welcome kit quindi fornito in quantità solo strettamente necessarie e limitate |
 | Bagnoschiuma | no |
@@ -103,8 +105,9 @@
 | Asciugamani viso | sì |
 | Asciugamani doccia | sì |
 | Tappetino bagno | sì |
-| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/mJa8OW1Sd6o?si=86pBjI4GBb15Wicx |
-| Stendino | sì |
+| Scaldasalviette | sì |
+| Lavatrice | presente |
+| Stendino | presente |
 
 ---
 
@@ -113,14 +116,12 @@
 | FIELD | VALUE |
 |---|---|
 | Cucina completa | sì |
-| Piano gas | si, qui il link di come far funzionare i fornelli (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/cQE--i-ujGM?si=PlnvEEBraRVBATnq |
-| Forno | no |
-| Microonde | presente |
-| Lavastoviglie | si, qui il link di come far funzionare la lavastoviglie (da inviare solo se il guest richiede espressamente come funziona : https://youtu.be/oDpsKRln6bA?si=A7vVymDQDfYjeEFo |
-| Frigorifero | sì, ampio e spazioso |
-| Congelatore | sì |
-| Bollitore | sì |
-| Macchina caffè | sì, nespresso |
+| Piano gas | sì |
+| Forno | presente |
+| Frigorifero | presente, ampio e spazioso |
+| Congelatore | presente |
+| Bollitore | presente |
+| Macchina caffè | presente |
 | Pentole | sì |
 | Padelle | sì |
 | Piatti | sì |
@@ -141,14 +142,8 @@
 
 | FIELD | VALUE |
 |---|---|
-| Divano | è presente un comodo e spazioso divano letto matrimoniale a scomparsa in modo tale da risparmiare spazio e concedere l'adeguato comfort agli ospiti |
-| Divano letto | è presente un comodo e spazioso divano letto matrimoniale a scomparsa in modo tale da risparmiare spazio e concedere l'adeguato comfort agli ospiti |
-| Smart TV | presente la tv ma non smart |
-| Dimensione TV | circa 40 pollici |
-| Tavolo da pranzo | un tavolo in legno con 4 sedie |
-| Sedie disponibili | un tavolo in legno con 4 sedie |
-| Aria condizionata | presente in ogni ambiente |
-| Riscaldamento | tramite caloriferi regolabili con termovalvole |
+| Divano | un comodo divano letto matrimoniale |
+| Divano letto | un comodo divano letto matrimoniale |
 
 ---
 
@@ -156,12 +151,11 @@
 
 | FIELD | VALUE |
 |---|---|
-| Lavatrice | si, qui il link di come far funzionare la lavatrice (da inviare solo se il guest richiede espressamente come funziona il funzionamento: https://youtu.be/mJa8OW1Sd6o?si=86pBjI4GBb15Wicx |
-| Asciugatrice | non presente |
-| Ferro da stiro | presente |
-| Asse da stiro | presente |
+| Lavatrice | sì |
+| Ferro da stiro | sì |
+| Asse da stiro | sì |
 | Phon | presente |
-| Ventilatore | no, aria condizionata |
+| Ventilatore | no,aria condizionata |
 
 ---
 
@@ -169,8 +163,8 @@
 
 | FIELD | VALUE |
 |---|---|
-| Aria condizionata | si, l'appartamento gode di un impianto di aria condizionata con split in ogni ambiente di modo che possa garantire le migliori temperature all'interno dell'appartamento |
-| Numero split/fancoil | uno per ogni ambiente |
+| Aria condizionata | si, l'appartamento gode di un impianto di aria condizionata |
+| Numero split/fancoil | 2 |
 
 ---
 
@@ -178,10 +172,9 @@
 
 | FIELD | VALUE |
 |---|---|
-| Nome Wi-Fi | Vodafone-C02000227 |
-| Password Wi-Fi | XET3JNrptmJdXr3f |
-| Router posizione | si trova all'ingresso dell appartamento |
-| Procedura reset router | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem Vodafone a inviare una proceedura efficace di reset |
+| Nome Wi-Fi | TP-Link_DB93 |
+| Password Wi-Fi | 61589164 |
+| Procedura reset router | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem tp-link a inviare una proceedura efficace di reset |
 
 ---
 
@@ -192,8 +185,7 @@
 | Estintore | si, presente da 6 kg in polvere |
 | Rilevatore monossido | si, presente |
 | Kit pronto soccorso | si, presente |
-| Quadro elettrico | si trova entrando in casa sulla sinistra |
-| Contatore elettrico | Se salta la corrente, spiega al guest che probabilmente sono stati utilizzati troppi elettrodomestici contemporaneamente. Per riattivare la corrente, il guest deve utilizzare il contatore generale che si trova all’interno dell’appartamento. si trova entrando in casa sulla sinstra |
+| Quadro elettrico | si |
 
 ---
 
@@ -201,10 +193,9 @@
 
 | FIELD | VALUE |
 |---|---|
-| Garage privato | purtoppo la casa non ha un garage privato |
-| Box auto | purtroppo la casa non dispone di un box privato |
-| Parcheggio gratuito | purtroppo non disponiamo di un parcheggio gratuito |
-| Parcheggio a pagamento | sulla via dell'appartamento e in quelle adiacenti è molto presente |
+| Garage privato | non presente |
+| Box auto | non presente |
+| Telepass/ZTL | si dentro la ztl area c (voglio che llm spieghi ai guest cosa fare per non prendere multe in caso arrivino con la macchina |
 
 > per tutti i parcheggi custoditi a pagamento/ autorimesse voglio che sia LLM a rispondere in base alla posizione della casa gia' fornita e voglio che riporti eventuali costi giornalieri solo se è sicuro delle informazioni
 
@@ -214,9 +205,9 @@
 
 | FIELD | VALUE |
 |---|---|
-| Ascensore | sì |
-| Accesso disabili | no |
-| Piano terra | no, sesto |
+| Accesso disabili | sì, due gradini per arrivare alla porta di casa |
+| Doccia accessibile | sì |
+| Piano terra | sì |
 
 ---
 
@@ -224,9 +215,9 @@
 
 | FIELD | VALUE |
 |---|---|
-| Culla | presente |
-| Seggiolone | presente |
-| Lettino bambino | presente |
+| Culla | presente in struttura |
+| Seggiolone | presente in struttura |
+| Lettino bambino | presente in struttura |
 | Giochi per bambini | no |
 | Animali ammessi | sì |
 | Ciotole animali | no |
@@ -241,10 +232,10 @@
 
 | FIELD | VALUE |
 |---|---|
-| Vietato fumare | si, vietato all'interno dell'abitazione mentre è consentito sul balcone |
+| Vietato fumare | si, vietato all'interno dell'abitazione |
 | Vietate feste | si, vietato |
 | Orario silenzio | dalle 21 fino alle 9.00 del mattino |
-| Numero massimo ospiti | 4 |
+| Numero massimo ospiti | 7 |
 | Animali consentiti | sì |
 | Ospiti esterni consentiti | no |
 
@@ -255,14 +246,13 @@
 | FIELD | VALUE |
 |---|---|
 | Mancanza acqua calda | se non c'è acqua calda devo ricevere una notifica di riparazione su front end |
-| Salta corrente | Se salta la corrente, spiega al guest che probabilmente sono stati utilizzati troppi elettrodomestici contemporaneamente. Per riattivare la corrente, il guest deve utilizzare il contatore generale che si trova all’interno dell’appartamento. si trova entrando in casa sulla sinstra |
-| Wi-Fi non funziona | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem Vodafone a inviare una proceedura efficacie di reset |
-| Aria condizionata non funziona | controllare che le pile del telecomando degli split funzioni |
+| Wi-Fi non funziona | spegnere il modem e staccare e riattaccare la spina della corrente provando poi, dopo averlo riattaccato a riaccenderlo. nel caso in cui il disservizio continuasse voglio che sia LLM, sapendo che è un modem tp-link a inviare una proceedura efficace di reset |
+| Aria condizionata non funziona | controllare che le pile del telecomando degli split funzioni, mandami una notifica |
 | Serratura bloccata | tirare verso di sè stessi la maniglia della porta |
 | Perdite d'acqua | se gli ospiti lamentano perdite o disservizi simili mandami una notifica front end,prima però fatti mandare una foto |
-| Odori strani | se gli ospiti lamentano disservizi simili mandami una notifica front end, prima però fatti mandare una foto |
-| Insetti | se gli ospiti lamentano disservizi simili mandami una notifica front end, prima però fatti mandare una foto |
-| Guasto elettrodomestici | se gli ospiti lamentano disservizi simili mandami una notifica front end, prima però fatti mandare una foto |
+| Odori strani | se gli ospiti lamentano disservizi simili mandami una notifica front end,prima però fatti mandare una foto |
+| Insetti | se gli ospiti lamentano disservizi simili mandami una notifica front end,prima però fatti mandare una foto |
+| Guasto elettrodomestici | se gli ospiti lamentano disservizi simili mandami una notifica front end,prima però fatti mandare una foto |
 
 ---
 
@@ -271,9 +261,7 @@
 | FIELD | VALUE |
 |---|---|
 | Raccolta differenziata | si, bisogna differenziare: carta, umido, plastica, vetro e organico ciascuno in sacchetti diversi |
-| Dove sono i bidoni | Non preoccuparti, ci occuperemo noi di buttare la spazzatura 😊assicurati di aver fatto correttamente la raccolta indifferenziata spiega quindi che devono dividere: carta, umido, plastica , vetro e indifferenziata |
-
-> per tutte queste informazioni di posizione voglio che sia l'LLM a rispondere sulla base della posizione già fornita della casa
+| Dove sono i bidoni | Se il guest chiede dove lasciare o buttare la spazzatura, informa che, se la quantità di rifiuti non è eccessiva, può lasciarla nell’appartamento e ce ne occuperemo noi. È fondamentale ricordare sempre al guest di effettuare correttamente la raccolta differenziata, separando i rifiuti in sacchetti diversi per: * plastica; * vetro; * umido; * carta; * indifferenziata. |
 
 ---
 
@@ -294,7 +282,7 @@
 | FIELD | VALUE |
 |---|---|
 | Modalità pagamento | tramite link di pagamento, viene richiesta nella procedura di invio documenti |
-| Fattura disponibile | no, è possibile ricevere una ricevuta fiscale è importante fornire tutti i dati necessari per la corretta emissione |
+| Fattura disponibile | si, è possibile ricevere una fattura. è importante fornire tutti i dati necessari per la corretta emissione |
 | Prolungamento soggiorno | bisogna prima controllare la disponibilità dell'appartamento, inviami una notifica front end |
 | Early check-in | per eseguire il check-in anticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa. normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |
 | Late check-out | per eseguire il check-out posticipato prima bisogna accordarsi con lo staff delle pulizie, una volta che ci danno l'ok possiamo scrivere agli ospiti, sii emotivamente partecipe, esattamente nello stesso modo del late checkout spiegando che non dipende da noi ma dall'organizzazione della società esterna a noi che si occupa delle pulizie della casa. normalmente costa trenta euro, noi pero' non lo facciamo mai pagare e chiediamo in cambio una bella recensione col massimo del punteggio. questa cosa la facciamo passare come un favore personale che lo consentiamo soltanto occasionalmente soltanto dopo aver verificato la disponibilità con lo staff delle pulizie |

@@ -561,7 +561,15 @@ def process_thread(thread, active_apartments):
     else:
         next_eligible = storage.get_next_eligible(id_thread)
         now_ts = time.time()
-        if next_eligible is not None and now_ts < next_eligible:
+        if next_eligible is None:
+            # First time this (non-current) thread has hit the gate — start
+            # its recheck clock now rather than answering immediately. A
+            # brand-new future/past-booking thread's first message gets no
+            # special treatment: it waits for its tier's cadence just like
+            # every later message on that thread does.
+            storage.set_next_eligible(id_thread, now_ts + recheck_seconds)
+            return ["deferred"]
+        if now_ts < next_eligible:
             return ["deferred"]
         storage.set_next_eligible(id_thread, now_ts + recheck_seconds)
 
